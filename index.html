@@ -5,11 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>AETHON — house of light · Paphos</title>
 <meta name="description" content="AETHON. A private residence on the western coast of Paphos — a sanctuary built around sunsets, silence, and the western sea." />
+<link rel="canonical" href="https://aethon.house/" />
+<meta name="theme-color" content="#E9E7E0" />
 
 <!-- Open Graph (how the link looks when shared) -->
 <meta property="og:title" content="AETHON — house of light" />
 <meta property="og:description" content="A private residence on the western coast of Paphos." />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://aethon.house/" />
+<meta property="og:site_name" content="AETHON" />
+<meta property="og:locale" content="en" />
+<!-- og:image — add when a hero/social image exists (1200×630), e.g. https://aethon.house/images/og.jpg -->
+
+<!-- Structured data: minimal and non-private (no address) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AETHON",
+  "alternateName": "AETHON House · Paphos",
+  "url": "https://aethon.house/",
+  "description": "A private residence on the western coast of Paphos — a sanctuary built around sunsets, silence, and the western sea.",
+  "inLanguage": "en"
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,7 +49,7 @@
     --bg-soft:   #F0EEE8;
     --ink:       #2C2620;
     --ink-soft:  #4A423A;
-    --ink-mute:  #8C8478;
+    --ink-mute:  #6E675B;  /* greige, darkened to meet WCAG AA (~4.5:1) for small text on marble */
     --accent:    #565B3B;
     --accent-on: #E9E7E0;
 
@@ -186,6 +205,8 @@
   }
   .toggle:hover{ border-color: var(--accent); color: var(--accent); }
   .toggle:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+  /* comfortable touch target on phones (QR arrival) */
+  @media (max-width: 640px){ .toggle{ width: 2.75rem; height: 2.75rem; } }
 
   /* ---------- hero: light is the subject ---------- */
   .hero{
@@ -399,6 +420,14 @@
 
   <!-- HERO — the western light -->
   <section class="hero" aria-label="Introduction">
+    <!--
+      When a hero photograph is added, make it the LCP element for fast mobile load:
+      place it as the FIRST child here as
+        <img class="hero-photo" src="images/hero.avif" width="1600" height="1000"
+             alt="…" fetchpriority="high" decoding="async">  (never loading="lazy"),
+      and lay a darkening scrim over it (e.g. a left-to-right rgba(20,15,10,…) gradient)
+      so the headline keeps ≥ 4.5:1 contrast over the image (WCAG F83).
+    -->
     <div class="hero-inner">
       <p class="descriptor">AETHON House · Paphos</p>
       <h1 class="wordmark">AETHON</h1>
@@ -417,7 +446,7 @@
       </div>
       <div>
         <p>AETHON stands on the western shore of Paphos — the lighthouse coast — near Faros Beach, along the axis of the Tombs of the Kings, alongside the archaeological landscape of Nea Paphos, never within it.</p>
-        <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea. When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow.</p>
+        <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea.</p>
         <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em>Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
       </div>
     </div>
@@ -433,11 +462,14 @@
       <div>
         <p>AETHON is a quiet elevation of an existing seafront residence — not a reinvention. The original geometry is kept and honoured; the material and spatial language is refined toward stillness.</p>
         <p>The discipline of Bauhaus, the emptiness of Japandi, and the warmth of Mediterranean light — held in proportion rather than ornament. Light here is treated as a material in its own right: warm, indirect, and dimmed low as the day turns, so the house changes character with the hour. Warmth, air and shade are tuned quietly and out of sight; comfort here is felt rather than managed.</p>
-        <p>The plan is ordered by Feng Shui before anything else, so its calm is structural rather than styled. The ground opens to gather — living, dining, the pool and garden, the sea beyond. The upper levels withdraw — quiet rooms for rest and retreat. Surfaces stay few and honest: marble underfoot, travertine and coastal sandstone, dark oak, a single note of olive-green leather.</p>
+        <p>The plan is ordered by Feng Shui before anything else, so its calm is structural rather than styled. The ground opens to gather — living, dining, the pool and garden, the sea beyond; above, the rooms grow still. Surfaces stay few and honest: marble underfoot, travertine and coastal sandstone, dark oak, a single note of olive-green leather.</p>
         <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
       </div>
     </div>
   </section>
+
+  <!-- RESERVED: conceptual "Plan" beat — add here, after The architecture, when
+       redrawn, atmospheric (non-technical, non-dimensioned) plans exist. -->
 
   <!-- THE GARDEN / LANDSCAPE -->
   <section id="garden" class="field-paper">
@@ -454,8 +486,22 @@
     </div>
   </section>
 
+  <!-- THE INTERIOR / WITHDRAW -->
+  <section id="interior">
+    <div class="two-col reveal">
+      <div>
+        <p class="eyebrow">The interior</p>
+        <h2 class="section-title">Above, the house withdraws.</h2>
+      </div>
+      <div>
+        <p>Where the ground opens to gather, the floor above withdraws. The rooms grow quieter as the house rises — kept for rest and retreat, and for the slow end of the day.</p>
+        <p>When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow. Lit softly from within, the house keeps its own evening: warm, unhurried, still.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- MATERIALS -->
-  <section id="materials">
+  <section id="materials" class="field-paper">
     <div class="materials reveal">
       <p class="eyebrow">The material language</p>
       <h2 class="section-title measure">The palette is the house, read in light.</h2>
@@ -501,7 +547,7 @@
   </section>
 
   <!-- GALLERY (render slots) -->
-  <section id="gallery" class="field-paper">
+  <section id="gallery">
     <div class="gallery reveal">
       <p class="eyebrow">Views</p>
       <h2 class="section-title measure">The house, toward the evening.</h2>
@@ -514,7 +560,7 @@
   </section>
 
   <!-- REGISTER INTEREST -->
-  <section id="interest">
+  <section id="interest" class="field-paper">
     <div class="interest reveal">
       <p class="eyebrow">Register interest</p>
       <h2 class="section-title">A short, private list.</h2>
@@ -547,6 +593,15 @@
         <button class="submit" type="submit">Register interest</button>
       </form>
       <p class="form-note">Your details are kept privately and are never shared.</p>
+    </div>
+  </section>
+
+  <!-- CREDITS (colophon) — roles only; names added as each contributor agrees to be credited -->
+  <section id="credits">
+    <div class="interest reveal">
+      <p class="eyebrow">Credits</p>
+      <h2 class="section-title">The hands behind the house.</h2>
+      <p class="measure">Original architecture, interior, landscape, lighting and Feng Shui — by the project team. Each contributor is named here as they agree to be credited.</p>
     </div>
   </section>
 
