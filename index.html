@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AETHON — house of light · Paphos</title>
+<meta name="description" content="AETHON. A private residence on the western coast of Paphos — a sanctuary built around sunsets, silence, and the western sea." />
+
+<!-- Open Graph (how the link looks when shared) -->
+<meta property="og:title" content="AETHON — house of light" />
+<meta property="og:description" content="A private residence on the western coast of Paphos." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    /* --- Material constants (the house's real materials; do not theme these) --- */
+    --marble:      #E9E7E0;
+    --travertine:  #DCCDB3;
+    --sandstone:   #C7B08C;
+    --greige:      #8C8478;  /* Corian "Rosemary" */
+    --oak:         #2C2620;  /* dark oak */
+    --leather:     #565B3B;  /* olive-green leather — BoConcept Nordic Grain */
+
+    /* --- Roles: DAY (default) --- */
+    --bg:        #E9E7E0;
+    --bg-soft:   #F0EEE8;
+    --ink:       #2C2620;
+    --ink-soft:  #4A423A;
+    --ink-mute:  #8C8478;
+    --accent:    #565B3B;
+    --accent-on: #E9E7E0;
+
+    --rule:        rgba(44,38,32,0.16);
+    --rule-strong: rgba(44,38,32,0.28);
+    --bar-bg:      rgba(233,231,224,0.82);
+    --hero-band:   rgba(140,132,120,0.16);
+
+    --light-glow:    #F2DDBE;
+    --light-warm:    #E9C79B;
+    --light-opacity: 0.9;
+
+    --frame-grad: linear-gradient(135deg, var(--travertine), var(--sandstone) 60%, var(--greige));
+    --frame-label: rgba(44,38,32,0.72);
+
+    --footer-bg:   #2C2620;
+    --footer-ink:  #E9E7E0;
+    --footer-mute: rgba(233,231,224,0.70);
+
+    --measure: 60ch;
+    --edge: clamp(1.5rem, 6vw, 7rem);
+    --section-y: clamp(5rem, 12vw, 11rem);
+
+    --ff-display: "Jost", system-ui, sans-serif;
+    --ff-text: "Spectral", Georgia, serif;
+  }
+
+  /* --- Roles: NIGHT (warm ~3000K) --- */
+  body.night{
+    --bg:        #1A1410;
+    --bg-soft:   #221B14;
+    --ink:       #EEE7D6;
+    --ink-soft:  #CEC4AE;
+    --ink-mute:  #9E9376;
+    --accent:    #9CA279;   /* olive, brought up so it reads against the dark */
+    --accent-on: #15110B;
+
+    --rule:        rgba(238,231,214,0.14);
+    --rule-strong: rgba(238,231,214,0.30);
+    --bar-bg:      rgba(26,20,16,0.82);
+    --hero-band:   rgba(18,11,5,0.34);
+
+    --light-glow:    #F3C886;
+    --light-warm:    #E9AC63;
+    --light-opacity: 1;
+
+    --frame-grad: linear-gradient(135deg, #3A312A, #2C2620 60%, #211A14);
+    --frame-label: rgba(238,231,214,0.70);
+
+    --footer-bg:   #140F0A;
+    --footer-ink:  #EEE7D6;
+    --footer-mute: rgba(238,231,214,0.62);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--ff-text);
+    font-weight: 400;
+    line-height: 1.7;
+    font-size: clamp(1.02rem, 0.6vw + 0.95rem, 1.18rem);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background-color 0.7s ease, color 0.7s ease;
+  }
+
+  a{ color: inherit; }
+
+  /* ---------- shared type devices ---------- */
+  .eyebrow{
+    font-family: var(--ff-display);
+    font-weight: 400;
+    font-size: 0.72rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0 0 1.4rem;
+  }
+
+  .measure{ max-width: var(--measure); }
+
+  h2.section-title{
+    font-family: var(--ff-text);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.6rem;
+  }
+
+  p{ margin: 0 0 1.2rem; max-width: var(--measure); }
+  p:last-child{ margin-bottom: 0; }
+
+  .hairline{
+    height: 1px; width: 100%;
+    background: linear-gradient(to right, transparent, var(--rule-strong), transparent);
+    border: 0;
+  }
+
+  /* ---------- top bar ---------- */
+  header.bar{
+    position: fixed; inset: 0 0 auto 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem var(--edge);
+    z-index: 50;
+    transition: background 600ms ease, backdrop-filter 600ms ease, border-color 600ms ease;
+    border-bottom: 1px solid transparent;
+  }
+  header.bar.scrolled{
+    background: var(--bar-bg);
+    backdrop-filter: blur(8px);
+    border-bottom-color: var(--rule);
+  }
+  .bar .mark{
+    font-family: var(--ff-display);
+    font-weight: 400;
+    letter-spacing: 0.34em;
+    font-size: 0.92rem;
+    text-decoration: none;
+    padding-left: 0.34em;
+  }
+  .bar-right{ display:flex; align-items:center; gap: clamp(1.2rem, 3vw, 2.2rem); }
+  nav.links{ display:flex; gap: clamp(1.2rem, 3vw, 2.4rem); }
+  nav.links a{
+    font-family: var(--ff-display);
+    font-weight: 400;
+    font-size: 0.74rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 250ms ease, color 250ms ease;
+  }
+  nav.links a:hover{ border-bottom-color: var(--accent); color: var(--ink); }
+  @media (max-width: 640px){ nav.links{ display:none; } }
+
+  /* day / night toggle */
+  .toggle{
+    width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    border: 1px solid var(--rule-strong); background: transparent;
+    color: var(--ink); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; line-height: 1; flex: none;
+    transition: border-color 250ms ease, color 250ms ease, background-color 700ms ease;
+  }
+  .toggle:hover{ border-color: var(--accent); color: var(--accent); }
+  .toggle:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  /* ---------- hero: light is the subject ---------- */
+  .hero{
+    position: relative;
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 7rem var(--edge) clamp(4rem, 9vw, 7rem);
+    overflow: hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset: -20%;
+    background:
+      radial-gradient(60% 80% at 88% 42%, var(--light-glow) 0%, var(--light-warm) 28%, transparent 62%);
+    mix-blend-mode: multiply;
+    opacity: var(--light-opacity);
+    animation: drift 30s ease-in-out infinite alternate;
+    z-index: 0; pointer-events:none;
+    transition: opacity 0.7s ease;
+  }
+  body.night .hero::before{ mix-blend-mode: screen; }
+  .hero::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0; height: 34%;
+    background: linear-gradient(to top, var(--hero-band), transparent);
+    z-index:0; pointer-events:none;
+  }
+  @keyframes drift{
+    from{ transform: translate3d(4%, 2%, 0) scale(1.04); opacity: calc(var(--light-opacity) * 0.85); }
+    to  { transform: translate3d(-3%, -2%, 0) scale(1.0); opacity: var(--light-opacity); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .hero::before{ animation: none; transform:none; }
+  }
+
+  .hero-inner{ position: relative; z-index: 1; max-width: 56rem; }
+
+  .descriptor{
+    font-family: var(--ff-display); font-weight: 400;
+    font-size: 0.74rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-mute); margin: 0 0 2.2rem;
+  }
+  .wordmark{
+    font-family: var(--ff-display); font-weight: 300;
+    font-size: clamp(3rem, 11vw, 7.2rem); letter-spacing: 0.34em;
+    line-height: 0.95; margin: 0; text-indent: 0.34em; color: var(--ink);
+  }
+  .tagline{
+    font-family: var(--ff-display); font-weight: 400;
+    font-size: clamp(0.8rem, 1.4vw, 0.95rem); letter-spacing: 0.26em;
+    text-transform: uppercase; color: var(--accent); margin: 1.6rem 0 2.8rem;
+  }
+  .hero-line{
+    font-family: var(--ff-text); font-weight: 300; font-style: italic;
+    font-size: clamp(1.3rem, 3.4vw, 2.15rem); line-height: 1.35;
+    letter-spacing: -0.005em; color: var(--ink-soft); max-width: 28ch; margin: 0;
+  }
+  .scroll-cue{
+    position:absolute; left: var(--edge); bottom: clamp(1.6rem,4vw,2.6rem); z-index:1;
+    font-family: var(--ff-display); font-size: 0.66rem; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--ink-mute); text-decoration:none;
+    display:inline-flex; align-items:center; gap:0.7rem;
+  }
+  .scroll-cue .stroke{ width: 2.4rem; height:1px; background: var(--ink-mute); display:inline-block; }
+
+  /* ---------- generic section ---------- */
+  section{ padding: var(--section-y) var(--edge); position: relative; }
+  .field-paper{ background: var(--bg-soft); transition: background-color 0.7s ease; }
+
+  .two-col{
+    display:grid; grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vw, 5rem); align-items: start;
+    max-width: 78rem; margin: 0 auto;
+  }
+  @media (min-width: 880px){
+    .two-col{ grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+  }
+
+  /* ---------- materials ---------- */
+  .materials{ max-width: 78rem; margin: 0 auto; }
+  .swatches{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.9rem;
+    margin-top: 2.6rem;
+  }
+  .swatch{
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    transition: background-color 0.7s ease, border-color 0.7s ease;
+  }
+  .swatch .chip{ height: clamp(6rem, 12vw, 9rem); width:100%; display:block; }
+  .swatch .meta{ padding: 1rem 1rem 1.3rem; }
+  .swatch .name{
+    font-family: var(--ff-display); font-size: 0.82rem; letter-spacing: 0.06em;
+    display:block; margin-bottom: 0.2rem;
+  }
+  .swatch .note{ font-size: 0.82rem; color: var(--ink-mute); line-height: 1.45; }
+
+  /* ---------- gallery (render slots) ---------- */
+  .gallery{ max-width: 84rem; margin: 0 auto; }
+  .frames{
+    display:grid; grid-template-columns: 1fr; gap: clamp(1rem, 2.4vw, 1.6rem);
+    margin-top: 2.6rem;
+  }
+  @media (min-width: 760px){
+    .frames{ grid-template-columns: 1.4fr 1fr; grid-auto-rows: 1fr; }
+    .frame.wide{ grid-column: 1 / -1; }
+  }
+  .frame{
+    position: relative; aspect-ratio: 16 / 10; overflow: hidden;
+    background: var(--frame-grad);
+    display:flex; align-items:flex-end;
+    transition: background 0.7s ease;
+  }
+  .frame.wide{ aspect-ratio: 21 / 9; }
+  .frame .label{
+    font-family: var(--ff-display); font-size: 0.7rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--frame-label);
+    padding: 1rem 1.2rem; position: relative; z-index: 1;
+  }
+  .frame::after{
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(70% 90% at 80% 20%, var(--light-glow), transparent 60%);
+    mix-blend-mode: screen; pointer-events:none; opacity: 0.55;
+  }
+
+  /* ---------- interest form ---------- */
+  .interest{ max-width: 46rem; margin: 0 auto; }
+  form.register{ margin-top: 2.4rem; }
+  .grid-2{ display:grid; grid-template-columns:1fr; gap: 1.4rem; }
+  @media (min-width: 620px){ .grid-2{ grid-template-columns: 1fr 1fr; } }
+  .field{ display:flex; flex-direction:column; gap: 0.5rem; }
+  .field.full{ grid-column: 1 / -1; }
+  label{
+    font-family: var(--ff-display); font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  input, textarea{
+    font-family: var(--ff-text); font-size: 1rem; color: var(--ink);
+    background: transparent; border: 0; border-bottom: 1px solid var(--rule-strong);
+    padding: 0.6rem 0.1rem; border-radius: 0;
+    transition: border-color 250ms ease, color 0.7s ease;
+  }
+  input:focus, textarea:focus{ outline: none; border-bottom-color: var(--accent); }
+  textarea{ resize: vertical; min-height: 4.5rem; }
+  .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+
+  button.submit{
+    margin-top: 2.2rem;
+    font-family: var(--ff-display); font-size: 0.76rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--accent-on);
+    background: var(--accent); border: 1px solid var(--accent);
+    padding: 0.95rem 2.2rem; cursor: pointer; border-radius: 0;
+    transition: background 250ms ease, color 250ms ease, border-color 0.7s ease;
+  }
+  button.submit:hover{ background: transparent; color: var(--accent); }
+  button.submit:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+  .form-note{ font-size: 0.86rem; color: var(--ink-mute); margin-top: 1.4rem; }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding: clamp(3rem,7vw,5rem) var(--edge);
+    background: var(--footer-bg); color: var(--footer-ink);
+    transition: background-color 0.7s ease, color 0.7s ease;
+  }
+  .foot-inner{
+    max-width: 84rem; margin: 0 auto;
+    display:flex; flex-wrap:wrap; gap: 1.6rem 3rem; align-items:flex-end; justify-content:space-between;
+  }
+  .foot-mark{
+    font-family: var(--ff-display); font-weight: 300; letter-spacing: 0.34em;
+    font-size: 1.5rem; text-indent: 0.34em;
+  }
+  .foot-meta{
+    font-family: var(--ff-display); font-size: 0.74rem; letter-spacing: 0.14em;
+    color: var(--footer-mute); line-height: 1.9; text-transform: uppercase;
+  }
+
+  /* ---------- scroll reveal ---------- */
+  .reveal{ opacity: 0; transform: translateY(18px); transition: opacity 900ms ease, transform 900ms ease; }
+  .reveal.in{ opacity: 1; transform: none; }
+
+  :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity: 1; transform: none; transition: none; }
+    *, *::before, *::after{ transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="bar" id="bar">
+  <a class="mark" href="#top">AETHON</a>
+  <div class="bar-right">
+    <nav class="links" aria-label="Sections">
+      <a href="#place">The place</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#garden">Garden</a>
+      <a href="#interest">Register interest</a>
+    </nav>
+    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to night view">
+      <span class="toggle-icon" aria-hidden="true">&#9790;</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO — the western light -->
+  <section class="hero" aria-label="Introduction">
+    <div class="hero-inner">
+      <p class="descriptor">AETHON House · Paphos</p>
+      <h1 class="wordmark">AETHON</h1>
+      <p class="tagline">house of light</p>
+      <p class="hero-line">A sanctuary built around sunsets, silence, and the western sea.</p>
+    </div>
+    <a class="scroll-cue" href="#place"><span class="stroke"></span>Descend</a>
+  </section>
+
+  <!-- THE PLACE -->
+  <section id="place" class="field-paper">
+    <div class="two-col reveal">
+      <div>
+        <p class="eyebrow">The place</p>
+        <h2 class="section-title">First line, where the coast turns west.</h2>
+      </div>
+      <div>
+        <p>AETHON stands on the western shore of Paphos — the lighthouse coast — near Faros Beach, along the axis of the Tombs of the Kings, alongside the archaeological landscape of Nea Paphos, never within it.</p>
+        <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea. When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow.</p>
+        <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em>Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE / PHILOSOPHY -->
+  <section id="architecture">
+    <div class="two-col reveal">
+      <div>
+        <p class="eyebrow">The architecture</p>
+        <h2 class="section-title">Reduction, not decoration.</h2>
+      </div>
+      <div>
+        <p>AETHON is a quiet elevation of an existing seafront residence — not a reinvention. The original geometry is kept and honoured; the material and spatial language is refined toward stillness.</p>
+        <p>The discipline of Bauhaus, the emptiness of Japandi, and the warmth of Mediterranean light — held in proportion rather than ornament. Light here is treated as a material in its own right: warm, indirect, and dimmed low as the day turns, so the house changes character with the hour. Warmth, air and shade are tuned quietly and out of sight; comfort here is felt rather than managed.</p>
+        <p>The plan is ordered by Feng Shui before anything else, so its calm is structural rather than styled. The ground opens to gather — living, dining, the pool and garden, the sea beyond. The upper levels withdraw — quiet rooms for rest and retreat. Surfaces stay few and honest: marble underfoot, travertine and coastal sandstone, dark oak, a single note of olive-green leather.</p>
+        <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE GARDEN / LANDSCAPE -->
+  <section id="garden" class="field-paper">
+    <div class="two-col reveal">
+      <div>
+        <p class="eyebrow">The garden</p>
+        <h2 class="section-title">A dry garden, turned to the sea.</h2>
+      </div>
+      <div>
+        <p>The grounds are a Mediterranean dry garden built around ancient olive trees, brought in fully grown — slim cypress totems, grasses that move with the wind, and aromatic rosemary, lentisc and santolina, set among natural rock and sea-worn pebble.</p>
+        <p>A dry riverbed runs through it and a fire-pit gathers the evening; between house and garden lies the long pool, a sheet of water that mirrors the western sky. Shade sails and quiet retractable awnings temper the midday sun, so the terraces live through the whole day and fold open to the evening. Everything is chosen to ask for little and to age well, kept quiet and turned toward the sea.</p>
+        <p>After dark the composition keeps its light — a single old olive lit from below, the pool glowing softly at its edges — the same warm hour the house is built around.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATERIALS -->
+  <section id="materials">
+    <div class="materials reveal">
+      <p class="eyebrow">The material language</p>
+      <h2 class="section-title measure">The palette is the house, read in light.</h2>
+      <div class="swatches">
+        <div class="swatch">
+          <span class="chip" style="background:#E9E7E0"></span>
+          <span class="meta"><span class="name">Marble</span><span class="note">Flooring — the cool ground.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#DCCDB3"></span>
+          <span class="meta"><span class="name">Travertine</span><span class="note">Warm, quarried stone.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#C7B08C"></span>
+          <span class="meta"><span class="name">Coastal sandstone</span><span class="note">The colour of the shore.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#D9CFBE"></span>
+          <span class="meta"><span class="name">Venetian plaster</span><span class="note">Hand-troweled wall texture.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#8C8478"></span>
+          <span class="meta"><span class="name">Corian &ldquo;Rosemary&rdquo;</span><span class="note">Greige work surface.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#E8DDC9"></span>
+          <span class="meta"><span class="name">Corian &ldquo;Witch Hazel&rdquo;</span><span class="note">Pale Corian, lit shelving.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#9C6A3E"></span>
+          <span class="meta"><span class="name">Iroko</span><span class="note">Warm solid wood.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#2C2620"></span>
+          <span class="meta"><span class="name">Dark oak</span><span class="note">The warm ink of the house.</span></span>
+        </div>
+        <div class="swatch">
+          <span class="chip" style="background:#565B3B"></span>
+          <span class="meta"><span class="name">Olive-green leather</span><span class="note">Nordic grain — the single accent.</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY (render slots) -->
+  <section id="gallery" class="field-paper">
+    <div class="gallery reveal">
+      <p class="eyebrow">Views</p>
+      <h2 class="section-title measure">The house, toward the evening.</h2>
+      <div class="frames">
+        <div class="frame wide"><span class="label">West elevation · forthcoming</span></div>
+        <div class="frame"><span class="label">Living, toward the sea</span></div>
+        <div class="frame"><span class="label">The pool, at dusk</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGISTER INTEREST -->
+  <section id="interest">
+    <div class="interest reveal">
+      <p class="eyebrow">Register interest</p>
+      <h2 class="section-title">A short, private list.</h2>
+      <p class="measure">For those who would like to be told more, in time. No newsletters, no marketing — only a quiet word should the house ever become available.</p>
+
+      <!--
+        FORM DELIVERY: this form needs a free endpoint to actually send emails.
+        Replace YOUR_FORM_ID below with the ID from a free Formspree form (formspree.io).
+        We will set this up as a separate step.
+      -->
+      <form class="register" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="grid-2">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field full">
+            <label for="message">A note (optional)</label>
+            <textarea id="message" name="message" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <button class="submit" type="submit">Register interest</button>
+      </form>
+      <p class="form-note">Your details are kept privately and are never shared.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-mark">AETHON</div>
+    </div>
+    <div class="foot-meta">
+      AETHON House · Paphos, Cyprus<br/>
+      Pronounced &ldquo;AY-thon&rdquo;<br/>
+      &copy; <span id="year">2026</span> · A private residence
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Top bar: turn solid after leaving the hero
+  var bar = document.getElementById('bar');
+  function onScroll(){
+    if (window.scrollY > window.innerHeight * 0.6) bar.classList.add('scrolled');
+    else bar.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Day / Night
+  (function(){
+    var KEY = 'aethon-theme';
+    var body = document.body;
+    var btn = document.getElementById('theme-toggle');
+    var icon = btn.querySelector('.toggle-icon');
+    function apply(theme){
+      var night = theme === 'night';
+      body.classList.toggle('night', night);
+      btn.setAttribute('aria-pressed', night ? 'true' : 'false');
+      btn.setAttribute('aria-label', night ? 'Switch to day view' : 'Switch to night view');
+      icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
+    }
+    var saved = 'day';
+    try { var s = localStorage.getItem(KEY); if (s) saved = s; } catch (e) {}
+    apply(saved);
+    btn.addEventListener('click', function(){
+      var next = body.classList.contains('night') ? 'day' : 'night';
+      apply(next);
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+    });
+  })();
+
+  // Scroll reveal
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.16 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
