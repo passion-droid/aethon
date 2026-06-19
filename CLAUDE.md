@@ -51,7 +51,7 @@ impression and the mobile layout matter.
 - **One accent colour only:** the olive-green leather (BoConcept Nordic Grain Olive Green). Everything else is stone.
 - **Comfort, never gadgetry:** the smart-home (KNX), climate/cooling, outdoor misting, hearth and spa are expressed *only* abstractly, through mood and feeling (e.g. comfort "felt rather than managed"; "warmth takes its place" in the evening). Never list features, brands, specs or amenities; no security/CCTV mention at all.
 - **Solar, kept poetic:** the PV/solar appears (if at all) only as the house living on the light it is named for — sustained by the western sun, quietly self-sufficient. Never panels, system sizes, savings, payback or eco-claims; no roof-panel imagery.
-- **Feng Shui is foundational, names are not:** Feng Shui ordered the plan (the design basis). Express it as principle. The Feng Shui consultant and any other named collaborator must NOT be credited publicly without their written consent — professional involvement is not permission to use a real person's name in marketing. (Contributor names are kept in the private design memo, not in this repo.)
+- **Feng Shui is foundational:** Feng Shui ordered the plan (the design basis). Express it as principle.
 
 ## Palette — use these exact values
 Derived from the house's real materials:
@@ -91,9 +91,7 @@ superlatives, no marketing tone. Tone references: Aman, Tadao Ando.
 ## Decided / planned
 - **Floor plans:** include — but *conceptual* redrawn views only (awaiting redrawn assets).
 - **Credits:** a minimal contributors section crediting the original architect + the
-  project team (roles and names only, no bios). Contributor names are kept in the private
-  design memo — not in this public repo — until each confirms they're happy to be credited
-  publicly. Still needed: original architect, engineer.
+  project team (roles and names only, no bios).
 - **Day / Night:** **implemented.** A toggle (☀ / ☾) in the header switches the whole
   page between a day and a night mood via a `night` class on `<body>`. All colours come
   from role tokens (`--bg`, `--bg-soft`, `--ink`, `--ink-soft`, `--ink-mute`, `--accent`,
