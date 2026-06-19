@@ -238,6 +238,16 @@ PV (3 systems), decorative lighting (LampTwist / mohd), BoConcept furniture, Geo
 
 A **Hamburg furniture house** (villa-schmidt.de), not a property. Order delivered to the villa: DEDON *Swingus* hanging swing-sofa + cushions, Gloster *Lima* teak bench, Ethnicraft *Barrow* stools (pine-green), Porada *Ekero* stand (walnut / Carrara), Signet *Jester* chair. Outdoor-/indoor-living furniture — internal (supplier + costs). *Note: the stools' pine-green is a furniture finish, not a brand colour; the single accent stays the olive-green leather.*
 
+## 8 · Renovation vision
+
+The vision for this seaside home in Cyprus is to create a sanctuary that harmoniously blends Japandi minimalism, Feng Shui balance, and Mediterranean warmth — a space where serenity flows effortlessly through every corner.
+Rooted in the principle that “less is more”, the architecture should be guided by human-centric purpose: form follows function, with every line, material, and element intentionally chosen to serve both aesthetics and use.
+The home must be ecologically conscious, reflecting a deep respect for its natural surroundings and amplifying the raw beauty of the coastline. Earthy sand tones, marine blues, and water-like reflections will echo the hues of Cyprus, while the use of local, natural materials will ground the space in authenticity.
+Designed as an indoor-outdoor living experience, the home should breathe with the climate — windows flung open to invite in the sea air and sunshine. It’s a space built for joy: to savor food, water, weather, and nature, and to offer a sense of ease in daily rituals. The environment must be effortlessly accessible, cat-friendly, dust-resistant and sustain the coastal climate.
+While the ground floor is reserved for warm and welcoming hosting spaces, the upper areas should offer private, intimate sanctuaries for silence, meditation, and retreat. Outdoors, the pool and terrace must feel secluded — lush, layered plantings should shield views from neighbors and nearby pathways while still allowing nature to take center stage.
+A core design anchor is the daily spectacle of the sun sinking into the sea — this horizon should be framed and celebrated through thoughtful landscaping and terrace design.
+The garden is the soul of the property: alive with green as its dominant color, abundant in endemic vegetation, and rich in diversity. It must offer privacy, yet feel open and alive, blending with the rhythms of the seasons. Both garden and terrace should be designed for year-round enjoyment, offering comfort during high-summer heat and even in the occasional rain — always inviting, always alive.
+
 \---
 
 ## Decisions log
