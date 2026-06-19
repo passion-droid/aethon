@@ -313,8 +313,8 @@
     margin-top: 2.6rem;
   }
   @media (min-width: 760px){
-    .frames{ grid-template-columns: 1.4fr 1fr; grid-auto-rows: 1fr; }
-    .frame.wide{ grid-column: 1 / -1; }
+    .frames{ grid-template-columns: 1fr 1fr; }
+    .frame.wide, .frame.band{ grid-column: 1 / -1; }
   }
   .frame{
     position: relative; aspect-ratio: 16 / 10; overflow: hidden;
@@ -322,7 +322,9 @@
     display:flex; align-items:flex-end;
     transition: background 0.7s ease;
   }
-  .frame.wide{ aspect-ratio: 21 / 9; }
+  .frame.wide{ aspect-ratio: 21 / 9; }   /* full-width establishing view */
+  .frame.tall{ aspect-ratio: 4 / 5; }    /* portrait */
+  .frame.band{ aspect-ratio: 3 / 1; }    /* full-width detail strip */
   .frame .label{
     font-family: var(--ff-display); font-size: 0.7rem; letter-spacing: 0.22em;
     text-transform: uppercase; color: var(--frame-label);
@@ -366,6 +368,22 @@
   button.submit:hover{ background: transparent; color: var(--accent); }
   button.submit:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
   .form-note{ font-size: 0.86rem; color: var(--ink-mute); margin-top: 1.4rem; }
+
+  /* ---------- credits (colophon) ---------- */
+  .credits-list{ margin-top: 2.4rem; max-width: var(--measure); }
+  .credits-list > div{
+    display:grid; grid-template-columns: 1fr; gap: 0.15rem;
+    padding: 0.9rem 0; border-top: 1px solid var(--rule);
+  }
+  .credits-list > div:last-child{ border-bottom: 1px solid var(--rule); }
+  .credits-list dt{
+    font-family: var(--ff-display); font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .credits-list dd{ margin: 0; color: var(--ink-soft); }
+  @media (min-width: 620px){
+    .credits-list > div{ grid-template-columns: 13rem 1fr; gap: 1.4rem; align-items: baseline; }
+  }
 
   /* ---------- footer ---------- */
   footer{
@@ -421,12 +439,15 @@
   <!-- HERO — the western light -->
   <section class="hero" aria-label="Introduction">
     <!--
-      When a hero photograph is added, make it the LCP element for fast mobile load:
-      place it as the FIRST child here as
-        <img class="hero-photo" src="images/hero.avif" width="1600" height="1000"
-             alt="…" fetchpriority="high" decoding="async">  (never loading="lazy"),
-      and lay a darkening scrim over it (e.g. a left-to-right rgba(20,15,10,…) gradient)
-      so the headline keeps ≥ 4.5:1 contrast over the image (WCAG F83).
+      HERO MEDIA (when assets exist) — keep it the LCP element and fast on mobile:
+        • Still: place an <img class="hero-photo" src="images/hero.avif"
+          width="1600" height="1000" alt="…" fetchpriority="high" decoding="async">
+          as the FIRST child (never loading="lazy").
+        • Motion (optional, on-brand): a SHORT, muted, looping ambient clip / cinemagraph
+          (sea light; stirring olive leaves) — <video muted loop playsinline autoplay
+          preload="none" poster="images/hero.jpg"> with the poster as the LCP image;
+          gate autoplay behind prefers-reduced-motion and fall back to the still.
+      Lay a darkening scrim over either so the headline keeps ≥ 4.5:1 contrast (WCAG F83).
     -->
     <div class="hero-inner">
       <p class="descriptor">AETHON House · Paphos</p>
@@ -468,8 +489,20 @@
     </div>
   </section>
 
-  <!-- RESERVED: conceptual "Plan" beat — add here, after The architecture, when
-       redrawn, atmospheric (non-technical, non-dimensioned) plans exist. -->
+  <!-- THE PLAN (conceptual) -->
+  <section id="plan">
+    <div class="gallery reveal">
+      <p class="eyebrow">The plan</p>
+      <h2 class="section-title measure">Gather below, withdraw above.</h2>
+      <p class="measure">Two conceptual views — redrawn for atmosphere, not measurement. Forthcoming.</p>
+      <!-- Placeholders sized as the redrawn, low-detail plans will sit (no dimensions):
+           ground floor and first floor, side by side. -->
+      <div class="frames">
+        <div class="frame"><span class="label">Ground floor · gather</span></div>
+        <div class="frame"><span class="label">First floor · withdraw</span></div>
+      </div>
+    </div>
+  </section>
 
   <!-- THE GARDEN / LANDSCAPE -->
   <section id="garden" class="field-paper">
@@ -551,10 +584,30 @@
     <div class="gallery reveal">
       <p class="eyebrow">Views</p>
       <h2 class="section-title measure">The house, toward the evening.</h2>
+      <p class="measure">A curated selection, forthcoming — sized and sequenced as the photography will sit.</p>
+      <!--
+        SHOT BRIEF — placeholders mirror final size / ratio / position; grey until real
+        photography lands; the set scales to the eventual 20–30:
+          1. West elevation · sunset        — wide 21:9, golden hour, the signature exterior.
+             (Optional: a short, slow, muted establishing/drone FILM here instead of a still
+              — situating the house on the western coast; never aimless hovering.)
+          2. Living, toward the sea         — 16:10, late afternoon, ground floor to pool/sea.
+          3. The pool, at dusk              — 16:10, the long pool mirroring the western sky.
+          4. The garden, sculptural olives  — portrait 4:5, ancient olives + cypress verticals.
+          5. The lit olive, after dark      — portrait 4:5, the single old olive lit from below.
+          6. The terrace, under shade sails — 16:10, warm-sand sails, midday outdoor living.
+          7. The interior, lit from within  — 16:10, evening glow, the house turned down.
+          8. Material detail                — band 3:1, travertine · olive leather · iroko.
+      -->
       <div class="frames">
-        <div class="frame wide"><span class="label">West elevation · forthcoming</span></div>
+        <div class="frame wide"><span class="label">West elevation · sunset</span></div>
         <div class="frame"><span class="label">Living, toward the sea</span></div>
         <div class="frame"><span class="label">The pool, at dusk</span></div>
+        <div class="frame tall"><span class="label">The garden, sculptural olives</span></div>
+        <div class="frame tall"><span class="label">The lit olive, after dark</span></div>
+        <div class="frame"><span class="label">The terrace, under shade sails</span></div>
+        <div class="frame"><span class="label">The interior, lit from within</span></div>
+        <div class="frame band"><span class="label">Material detail</span></div>
       </div>
     </div>
   </section>
@@ -596,12 +649,18 @@
     </div>
   </section>
 
-  <!-- CREDITS (colophon) — roles only; names added as each contributor agrees to be credited -->
+  <!-- CREDITS (colophon) -->
   <section id="credits">
     <div class="interest reveal">
       <p class="eyebrow">Credits</p>
       <h2 class="section-title">The hands behind the house.</h2>
-      <p class="measure">Original architecture, interior, landscape, lighting and Feng Shui — by the project team. Each contributor is named here as they agree to be credited.</p>
+      <dl class="credits-list">
+        <div><dt>Original architecture</dt><dd>To be confirmed</dd></div>
+        <div><dt>Interior</dt><dd>House Talks Interiors — Vicky Savva</dd></div>
+        <div><dt>Landscape</dt><dd>Antoine</dd></div>
+        <div><dt>Lighting</dt><dd>DARK Architectural Lighting</dd></div>
+        <div><dt>Feng Shui</dt><dd>Cliff Tan — Dear Modern</dd></div>
+      </dl>
     </div>
   </section>
 
