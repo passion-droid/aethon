@@ -303,7 +303,7 @@
   .note-source{ font-family: var(--ff-text); font-style: italic; color: var(--ink-soft); margin: 0; max-width: 32ch; }
   .note-mats{ display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: clamp(0.9rem, 2vw, 1.4rem); }
   .mat{ margin: 0; }
-  .mat-chip{ display:block; width:100%; height: clamp(7rem, 13vw, 10rem); border: 1px solid var(--rule); }
+  .mat-chip{ display:block; width:100%; height: clamp(7rem, 13vw, 10rem); border: 1px solid var(--rule); object-fit: cover; }
   .mat figcaption{ display:block; padding-top: 0.7rem; }
   .mat-name{ font-family: var(--ff-display); font-size: 0.84rem; letter-spacing: 0.06em; display:block; margin-bottom: 0.15rem; }
   .mat-note{ font-size: 0.84rem; color: var(--ink-mute); line-height: 1.45; }
@@ -583,8 +583,22 @@
             <p class="note-source">The white of water, the pale of morning.</p>
           </div>
           <div class="note-mats">
-            <figure class="mat"><span class="mat-chip" style="background:#E9E7E0"></span><figcaption><span class="mat-name">Marble</span><span class="mat-note">The cool ground, underfoot.</span></figcaption></figure>
-            <figure class="mat"><span class="mat-chip" style="background:#D9CFBE"></span><figcaption><span class="mat-name">Venetian plaster</span><span class="mat-note">Hand-troweled, pale on the wall.</span></figcaption></figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/marble-400.avif 400w, images/materials/marble-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/marble-400.webp 400w, images/materials/marble-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/marble-800.jpg" srcset="images/materials/marble-400.jpg 400w, images/materials/marble-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Marble — the cool ground, underfoot" style="background:#E9E7E0">
+              </picture>
+              <figcaption><span class="mat-name">Marble</span><span class="mat-note">The cool ground, underfoot.</span></figcaption>
+            </figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/venetian-plaster-400.avif 400w, images/materials/venetian-plaster-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/venetian-plaster-400.webp 400w, images/materials/venetian-plaster-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/venetian-plaster-800.jpg" srcset="images/materials/venetian-plaster-400.jpg 400w, images/materials/venetian-plaster-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Venetian plaster — hand-troweled, pale on the wall" style="background:#D9CFBE">
+              </picture>
+              <figcaption><span class="mat-name">Venetian plaster</span><span class="mat-note">Hand-troweled, pale on the wall.</span></figcaption>
+            </figure>
           </div>
         </div>
 
@@ -594,8 +608,22 @@
             <p class="note-source">Sandstone, quarried and weathered.</p>
           </div>
           <div class="note-mats">
-            <figure class="mat"><span class="mat-chip" style="background:#DCCDB3"></span><figcaption><span class="mat-name">Travertine</span><span class="mat-note">Warm stone that holds the afternoon.</span></figcaption></figure>
-            <figure class="mat"><span class="mat-chip" style="background:#C7B08C"></span><figcaption><span class="mat-name">Coastal sandstone</span><span class="mat-note">The colour of the shore.</span></figcaption></figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/travertine-400.avif 400w, images/materials/travertine-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/travertine-400.webp 400w, images/materials/travertine-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/travertine-800.jpg" srcset="images/materials/travertine-400.jpg 400w, images/materials/travertine-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Travertine — warm stone that holds the afternoon" style="background:#DCCDB3">
+              </picture>
+              <figcaption><span class="mat-name">Travertine</span><span class="mat-note">Warm stone that holds the afternoon.</span></figcaption>
+            </figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/coastal-sandstone-400.avif 400w, images/materials/coastal-sandstone-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/coastal-sandstone-400.webp 400w, images/materials/coastal-sandstone-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/coastal-sandstone-800.jpg" srcset="images/materials/coastal-sandstone-400.jpg 400w, images/materials/coastal-sandstone-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Coastal sandstone — the colour of the shore" style="background:#C7B08C">
+              </picture>
+              <figcaption><span class="mat-name">Coastal sandstone</span><span class="mat-note">The colour of the shore.</span></figcaption>
+            </figure>
           </div>
         </div>
 
@@ -605,8 +633,22 @@
             <p class="note-source">Rosemary, lentisc, santolina — the garden&rsquo;s green, carried inside.</p>
           </div>
           <div class="note-mats">
-            <figure class="mat"><span class="mat-chip" style="background:#565B3B"></span><figcaption><span class="mat-name">Olive-green leather</span><span class="mat-note">The deep green; the garden&rsquo;s olive, brought in.</span></figcaption></figure>
-            <figure class="mat"><span class="mat-chip" style="background:#7C8569"></span><figcaption><span class="mat-name">Rosemary green</span><span class="mat-note">A softer green, in fabric — curtains and chairs.</span></figcaption></figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/olive-leather-400.avif 400w, images/materials/olive-leather-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/olive-leather-400.webp 400w, images/materials/olive-leather-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/olive-leather-800.jpg" srcset="images/materials/olive-leather-400.jpg 400w, images/materials/olive-leather-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Olive-green leather — the garden's olive, brought in" style="background:#565B3B">
+              </picture>
+              <figcaption><span class="mat-name">Olive-green leather</span><span class="mat-note">The deep green; the garden&rsquo;s olive, brought in.</span></figcaption>
+            </figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/rosemary-green-400.avif 400w, images/materials/rosemary-green-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/rosemary-green-400.webp 400w, images/materials/rosemary-green-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/rosemary-green-800.jpg" srcset="images/materials/rosemary-green-400.jpg 400w, images/materials/rosemary-green-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Rosemary green — a softer green, in fabric" style="background:#7C8569">
+              </picture>
+              <figcaption><span class="mat-name">Rosemary green</span><span class="mat-note">A softer green, in fabric — curtains and chairs.</span></figcaption>
+            </figure>
           </div>
         </div>
 
@@ -616,8 +658,22 @@
             <p class="note-source">Brown, in shadow and grain.</p>
           </div>
           <div class="note-mats">
-            <figure class="mat"><span class="mat-chip" style="background:#2C2620"></span><figcaption><span class="mat-name">Dark oak</span><span class="mat-note">The warm ink of the house.</span></figcaption></figure>
-            <figure class="mat"><span class="mat-chip" style="background:#9C6A3E"></span><figcaption><span class="mat-name">Iroko</span><span class="mat-note">Warm hardwood, close at hand.</span></figcaption></figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/dark-oak-400.avif 400w, images/materials/dark-oak-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/dark-oak-400.webp 400w, images/materials/dark-oak-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/dark-oak-800.jpg" srcset="images/materials/dark-oak-400.jpg 400w, images/materials/dark-oak-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Dark oak — the warm ink of the house" style="background:#2C2620">
+              </picture>
+              <figcaption><span class="mat-name">Dark oak</span><span class="mat-note">The warm ink of the house.</span></figcaption>
+            </figure>
+            <figure class="mat">
+              <picture>
+                <source type="image/avif" srcset="images/materials/iroko-400.avif 400w, images/materials/iroko-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <source type="image/webp" srcset="images/materials/iroko-400.webp 400w, images/materials/iroko-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
+                <img class="mat-chip" src="images/materials/iroko-800.jpg" srcset="images/materials/iroko-400.jpg 400w, images/materials/iroko-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Iroko — warm hardwood, close at hand" style="background:#9C6A3E">
+              </picture>
+              <figcaption><span class="mat-name">Iroko</span><span class="mat-note">Warm hardwood, close at hand.</span></figcaption>
+            </figure>
           </div>
         </div>
 
