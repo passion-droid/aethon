@@ -79,10 +79,12 @@ superlatives, no marketing tone. Tone references: Aman, Tadao Ando. A little hum
 is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 
 ## Known TODOs
-- **Images:** the Views gallery now holds eight realistic placeholders (sized and
-  sequenced as the final photography will sit, with an in-code shot brief), plus two
-  conceptual floor-plan placeholders. Awaiting real images — add an `images/` folder,
-  then wire them in. The gallery scales to the eventual 20–30 professional photographs.
+- **Images:** imagery is woven through the page as placeholders — a hero media slot (an
+  ambient loop), an establishing-film plate in *The place*, a companion image under
+  *The architecture*, *The garden* and *The interior*, the two conceptual floor plans,
+  and the eight-slot *Views* gallery (with an in-code shot brief). Awaiting real images —
+  add an `images/` folder, then wire them in. Scales to the eventual 20–30 photographs.
+  (Once real photos land, expect to consolidate woven vs. gallery to avoid duplication.)
 - **Floor plans:** a conceptual *Plan* section (ground + first-floor placeholders) now
   sits after *The architecture*; awaiting the redrawn, low-detail artwork.
 - **Credits:** a colophon before the footer credits the project team — Interior: House
@@ -121,5 +123,6 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   The garden → The interior → Materials → Views → Register interest → Credits.
 - Floor plans and credits placement — **decided:** the *Plan* sits after *The
   architecture*; *Credits* is a colophon before the footer.
-- **Hero motion / a short film** — whether to add a muted ambient hero loop and/or one
-  cinematic establishing (drone) view — pending footage and the photo/video brief.
+- **Hero motion / a short film** — slots are now in place (a hero ambient-loop and an
+  establishing-film plate in *The place*, each marked with a ▶ affordance); whether to
+  actually commission them is pending footage and the photo/video brief.

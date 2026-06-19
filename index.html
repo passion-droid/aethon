@@ -336,6 +336,25 @@
     mix-blend-mode: screen; pointer-events:none; opacity: 0.55;
   }
 
+  /* ---------- woven media plates + film/loop affordance ---------- */
+  .plate{ max-width: 84rem; margin: clamp(2rem, 5vw, 3.4rem) auto 0; }
+  .play{
+    display:inline-flex; align-items:center; justify-content:center; flex:none;
+    width: 3.4rem; height: 3.4rem; border: 1px solid currentColor; border-radius: 50%;
+    font-size: 0.8rem; padding-left: 0.18em;
+  }
+  .frame .play{
+    position:absolute; left:50%; top:50%; transform: translate(-50%, -50%);
+    color: var(--frame-label); z-index: 1;
+  }
+  .hero-media{
+    position:absolute; right: var(--edge); bottom: clamp(1.6rem, 4vw, 2.6rem); z-index: 1;
+    display:inline-flex; align-items:center; gap: 0.7rem; white-space: nowrap;
+    font-family: var(--ff-display); font-size: 0.66rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .hero-media .play{ width: 1.9rem; height: 1.9rem; font-size: 0.56rem; padding-left: 0.14em; }
+
   /* ---------- interest form ---------- */
   .interest{ max-width: 46rem; margin: 0 auto; }
   form.register{ margin-top: 2.4rem; }
@@ -455,6 +474,7 @@
       <p class="tagline">house of light</p>
       <p class="hero-line">A sanctuary built around sunsets, silence, and the western sea.</p>
     </div>
+    <div class="hero-media"><span class="play" aria-hidden="true">&#9654;</span>Ambient loop · forthcoming</div>
     <a class="scroll-cue" href="#place"><span class="stroke"></span>Descend</a>
   </section>
 
@@ -471,6 +491,9 @@
         <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em>Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
       </div>
     </div>
+    <figure class="plate reveal">
+      <div class="frame wide film"><span class="play" aria-hidden="true">&#9654;</span><span class="label">Establishing film · the western coast at sunset · forthcoming</span></div>
+    </figure>
   </section>
 
   <!-- ARCHITECTURE / PHILOSOPHY -->
@@ -487,6 +510,9 @@
         <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
       </div>
     </div>
+    <figure class="plate reveal">
+      <div class="frame"><span class="label">The living spaces, toward the sea · forthcoming</span></div>
+    </figure>
   </section>
 
   <!-- THE PLAN (conceptual) -->
@@ -517,6 +543,9 @@
         <p>After dark the composition keeps its light — a single old olive lit from below, the pool glowing softly at its edges — the same warm hour the house is built around.</p>
       </div>
     </div>
+    <figure class="plate reveal">
+      <div class="frame"><span class="label">Ancient olives, the dry garden · forthcoming</span></div>
+    </figure>
   </section>
 
   <!-- THE INTERIOR / WITHDRAW -->
@@ -531,6 +560,9 @@
         <p>When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow. Lit softly from within, the house keeps its own evening: warm, unhurried, still.</p>
       </div>
     </div>
+    <figure class="plate reveal">
+      <div class="frame"><span class="label">Lit from within, at evening · forthcoming</span></div>
+    </figure>
   </section>
 
   <!-- MATERIALS -->
