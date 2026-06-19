@@ -80,12 +80,17 @@ superlatives, no marketing tone. Tone references: Aman, Tadao Ando. A little hum
 is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 
 ## Known TODOs
-- **Images:** imagery is woven through the page as placeholders — a hero media slot (an
-  ambient loop), an establishing-film plate in *The place*, a companion image under
-  *The architecture*, *The garden* and *The interior*, the two conceptual floor plans,
-  and the eight-slot *Views* gallery (with an in-code shot brief). Awaiting real images —
-  add an `images/` folder, then wire them in. Scales to the eventual 20–30 photographs.
-  (Once real photos land, expect to consolidate woven vs. gallery to avoid duplication.)
+- **Images:** an `images/` folder + a **buildless optimisation pipeline** now exist — see
+  `images/README.md` (AVIF→WebP→JPEG via `<picture>`, 400/800w, uniform 3:2, sRGB,
+  metadata stripped; Pillow runs it in-session). **Materials done:** the 8 macro swatches
+  are wired (48 assets in `images/materials/`, brand colour kept as a load-time tint).
+  Still placeholders, awaiting real images via the same pipeline: the hero ambient loop,
+  the establishing-film plate in *The place*, companion images under *The architecture* /
+  *The garden* / *The interior*, the two conceptual floor plans, and the eight-slot
+  *Views* gallery (in-code shot brief). Scales to ~20–30 photographs; once they land,
+  consolidate woven vs. gallery to avoid duplication.
+  **Pending cleanup:** ask the owner to delete the temporary `assets-intake` branch
+  (raw originals; no GPS found, low risk — the session's git proxy could not delete it).
 - **Floor plans:** a conceptual *Plan* section (ground + first-floor placeholders) now
   sits after *The architecture*; awaiting the redrawn, low-detail artwork.
 - **Credits:** a colophon before the footer credits the project team — Interior: House
@@ -106,17 +111,21 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **The interior (withdraw):** a quiet evening/retreat beat after *The garden* — the
   upper floor withdraws; the evening-warmth line (“a low fire, the slow heat of water,
   the rooms turned down to a glow”) lives here. Mood only, never rooms or amenities.
-- **Accessibility / SEO:** day `--ink-mute` darkened to meet WCAG AA (~4.5:1) for small
-  text on marble; canonical + Open Graph (`og:url` / `site_name` / `locale`) +
-  `theme-color` + a minimal, non-private `WebSite` JSON-LD added; mobile toggle tap
-  target enlarged.
+- **Accessibility / SEO:** canonical + Open Graph (`og:url` / `site_name` / `locale`) +
+  `theme-color` + a minimal, non-private `WebSite` JSON-LD; mobile toggle tap target
+  enlarged. **Readability pass** (standards memo: `docs/readability-and-visual-quality.md`;
+  audit: `docs/readability-audit.md`) — all text passes WCAG AA in both themes; a new
+  `--field-line` token brings input/toggle borders to non-text 3:1 (SC 1.4.11); day
+  `--ink-mute` darkened to ~5:1 (glare margin); mobile `--section-y` floor cut to 3.5rem
+  (desktop unchanged); eyebrow → 0.78rem; paragraph spacing → 1.4rem.
 - **Materials section:** restructured as “the palette drawn from the coast” — a short
   concept (the colours gathered from the sea’s light, the cliffs, the coastal herbs, the
   inland woods) then the materials as execution, grouped under those four colour-notes.
   Curated to the eight that tell the story; the two **Corian** finishes are dropped from
   the public wall (they stay in the memo). The green accent sits under the coastal-herbs
-  note in two weights — olive-green leather and rosemary-green fabric. Real colours,
-  enlarged and texture-ready for macro close-ups later.
+  note in two weights — olive-green leather and rosemary-green fabric. Real macro
+  photography is now wired (see **Images** above); each tile keeps its brand colour as a
+  load-time tint behind the photo.
 - **Day / Night:** **implemented.** A toggle (☀ / ☾) in the header switches the whole
   page between a day and a night mood via a `night` class on `<body>`. All colours come
   from role tokens (`--bg`, `--bg-soft`, `--ink`, `--ink-soft`, `--ink-mute`, `--accent`,
