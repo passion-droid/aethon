@@ -191,7 +191,8 @@
     border-bottom: 1px solid transparent;
     transition: border-color 250ms ease, color 250ms ease;
   }
-  nav.links a:hover{ border-bottom-color: var(--accent); color: var(--ink); }
+  nav.links a:hover,
+  nav.links a.active{ border-bottom-color: var(--accent); color: var(--ink); }
   @media (max-width: 640px){ nav.links{ display:none; } }
 
   /* day / night toggle */
@@ -713,14 +714,33 @@
 </footer>
 
 <script>
-  // Top bar: turn solid after leaving the hero
+  // Top bar: turn solid after the hero + highlight the section in view
   var bar = document.getElementById('bar');
-  function onScroll(){
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('nav.links a'));
+  var spyTargets = navLinks.map(function(a){
+    return { a: a, el: document.getElementById(a.getAttribute('href').slice(1)) };
+  }).filter(function(t){ return t.el; });
+  var activeLink = null, ticking = false;
+  function updateHeader(){
+    ticking = false;
     if (window.scrollY > window.innerHeight * 0.6) bar.classList.add('scrolled');
     else bar.classList.remove('scrolled');
+    // mark the last nav-linked section whose top has crossed ~35% of the viewport
+    var line = window.innerHeight * 0.35, cur = null, i;
+    for (i = 0; i < spyTargets.length; i++){
+      if (spyTargets[i].el.getBoundingClientRect().top <= line) cur = spyTargets[i];
+    }
+    var curLink = cur ? cur.a : null;
+    if (curLink !== activeLink){
+      if (activeLink){ activeLink.classList.remove('active'); activeLink.removeAttribute('aria-current'); }
+      if (curLink){ curLink.classList.add('active'); curLink.setAttribute('aria-current', 'true'); }
+      activeLink = curLink;
+    }
   }
+  function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(updateHeader); } }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  window.addEventListener('resize', onScroll, { passive: true });
+  updateHeader();
 
   // Year
   document.getElementById('year').textContent = new Date().getFullYear();
