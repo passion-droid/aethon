@@ -60,8 +60,7 @@ Hosted free on **GitHub Pages**, served from this repository.
 
 ## Brand guardrails (please keep)
 
-- No exact address, no floor plans, and **no private detail** — no names of people or
-  vendors, no costs, no equipment or security specs.
+- No exact address and **no private detail** — no costs, no equipment or security specs.
 - No estate-agent superlatives or "investment opportunity" language.
 - The **sunset**, not the lighthouse, is the hero of the story.
 - One accent colour only: the olive-green leather (`#565B3B`; a lighter `#9CA279` at night).
