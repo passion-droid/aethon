@@ -109,6 +109,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   text on marble; canonical + Open Graph (`og:url` / `site_name` / `locale`) +
   `theme-color` + a minimal, non-private `WebSite` JSON-LD added; mobile toggle tap
   target enlarged.
+- **Materials section:** restructured as “the palette drawn from the coast” — a short
+  concept (the colours gathered from the sea’s light, the cliffs, the coastal herbs, the
+  inland woods) then the materials as execution, grouped under those four colour-notes.
+  Curated to the seven that tell the story; the two **Corian** finishes are dropped from
+  the public wall (they stay in the memo). Real colours, enlarged and texture-ready for
+  macro close-ups later.
 - **Day / Night:** **implemented.** A toggle (☀ / ☾) in the header switches the whole
   page between a day and a night mood via a `night` class on `<body>`. All colours come
   from role tokens (`--bg`, `--bg-soft`, `--ink`, `--ink-soft`, `--ink-mute`, `--accent`,

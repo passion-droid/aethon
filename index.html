@@ -286,26 +286,25 @@
     .two-col{ grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
   }
 
-  /* ---------- materials ---------- */
+  /* ---------- materials (a palette drawn from the coast) ---------- */
   .materials{ max-width: 78rem; margin: 0 auto; }
-  .swatches{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 0.9rem;
-    margin-top: 2.6rem;
+  .palette{ margin-top: clamp(2.4rem, 5vw, 3.6rem); display:grid; gap: clamp(2.2rem, 4.5vw, 3.6rem); }
+  .note{ display:grid; grid-template-columns: 1fr; gap: 1.1rem; }
+  @media (min-width: 760px){
+    .note{ grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: clamp(2rem, 4vw, 3.5rem); align-items: start; }
   }
-  .swatch{
-    background: var(--bg-soft);
-    border: 1px solid var(--rule);
-    transition: background-color 0.7s ease, border-color 0.7s ease;
+  .note + .note{ border-top: 1px solid var(--rule); padding-top: clamp(2.2rem, 4.5vw, 3.6rem); }
+  .note-title{
+    font-family: var(--ff-text); font-weight: 300; font-size: clamp(1.2rem, 2vw, 1.55rem);
+    line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 0.5rem;
   }
-  .swatch .chip{ height: clamp(6rem, 12vw, 9rem); width:100%; display:block; }
-  .swatch .meta{ padding: 1rem 1rem 1.3rem; }
-  .swatch .name{
-    font-family: var(--ff-display); font-size: 0.82rem; letter-spacing: 0.06em;
-    display:block; margin-bottom: 0.2rem;
-  }
-  .swatch .note{ font-size: 0.82rem; color: var(--ink-mute); line-height: 1.45; }
+  .note-source{ font-family: var(--ff-text); font-style: italic; color: var(--ink-soft); margin: 0; max-width: 32ch; }
+  .note-mats{ display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: clamp(0.9rem, 2vw, 1.4rem); }
+  .mat{ margin: 0; }
+  .mat-chip{ display:block; width:100%; height: clamp(7rem, 13vw, 10rem); border: 1px solid var(--rule); }
+  .mat figcaption{ display:block; padding-top: 0.7rem; }
+  .mat-name{ font-family: var(--ff-display); font-size: 0.84rem; letter-spacing: 0.06em; display:block; margin-bottom: 0.15rem; }
+  .mat-note{ font-size: 0.84rem; color: var(--ink-mute); line-height: 1.45; }
 
   /* ---------- gallery (render slots) ---------- */
   .gallery{ max-width: 84rem; margin: 0 auto; }
@@ -571,44 +570,54 @@
   <section id="materials" class="field-paper">
     <div class="materials reveal">
       <p class="eyebrow">The material language</p>
-      <h2 class="section-title measure">The palette is the house, read in light.</h2>
-      <div class="swatches">
-        <div class="swatch">
-          <span class="chip" style="background:#E9E7E0"></span>
-          <span class="meta"><span class="name">Marble</span><span class="note">Flooring — the cool ground.</span></span>
+      <h2 class="section-title measure">The palette is drawn from the coast.</h2>
+      <p class="measure">Nothing is chosen for its own sake. The colours are gathered from the place — the light of the sea, the sandstone of the cliffs, the green of the coastal herbs, the brown of the inland woods. The house answers each in material.</p>
+
+      <div class="palette">
+
+        <div class="note">
+          <div class="note-head">
+            <h3 class="note-title">The sea, and its light</h3>
+            <p class="note-source">The white of water, the pale of morning.</p>
+          </div>
+          <div class="note-mats">
+            <figure class="mat"><span class="mat-chip" style="background:#E9E7E0"></span><figcaption><span class="mat-name">Marble</span><span class="mat-note">The cool ground, underfoot.</span></figcaption></figure>
+            <figure class="mat"><span class="mat-chip" style="background:#D9CFBE"></span><figcaption><span class="mat-name">Venetian plaster</span><span class="mat-note">Hand-troweled, pale on the wall.</span></figcaption></figure>
+          </div>
         </div>
-        <div class="swatch">
-          <span class="chip" style="background:#DCCDB3"></span>
-          <span class="meta"><span class="name">Travertine</span><span class="note">Warm, quarried stone.</span></span>
+
+        <div class="note">
+          <div class="note-head">
+            <h3 class="note-title">The cliffs and the shore</h3>
+            <p class="note-source">Sandstone, quarried and weathered.</p>
+          </div>
+          <div class="note-mats">
+            <figure class="mat"><span class="mat-chip" style="background:#DCCDB3"></span><figcaption><span class="mat-name">Travertine</span><span class="mat-note">Warm stone that holds the afternoon.</span></figcaption></figure>
+            <figure class="mat"><span class="mat-chip" style="background:#C7B08C"></span><figcaption><span class="mat-name">Coastal sandstone</span><span class="mat-note">The colour of the shore.</span></figcaption></figure>
+          </div>
         </div>
-        <div class="swatch">
-          <span class="chip" style="background:#C7B08C"></span>
-          <span class="meta"><span class="name">Coastal sandstone</span><span class="note">The colour of the shore.</span></span>
+
+        <div class="note">
+          <div class="note-head">
+            <h3 class="note-title">The coastal herbs</h3>
+            <p class="note-source">Rosemary, lentisc, santolina — the one green note.</p>
+          </div>
+          <div class="note-mats">
+            <figure class="mat"><span class="mat-chip" style="background:#565B3B"></span><figcaption><span class="mat-name">Olive-green leather</span><span class="mat-note">The single accent; the garden&rsquo;s olive, brought in.</span></figcaption></figure>
+          </div>
         </div>
-        <div class="swatch">
-          <span class="chip" style="background:#D9CFBE"></span>
-          <span class="meta"><span class="name">Venetian plaster</span><span class="note">Hand-troweled wall texture.</span></span>
+
+        <div class="note">
+          <div class="note-head">
+            <h3 class="note-title">The inland woods</h3>
+            <p class="note-source">Brown, in shadow and grain.</p>
+          </div>
+          <div class="note-mats">
+            <figure class="mat"><span class="mat-chip" style="background:#2C2620"></span><figcaption><span class="mat-name">Dark oak</span><span class="mat-note">The warm ink of the house.</span></figcaption></figure>
+            <figure class="mat"><span class="mat-chip" style="background:#9C6A3E"></span><figcaption><span class="mat-name">Iroko</span><span class="mat-note">Warm hardwood, close at hand.</span></figcaption></figure>
+          </div>
         </div>
-        <div class="swatch">
-          <span class="chip" style="background:#8C8478"></span>
-          <span class="meta"><span class="name">Corian &ldquo;Rosemary&rdquo;</span><span class="note">Greige work surface.</span></span>
-        </div>
-        <div class="swatch">
-          <span class="chip" style="background:#E8DDC9"></span>
-          <span class="meta"><span class="name">Corian &ldquo;Witch Hazel&rdquo;</span><span class="note">Pale Corian, lit shelving.</span></span>
-        </div>
-        <div class="swatch">
-          <span class="chip" style="background:#9C6A3E"></span>
-          <span class="meta"><span class="name">Iroko</span><span class="note">Warm solid wood.</span></span>
-        </div>
-        <div class="swatch">
-          <span class="chip" style="background:#2C2620"></span>
-          <span class="meta"><span class="name">Dark oak</span><span class="note">The warm ink of the house.</span></span>
-        </div>
-        <div class="swatch">
-          <span class="chip" style="background:#565B3B"></span>
-          <span class="meta"><span class="name">Olive-green leather</span><span class="note">Nordic grain — the single accent.</span></span>
-        </div>
+
       </div>
     </div>
   </section>
