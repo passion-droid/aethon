@@ -49,12 +49,13 @@
     --bg-soft:   #F0EEE8;
     --ink:       #2C2620;
     --ink-soft:  #4A423A;
-    --ink-mute:  #6E675B;  /* greige, darkened to meet WCAG AA (~4.5:1) for small text on marble */
+    --ink-mute:  #665F53;  /* greige, darkened to ~5:1 on marble for an outdoor/mobile-glare margin */
     --accent:    #565B3B;
     --accent-on: #E9E7E0;
 
     --rule:        rgba(44,38,32,0.16);
     --rule-strong: rgba(44,38,32,0.28);
+    --field-line:  rgba(44,38,32,0.55);  /* form/control borders — meets WCAG 1.4.11 non-text 3:1 */
     --bar-bg:      rgba(233,231,224,0.82);
     --hero-band:   rgba(140,132,120,0.16);
 
@@ -71,7 +72,7 @@
 
     --measure: 60ch;
     --edge: clamp(1.5rem, 6vw, 7rem);
-    --section-y: clamp(5rem, 12vw, 11rem);
+    --section-y: clamp(3.5rem, 12vw, 11rem);
 
     --ff-display: "Jost", system-ui, sans-serif;
     --ff-text: "Spectral", Georgia, serif;
@@ -89,6 +90,7 @@
 
     --rule:        rgba(238,231,214,0.14);
     --rule-strong: rgba(238,231,214,0.30);
+    --field-line:  rgba(238,231,214,0.40);  /* form/control borders — meets WCAG 1.4.11 non-text 3:1 */
     --bar-bg:      rgba(26,20,16,0.82);
     --hero-band:   rgba(18,11,5,0.34);
 
@@ -128,7 +130,7 @@
   .eyebrow{
     font-family: var(--ff-display);
     font-weight: 400;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     letter-spacing: 0.32em;
     text-transform: uppercase;
     color: var(--ink-mute);
@@ -146,7 +148,7 @@
     margin: 0 0 1.6rem;
   }
 
-  p{ margin: 0 0 1.2rem; max-width: var(--measure); }
+  p{ margin: 0 0 1.4rem; max-width: var(--measure); }
   p:last-child{ margin-bottom: 0; }
 
   .hairline{
@@ -198,7 +200,7 @@
   /* day / night toggle */
   .toggle{
     width: 2.2rem; height: 2.2rem; border-radius: 50%;
-    border: 1px solid var(--rule-strong); background: transparent;
+    border: 1px solid var(--field-line); background: transparent;
     color: var(--ink); cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center;
     font-size: 0.95rem; line-height: 1; flex: none;
@@ -368,7 +370,7 @@
   }
   input, textarea{
     font-family: var(--ff-text); font-size: 1rem; color: var(--ink);
-    background: transparent; border: 0; border-bottom: 1px solid var(--rule-strong);
+    background: transparent; border: 0; border-bottom: 1px solid var(--field-line);
     padding: 0.6rem 0.1rem; border-radius: 0;
     transition: border-color 250ms ease, color 0.7s ease;
   }
