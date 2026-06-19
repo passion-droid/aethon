@@ -28,9 +28,10 @@ Hosted free on **GitHub Pages**, served from this repository.
 
 ## Outstanding setup (handled step by step with Claude)
 
-1. **Images** — the gallery now shows eight realistic placeholders (with an in-code shot
-   brief) plus two conceptual floor-plan placeholders; drop real renders/photos into an
-   `images/` folder and wire them in. Built to grow into the eventual 20–30 photographs.
+1. **Images** — imagery is woven through the page as placeholders (a hero ambient-loop
+   slot, an establishing-film plate, a companion image per narrative section, two
+   conceptual floor plans, and the eight-slot Views gallery with an in-code shot brief);
+   drop real renders/photos into an `images/` folder and wire them in. Grows to 20–30.
 2. **Interest form delivery** — the "Register interest" form needs a free
    [Formspree](https://formspree.io) form ID pasted into `index.html`
    (search the file for `YOUR_FORM_ID`). Until then the form looks correct but
@@ -57,8 +58,8 @@ Hosted free on **GitHub Pages**, served from this repository.
 
 ## Still to settle together
 
-- **Hero motion / a short film** — whether to add a muted ambient hero loop and/or one
-  cinematic establishing (drone) view, pending footage and the photo/video brief. The
+- **Hero motion / a short film** — slots are now in place (a hero ambient-loop and an
+  establishing-film plate), pending footage and the photo/video brief to commission them. The
   section order is established: Hero → The place → The architecture → The plan → The garden
   → The interior → Materials → Views → Register interest → Credits (the *Plan* sits after
   *The architecture*; *Credits* is a colophon before the footer).
