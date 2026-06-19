@@ -1,0 +1,18 @@
+# This is a PUBLIC repo. Raw camera/phone originals must NOT be committed:
+# they embed EXIF GPS (the house's location) + timestamps, and bloat git history.
+# Drop raw files into a local _originals/ folder — it stays out of git.
+# Only the optimised, metadata-stripped .webp assets get committed.
+_originals/
+**/_originals/
+
+# Belt-and-braces: never commit these source / raw types anywhere under images/
+*.heic
+*.HEIC
+*.heif
+*.tif
+*.tiff
+*.dng
+*.cr2
+*.nef
+*.arw
+*.psd
