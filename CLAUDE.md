@@ -75,23 +75,38 @@ any shade imagery or copy in that warm-neutral register, never stark white.
 
 ## Copy voice
 Calm, museal, understated. Short sentences, sentence case, no exclamation marks, no
-superlatives, no marketing tone. Tone references: Aman, Tadao Ando.
+superlatives, no marketing tone. Tone references: Aman, Tadao Ando. A little human warmth
+is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 
 ## Known TODOs
-- **Images:** the three “Views” tiles are placeholders awaiting real images (add an
-  `images/` folder, then wire them in). Design the gallery to scale to the eventual
-  20–30 professional photographs.
-- **Floor plans:** awaiting conceptual, professionally redrawn plans to add.
-- **Credits:** awaiting the original architect's name/studio and the project team's
-  names + roles.
+- **Images:** the Views gallery now holds eight realistic placeholders (sized and
+  sequenced as the final photography will sit, with an in-code shot brief), plus two
+  conceptual floor-plan placeholders. Awaiting real images — add an `images/` folder,
+  then wire them in. The gallery scales to the eventual 20–30 professional photographs.
+- **Floor plans:** a conceptual *Plan* section (ground + first-floor placeholders) now
+  sits after *The architecture*; awaiting the redrawn, low-detail artwork.
+- **Credits:** a colophon before the footer credits the project team — Interior: House
+  Talks Interiors (Vicky Savva); Landscape: Antoine; Lighting: DARK Architectural
+  Lighting; Feng Shui: Cliff Tan (Dear Modern). Still awaiting the **original
+  architect's** name/studio.
 - **Interest form:** `index.html` contains `action="https://formspree.io/f/YOUR_FORM_ID"`
   — replace with a real Formspree ID so the form actually delivers.
-- **Domain:** connect `aethon.house` once registered (add a `CNAME` file + DNS records).
+- **Domain:** `aethon.house` is connected (a `CNAME` file is on `main`); the site uses it
+  as the canonical / Open Graph URL.
 
 ## Decided / planned
-- **Floor plans:** include — but *conceptual* redrawn views only (awaiting redrawn assets).
-- **Credits:** a minimal contributors section crediting the original architect + the
-  project team (roles and names only, no bios).
+- **Floor plans:** included as a conceptual *Plan* section after *The architecture* —
+  redrawn, atmospheric, low-detail only (placeholders in now; awaiting redrawn assets).
+- **Credits:** a minimal colophon before the footer crediting the original architect +
+  the project team (roles and names only, no bios). Project-team names are now shown
+  (cleared for credit); the **original architect** is still to be confirmed.
+- **The interior (withdraw):** a quiet evening/retreat beat after *The garden* — the
+  upper floor withdraws; the evening-warmth line (“a low fire, the slow heat of water,
+  the rooms turned down to a glow”) lives here. Mood only, never rooms or amenities.
+- **Accessibility / SEO:** day `--ink-mute` darkened to meet WCAG AA (~4.5:1) for small
+  text on marble; canonical + Open Graph (`og:url` / `site_name` / `locale`) +
+  `theme-color` + a minimal, non-private `WebSite` JSON-LD added; mobile toggle tap
+  target enlarged.
 - **Day / Night:** **implemented.** A toggle (☀ / ☾) in the header switches the whole
   page between a day and a night mood via a `night` class on `<body>`. All colours come
   from role tokens (`--bg`, `--bg-soft`, `--ink`, `--ink-soft`, `--ink-mute`, `--accent`,
@@ -102,6 +117,9 @@ superlatives, no marketing tone. Tone references: Aman, Tadao Ando.
   is warm (~3000 K), indirect and DALI-dimmable, so keep the night mood warm and soft.
 
 ## Still open (decide together — don't act unprompted)
-- Current section order (established): Hero → The place → The architecture → The garden
-  → Materials → Views → Register interest.
-- **Where floor plans and credits sit** in that order — still to decide.
+- Current section order (established): Hero → The place → The architecture → The plan →
+  The garden → The interior → Materials → Views → Register interest → Credits.
+- Floor plans and credits placement — **decided:** the *Plan* sits after *The
+  architecture*; *Credits* is a colophon before the footer.
+- **Hero motion / a short film** — whether to add a muted ambient hero loop and/or one
+  cinematic establishing (drone) view — pending footage and the photo/video brief.

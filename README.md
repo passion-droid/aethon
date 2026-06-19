@@ -28,35 +28,40 @@ Hosted free on **GitHub Pages**, served from this repository.
 
 ## Outstanding setup (handled step by step with Claude)
 
-1. **Images** — renders go in first (drop into an `images/` folder); the gallery is
-   built to grow into the eventual 20–30 professional photographs.
+1. **Images** — the gallery now shows eight realistic placeholders (with an in-code shot
+   brief) plus two conceptual floor-plan placeholders; drop real renders/photos into an
+   `images/` folder and wire them in. Built to grow into the eventual 20–30 photographs.
 2. **Interest form delivery** — the "Register interest" form needs a free
    [Formspree](https://formspree.io) form ID pasted into `index.html`
    (search the file for `YOUR_FORM_ID`). Until then the form looks correct but
    does not send.
-3. **Domain** — connect `aethon.house` once registered.
+3. **Domain** — `aethon.house` is connected (a `CNAME` is on `main`).
 
 ## Decided / in progress
 
 - **Day / Night** — live. A ☀ / ☾ toggle in the header switches the whole page between
   a day and a night mood. Default is day; the choice is remembered between visits.
-- **Floor plans** — will be included as *conceptual*, professionally redrawn views
-  (awaiting the redrawn artwork).
-- **Credits** — a minimal contributors section will credit the original architect and
-  the project team (names held privately until each contributor agrees to be credited).
+- **Floor plans** — a conceptual *Plan* section (ground + first floor) now sits after
+  *The architecture* as placeholders; awaiting the redrawn, low-detail artwork.
+- **Credits** — a colophon before the footer credits the project team (Interior,
+  Landscape, Lighting and Feng Shui — now named); the original architect is still to be
+  confirmed.
 - **Palette** — accent retuned to the real olive leather (BoConcept Nordic Grain Olive
   Green); materials expanded with Venetian plaster, Iroko and Corian "Witch Hazel".
 - **Garden** — now has its own section; a subtle lighthouse-locale origins note added to
   *The place*; the day/night mood extends into the garden (lit olive at dusk).
-- **Story / copy** — the full narrative is written (place, architecture, garden, materials);
-  light, comfort, Feng Shui and quiet self-sufficiency are woven in by feel, with all specs,
-  systems and amenities kept out of the prose.
+- **Story / copy** — the full narrative is written (place, architecture, garden, the
+  interior/withdraw beat, materials); light, comfort, Feng Shui and quiet self-sufficiency
+  are woven in by feel, with all specs, systems and amenities kept out of the prose.
+  Voice: restraint with a little warmth.
 
 ## Still to settle together
 
-- **Floor plans & credits** — whether and where these sit in the page. The section order is
-  otherwise established (Hero → The place → The architecture → The garden → Materials →
-  Views → Register interest).
+- **Hero motion / a short film** — whether to add a muted ambient hero loop and/or one
+  cinematic establishing (drone) view, pending footage and the photo/video brief. The
+  section order is established: Hero → The place → The architecture → The plan → The garden
+  → The interior → Materials → Views → Register interest → Credits (the *Plan* sits after
+  *The architecture*; *Credits* is a colophon before the footer).
 
 ## Brand guardrails (please keep)
 

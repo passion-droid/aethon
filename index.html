@@ -5,11 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>AETHON — house of light · Paphos</title>
 <meta name="description" content="AETHON. A private residence on the western coast of Paphos — a sanctuary built around sunsets, silence, and the western sea." />
+<link rel="canonical" href="https://aethon.house/" />
+<meta name="theme-color" content="#E9E7E0" />
 
 <!-- Open Graph (how the link looks when shared) -->
 <meta property="og:title" content="AETHON — house of light" />
 <meta property="og:description" content="A private residence on the western coast of Paphos." />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://aethon.house/" />
+<meta property="og:site_name" content="AETHON" />
+<meta property="og:locale" content="en" />
+<!-- og:image — add when a hero/social image exists (1200×630), e.g. https://aethon.house/images/og.jpg -->
+
+<!-- Structured data: minimal and non-private (no address) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AETHON",
+  "alternateName": "AETHON House · Paphos",
+  "url": "https://aethon.house/",
+  "description": "A private residence on the western coast of Paphos — a sanctuary built around sunsets, silence, and the western sea.",
+  "inLanguage": "en"
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,7 +49,7 @@
     --bg-soft:   #F0EEE8;
     --ink:       #2C2620;
     --ink-soft:  #4A423A;
-    --ink-mute:  #8C8478;
+    --ink-mute:  #6E675B;  /* greige, darkened to meet WCAG AA (~4.5:1) for small text on marble */
     --accent:    #565B3B;
     --accent-on: #E9E7E0;
 
@@ -186,6 +205,8 @@
   }
   .toggle:hover{ border-color: var(--accent); color: var(--accent); }
   .toggle:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+  /* comfortable touch target on phones (QR arrival) */
+  @media (max-width: 640px){ .toggle{ width: 2.75rem; height: 2.75rem; } }
 
   /* ---------- hero: light is the subject ---------- */
   .hero{
@@ -292,8 +313,8 @@
     margin-top: 2.6rem;
   }
   @media (min-width: 760px){
-    .frames{ grid-template-columns: 1.4fr 1fr; grid-auto-rows: 1fr; }
-    .frame.wide{ grid-column: 1 / -1; }
+    .frames{ grid-template-columns: 1fr 1fr; }
+    .frame.wide, .frame.band{ grid-column: 1 / -1; }
   }
   .frame{
     position: relative; aspect-ratio: 16 / 10; overflow: hidden;
@@ -301,7 +322,9 @@
     display:flex; align-items:flex-end;
     transition: background 0.7s ease;
   }
-  .frame.wide{ aspect-ratio: 21 / 9; }
+  .frame.wide{ aspect-ratio: 21 / 9; }   /* full-width establishing view */
+  .frame.tall{ aspect-ratio: 4 / 5; }    /* portrait */
+  .frame.band{ aspect-ratio: 3 / 1; }    /* full-width detail strip */
   .frame .label{
     font-family: var(--ff-display); font-size: 0.7rem; letter-spacing: 0.22em;
     text-transform: uppercase; color: var(--frame-label);
@@ -345,6 +368,22 @@
   button.submit:hover{ background: transparent; color: var(--accent); }
   button.submit:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
   .form-note{ font-size: 0.86rem; color: var(--ink-mute); margin-top: 1.4rem; }
+
+  /* ---------- credits (colophon) ---------- */
+  .credits-list{ margin-top: 2.4rem; max-width: var(--measure); }
+  .credits-list > div{
+    display:grid; grid-template-columns: 1fr; gap: 0.15rem;
+    padding: 0.9rem 0; border-top: 1px solid var(--rule);
+  }
+  .credits-list > div:last-child{ border-bottom: 1px solid var(--rule); }
+  .credits-list dt{
+    font-family: var(--ff-display); font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .credits-list dd{ margin: 0; color: var(--ink-soft); }
+  @media (min-width: 620px){
+    .credits-list > div{ grid-template-columns: 13rem 1fr; gap: 1.4rem; align-items: baseline; }
+  }
 
   /* ---------- footer ---------- */
   footer{
@@ -399,6 +438,17 @@
 
   <!-- HERO — the western light -->
   <section class="hero" aria-label="Introduction">
+    <!--
+      HERO MEDIA (when assets exist) — keep it the LCP element and fast on mobile:
+        • Still: place an <img class="hero-photo" src="images/hero.avif"
+          width="1600" height="1000" alt="…" fetchpriority="high" decoding="async">
+          as the FIRST child (never loading="lazy").
+        • Motion (optional, on-brand): a SHORT, muted, looping ambient clip / cinemagraph
+          (sea light; stirring olive leaves) — <video muted loop playsinline autoplay
+          preload="none" poster="images/hero.jpg"> with the poster as the LCP image;
+          gate autoplay behind prefers-reduced-motion and fall back to the still.
+      Lay a darkening scrim over either so the headline keeps ≥ 4.5:1 contrast (WCAG F83).
+    -->
     <div class="hero-inner">
       <p class="descriptor">AETHON House · Paphos</p>
       <h1 class="wordmark">AETHON</h1>
@@ -417,7 +467,7 @@
       </div>
       <div>
         <p>AETHON stands on the western shore of Paphos — the lighthouse coast — near Faros Beach, along the axis of the Tombs of the Kings, alongside the archaeological landscape of Nea Paphos, never within it.</p>
-        <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea. When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow.</p>
+        <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea.</p>
         <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em>Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
       </div>
     </div>
@@ -433,8 +483,23 @@
       <div>
         <p>AETHON is a quiet elevation of an existing seafront residence — not a reinvention. The original geometry is kept and honoured; the material and spatial language is refined toward stillness.</p>
         <p>The discipline of Bauhaus, the emptiness of Japandi, and the warmth of Mediterranean light — held in proportion rather than ornament. Light here is treated as a material in its own right: warm, indirect, and dimmed low as the day turns, so the house changes character with the hour. Warmth, air and shade are tuned quietly and out of sight; comfort here is felt rather than managed.</p>
-        <p>The plan is ordered by Feng Shui before anything else, so its calm is structural rather than styled. The ground opens to gather — living, dining, the pool and garden, the sea beyond. The upper levels withdraw — quiet rooms for rest and retreat. Surfaces stay few and honest: marble underfoot, travertine and coastal sandstone, dark oak, a single note of olive-green leather.</p>
+        <p>The plan is ordered by Feng Shui before anything else, so its calm is structural rather than styled. The ground opens to gather — living, dining, the pool and garden, the sea beyond; above, the rooms grow still. Surfaces stay few and honest: marble underfoot, travertine and coastal sandstone, dark oak, a single note of olive-green leather.</p>
         <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE PLAN (conceptual) -->
+  <section id="plan">
+    <div class="gallery reveal">
+      <p class="eyebrow">The plan</p>
+      <h2 class="section-title measure">Gather below, withdraw above.</h2>
+      <p class="measure">Two conceptual views — redrawn for atmosphere, not measurement. Forthcoming.</p>
+      <!-- Placeholders sized as the redrawn, low-detail plans will sit (no dimensions):
+           ground floor and first floor, side by side. -->
+      <div class="frames">
+        <div class="frame"><span class="label">Ground floor · gather</span></div>
+        <div class="frame"><span class="label">First floor · withdraw</span></div>
       </div>
     </div>
   </section>
@@ -454,8 +519,22 @@
     </div>
   </section>
 
+  <!-- THE INTERIOR / WITHDRAW -->
+  <section id="interior">
+    <div class="two-col reveal">
+      <div>
+        <p class="eyebrow">The interior</p>
+        <h2 class="section-title">Above, the house withdraws.</h2>
+      </div>
+      <div>
+        <p>Where the ground opens to gather, the floor above withdraws. The rooms grow quieter as the house rises — kept for rest and retreat, and for the slow end of the day.</p>
+        <p>When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow. Lit softly from within, the house keeps its own evening: warm, unhurried, still.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- MATERIALS -->
-  <section id="materials">
+  <section id="materials" class="field-paper">
     <div class="materials reveal">
       <p class="eyebrow">The material language</p>
       <h2 class="section-title measure">The palette is the house, read in light.</h2>
@@ -501,20 +580,40 @@
   </section>
 
   <!-- GALLERY (render slots) -->
-  <section id="gallery" class="field-paper">
+  <section id="gallery">
     <div class="gallery reveal">
       <p class="eyebrow">Views</p>
       <h2 class="section-title measure">The house, toward the evening.</h2>
+      <p class="measure">A curated selection, forthcoming — sized and sequenced as the photography will sit.</p>
+      <!--
+        SHOT BRIEF — placeholders mirror final size / ratio / position; grey until real
+        photography lands; the set scales to the eventual 20–30:
+          1. West elevation · sunset        — wide 21:9, golden hour, the signature exterior.
+             (Optional: a short, slow, muted establishing/drone FILM here instead of a still
+              — situating the house on the western coast; never aimless hovering.)
+          2. Living, toward the sea         — 16:10, late afternoon, ground floor to pool/sea.
+          3. The pool, at dusk              — 16:10, the long pool mirroring the western sky.
+          4. The garden, sculptural olives  — portrait 4:5, ancient olives + cypress verticals.
+          5. The lit olive, after dark      — portrait 4:5, the single old olive lit from below.
+          6. The terrace, under shade sails — 16:10, warm-sand sails, midday outdoor living.
+          7. The interior, lit from within  — 16:10, evening glow, the house turned down.
+          8. Material detail                — band 3:1, travertine · olive leather · iroko.
+      -->
       <div class="frames">
-        <div class="frame wide"><span class="label">West elevation · forthcoming</span></div>
+        <div class="frame wide"><span class="label">West elevation · sunset</span></div>
         <div class="frame"><span class="label">Living, toward the sea</span></div>
         <div class="frame"><span class="label">The pool, at dusk</span></div>
+        <div class="frame tall"><span class="label">The garden, sculptural olives</span></div>
+        <div class="frame tall"><span class="label">The lit olive, after dark</span></div>
+        <div class="frame"><span class="label">The terrace, under shade sails</span></div>
+        <div class="frame"><span class="label">The interior, lit from within</span></div>
+        <div class="frame band"><span class="label">Material detail</span></div>
       </div>
     </div>
   </section>
 
   <!-- REGISTER INTEREST -->
-  <section id="interest">
+  <section id="interest" class="field-paper">
     <div class="interest reveal">
       <p class="eyebrow">Register interest</p>
       <h2 class="section-title">A short, private list.</h2>
@@ -547,6 +646,21 @@
         <button class="submit" type="submit">Register interest</button>
       </form>
       <p class="form-note">Your details are kept privately and are never shared.</p>
+    </div>
+  </section>
+
+  <!-- CREDITS (colophon) -->
+  <section id="credits">
+    <div class="interest reveal">
+      <p class="eyebrow">Credits</p>
+      <h2 class="section-title">The hands behind the house.</h2>
+      <dl class="credits-list">
+        <div><dt>Original architecture</dt><dd>To be confirmed</dd></div>
+        <div><dt>Interior</dt><dd>House Talks Interiors — Vicky Savva</dd></div>
+        <div><dt>Landscape</dt><dd>Antoine</dd></div>
+        <div><dt>Lighting</dt><dd>DARK Architectural Lighting</dd></div>
+        <div><dt>Feng Shui</dt><dd>Cliff Tan — Dear Modern</dd></div>
+      </dl>
     </div>
   </section>
 
