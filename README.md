@@ -69,5 +69,6 @@ Hosted free on **GitHub Pages**, served from this repository.
 - No exact address and **no private detail** — no costs, no equipment or security specs.
 - No estate-agent superlatives or "investment opportunity" language.
 - The **sunset**, not the lighthouse, is the hero of the story.
-- One accent colour only: the olive-green leather (`#565B3B`; a lighter `#9CA279` at night).
-  Everything else is stone — never a blue accent.
+- One accent colour only — green, now in two weights: olive-green leather (`#565B3B`;
+  `#9CA279` at night — the primary/UI accent) and a softer rosemary-green fabric (curtains
+  and some furniture). Everything else is stone — never a blue accent.

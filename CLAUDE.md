@@ -48,7 +48,7 @@ impression and the mobile layout matter.
   being away.
 - **Floor plans:** allowed *only* as conceptual, professionally redrawn views
   (atmospheric, low-detail) — never technical or dimensioned drawings.
-- **One accent colour only:** the olive-green leather (BoConcept Nordic Grain Olive Green). Everything else is stone.
+- **One accent colour only — green:** the accent is a single colour, green, carried in two weights — olive-green leather (primary; BoConcept Nordic Grain Olive Green) and a softer **rosemary-green fabric** (in curtains and some furniture). Everything else is stone; the **UI accent (links, buttons) stays the olive**. Never a blue accent.
 - **Comfort, never gadgetry:** the smart-home (KNX), climate/cooling, outdoor misting, hearth and spa are expressed *only* abstractly, through mood and feeling (e.g. comfort "felt rather than managed"; "warmth takes its place" in the evening). Never list features, brands, specs or amenities; no security/CCTV mention at all.
 - **Solar, kept poetic:** the PV/solar appears (if at all) only as the house living on the light it is named for — sustained by the western sun, quietly self-sufficient. Never panels, system sizes, savings, payback or eco-claims; no roof-panel imagery.
 - **Feng Shui is foundational:** Feng Shui ordered the plan (the design basis). Express it as principle.
@@ -60,7 +60,8 @@ Derived from the house's real materials:
 - Coastal sandstone `#C7B08C`
 - Corian “Rosemary” greige `#8C8478` (muted text)
 - Dark oak `#2C2620` (ink / body text)
-- Olive-green leather `#565B3B` (the single accent — BoConcept "Nordic Grain" Olive Green; night tone `#9CA279`)
+- Olive-green leather `#565B3B` (primary green accent — BoConcept "Nordic Grain" Olive Green; night tone `#9CA279`)
+- Rosemary-green fabric `#7C8569` (secondary green — softer, in curtains/furniture; **indicative, confirm vs the real cloth**)
 
 Do **not** introduce other accent colours (e.g. ocean blue, from an earlier draft).
 The sea is evoked through light and stone — never a blue accent.
@@ -112,9 +113,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Materials section:** restructured as “the palette drawn from the coast” — a short
   concept (the colours gathered from the sea’s light, the cliffs, the coastal herbs, the
   inland woods) then the materials as execution, grouped under those four colour-notes.
-  Curated to the seven that tell the story; the two **Corian** finishes are dropped from
-  the public wall (they stay in the memo). Real colours, enlarged and texture-ready for
-  macro close-ups later.
+  Curated to the eight that tell the story; the two **Corian** finishes are dropped from
+  the public wall (they stay in the memo). The green accent sits under the coastal-herbs
+  note in two weights — olive-green leather and rosemary-green fabric. Real colours,
+  enlarged and texture-ready for macro close-ups later.
 - **Day / Night:** **implemented.** A toggle (☀ / ☾) in the header switches the whole
   page between a day and a night mood via a `night` class on `<body>`. All colours come
   from role tokens (`--bg`, `--bg-soft`, `--ink`, `--ink-soft`, `--ink-mute`, `--accent`,
