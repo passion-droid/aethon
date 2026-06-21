@@ -91,10 +91,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   consolidate woven vs. gallery to avoid duplication.
 - **Floor plans:** a conceptual *Plan* section (ground + first-floor placeholders) now
   sits after *The architecture*; awaiting the redrawn, low-detail artwork.
-- **Credits:** a colophon before the footer credits the project team — Interior: House
-  Talks Interiors (Vicky Savva); Landscape: Antoine; Lighting: DARK Architectural
-  Lighting; Feng Shui: Cliff Tan (Dear Modern). Still awaiting the **original
-  architect's** name/studio.
+- **Credits:** **done.** The colophon credits the full team with linked company sites
+  (olive, underlined, new tab) — Original architecture: Vardastudio (Andreas Vardas);
+  Renovation: G. Patsalides Construction & Renovation (Georgios Patsalides); Interior:
+  House Talks Interiors (Vicky Savva); Landscape: Antoine Garden Design & Construction
+  (Antoine Hadjialexandrou); Lighting: DARK Architectural Lighting; Feng Shui: Dear
+  Modern (Cliff Tan).
 - **Interest form:** wired to **Brevo** — `action="https://sibforms.com/serve/YOUR_BREVO_FORM_ID"`
   (replace with the real serve ID once the Brevo form exists). Native POST, no API key
   exposed. Submissions go to a dedicated **"AETHON — Interest"** list with a hidden
@@ -109,9 +111,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 ## Decided / planned
 - **Floor plans:** included as a conceptual *Plan* section after *The architecture* —
   redrawn, atmospheric, low-detail only (placeholders in now; awaiting redrawn assets).
-- **Credits:** a minimal colophon before the footer crediting the original architect +
-  the project team (roles and names only, no bios). Project-team names are now shown
-  (cleared for credit); the **original architect** is still to be confirmed.
+- **Credits:** a minimal colophon before the footer crediting the team (roles, names,
+  linked company sites; no bios). **Complete** — original architect confirmed as
+  Vardastudio (Andreas Vardas); Renovation by G. Patsalides Construction & Renovation
+  (Georgios Patsalides) added. Heading: "The minds behind the house."
 - **The interior (withdraw):** a quiet evening/retreat beat after *The garden* — the
   upper floor withdraws; the evening-warmth line (“a low fire, the slow heat of water,
   the rooms turned down to a glow”) lives here. Mood only, never rooms or amenities.
