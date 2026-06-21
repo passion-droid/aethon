@@ -360,6 +360,8 @@
   /* ---------- interest form ---------- */
   .interest{ max-width: 46rem; margin: 0 auto; }
   form.register{ margin-top: 2.4rem; }
+  .register-done{ margin-top: 2.4rem; }
+  .register-done__line{ font-family: var(--ff-display); font-weight: 300; font-size: clamp(1.15rem, 1.7vw, 1.45rem); letter-spacing: 0.01em; color: var(--accent); margin: 0 0 0.5rem; transition: color 0.7s ease; }
   .grid-2{ display:grid; grid-template-columns:1fr; gap: 1.4rem; }
   @media (min-width: 620px){ .grid-2{ grid-template-columns: 1fr 1fr; } }
   .field{ display:flex; flex-direction:column; gap: 0.5rem; }
@@ -722,16 +724,14 @@
       <p class="measure">For those who would like to be told more, in time. No newsletters, no marketing — only a quiet word should the house ever become available.</p>
 
       <!--
-        FORM DELIVERY (Brevo): replace YOUR_BREVO_FORM_ID with your Brevo subscription
-        form's serve ID — Brevo > Contacts > Forms > (your form) > Share; the action URL
-        is https://sibforms.com/serve/<ID>. The Brevo form MUST add contacts to a
-        dedicated "AETHON — Interest" list (kept separate from the other site); the hidden
-        SOURCE field below tags them as aethon.house. Inputs map to Brevo attributes
-        FIRSTNAME / EMAIL / MESSAGE — create MESSAGE and SOURCE as text attributes and add
-        those fields to the Brevo form, or Brevo will ignore them. No API key is exposed
-        (native POST). Full setup checklist is in the commit message / PR.
+        FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.
+        Enhanced to submit via AJAX (script below) so visitors stay on the page and get an
+        inline thank-you; the plain POST is the no-JS fallback. Fields map to Brevo
+        attributes FIRSTNAME / EMAIL / MESSAGE; honeypot email_address_check; hidden
+        SOURCE=aethon.house (stored only if a SOURCE attribute exists in Brevo — otherwise
+        the dedicated "AETHON — Interest" list is what keeps these contacts separate).
       -->
-      <form class="register" action="https://sibforms.com/serve/YOUR_BREVO_FORM_ID" method="POST">
+      <form id="register-form" class="register" action="https://06e3f483.sibforms.com/serve/MUIFALZtNwrfYRie9sz1bG8YnRNZPOTrFhddbiapvcGS7lsNjlRfOOaYD3ioukppoi1DGr3ljYQtJwdAlKHyYy-8U5AKSsy7vqzWFX20XrTkJuKC7AXd28q87w-AYZVgJDxx_ZPXcCaDXOKww5fU560hl4Z_eMe5-BBqnO2y2MTsAHBLHuGK9AKJOeDDYv-9L_CU2eqH0x3jh9ytmQ==" method="POST">
         <div class="grid-2">
           <div class="field">
             <label for="name">Name</label>
@@ -756,7 +756,12 @@
         <input type="hidden" name="locale" value="en" />
         <button class="submit" type="submit">Register interest</button>
       </form>
-      <p class="form-note">Your details are kept privately and are never shared.</p>
+      <p class="form-note" id="register-note">Your details are kept privately and are never shared.</p>
+      <p class="form-note" id="register-error" hidden>That didn’t go through. Please try again in a moment.</p>
+      <div class="register-done" id="register-thanks" hidden>
+        <p class="register-done__line">Thank you. Your interest has been noted.</p>
+        <p class="form-note">We’ll be in touch only in time, and only should the house become available. If a note to confirm reaches you, a tap completes it.</p>
+      </div>
     </div>
   </section>
 
@@ -857,6 +862,39 @@
   } else {
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
   }
+
+  // Register-interest: AJAX submit to Brevo so visitors stay on the page (native POST is the no-JS fallback)
+  (function(){
+    var f = document.getElementById('register-form');
+    if (!f || !window.fetch) return;
+    f.addEventListener('submit', function(e){
+      e.preventDefault();
+      var hp = f.querySelector('[name="email_address_check"]');
+      if (hp && hp.value) return;                              // bot filled the honeypot — ignore
+      if (f.checkValidity && !f.checkValidity()){ f.reportValidity(); return; }
+      var btn = f.querySelector('button[type="submit"]');
+      var label = btn ? btn.textContent : '';
+      var err = document.getElementById('register-error');
+      if (err) err.hidden = true;
+      if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+      function finish(ok){
+        if (ok){
+          f.hidden = true;
+          var note = document.getElementById('register-note'); if (note) note.hidden = true;
+          var thanks = document.getElementById('register-thanks'); if (thanks) thanks.hidden = false;
+        } else {
+          if (btn){ btn.disabled = false; btn.textContent = label; }
+          if (err) err.hidden = false;
+        }
+      }
+      // no-cors: the cross-origin POST is delivered but the response is opaque, so treat
+      // completion as success (Brevo's confirmation email is the real receipt); only a
+      // genuine network failure rejects.
+      fetch(f.action, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(new FormData(f)) })
+        .then(function(){ finish(true); })
+        .catch(function(){ finish(false); });
+    });
+  })();
 </script>
 </body>
 </html>
