@@ -89,8 +89,6 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   *The garden* / *The interior*, the two conceptual floor plans, and the eight-slot
   *Views* gallery (in-code shot brief). Scales to ~20–30 photographs; once they land,
   consolidate woven vs. gallery to avoid duplication.
-  **Pending cleanup:** ask the owner to delete the temporary `assets-intake` branch
-  (raw originals; no GPS found, low risk — the session's git proxy could not delete it).
 - **Floor plans:** a conceptual *Plan* section (ground + first-floor placeholders) now
   sits after *The architecture*; awaiting the redrawn, low-detail artwork.
 - **Credits:** a colophon before the footer credits the project team — Interior: House
