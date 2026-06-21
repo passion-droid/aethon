@@ -410,6 +410,13 @@
     .credits-list > div{ grid-template-columns: 13rem 1fr; gap: 1.4rem; align-items: baseline; }
   }
 
+  /* gallery entry link (end of Views) + footer link */
+  .more{ margin-top: clamp(1.8rem, 3.5vw, 2.8rem); }
+  .more-link{ font-family: var(--ff-display); font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--ink-soft); border-bottom: 1px solid var(--field-line); padding-bottom: 4px; transition: color 0.25s ease, border-color 0.25s ease; }
+  .more-link:hover{ color: var(--ink); border-bottom-color: var(--accent); }
+  .more-link .arrow{ padding-left: 0.45em; }
+  .foot-meta a{ color: var(--footer-ink); text-decoration: underline; text-underline-offset: 0.18em; }
+
   /* ---------- footer ---------- */
   footer{
     padding: clamp(3rem,7vw,5rem) var(--edge);
@@ -715,6 +722,7 @@
         <div class="frame"><span class="label">The interior, lit from within</span></div>
         <div class="frame band"><span class="label">Material detail</span></div>
       </div>
+      <p class="more"><a class="more-link" href="/gallery/">A longer look — the gallery<span class="arrow" aria-hidden="true">&rarr;</span></a></p>
     </div>
   </section>
 
@@ -793,6 +801,7 @@
     <div class="foot-meta">
       AETHON House · Paphos, Cyprus<br/>
       Pronounced &ldquo;AY-thon&rdquo;<br/>
+      <a href="/gallery/">Gallery</a><br/>
       &copy; <span id="year">2026</span> · A private residence
     </div>
   </div>

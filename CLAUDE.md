@@ -141,6 +141,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   hard-coded colour will not adapt and will break the night view. The green accent is
   intentionally lighter at night so it reads against the dark. The real lighting scheme
   is warm (~3000 K), indirect and DALI-dimmable, so keep the night mood warm and soft.
+- **Gallery subpage:** a deeper photo-essay at `/gallery/` (`gallery/index.html`) —
+  self-contained, **noindex**, **not** in the main nav; reached only by understated links
+  at the end of *Views* and in the footer. Six chapters (Arrival → the ground that gathers
+  → garden & terrace → western evening → the withdraw → materials) with labeled placeholder
+  slots + a SHOT BRIEF; awaiting images via the pipeline (800w/1600w into `images/gallery/`).
+  Buildless, so its `<style>` mirrors index.html's tokens **by hand — keep them in sync**.
+  A quiet lightbox can be added once images land.
 
 ## Still open (decide together — don't act unprompted)
 - Current section order (established): Hero → The place → The architecture → The plan →

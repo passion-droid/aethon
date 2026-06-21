@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AETHON — Gallery · Paphos</title>
+<!-- This subpage is intentionally NOT indexed (reachable only via the quiet links on the main page). -->
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#E9E7E0" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+
+<style>
+  /* Tokens mirror index.html (buildless: kept in sync by hand). DAY (default) */
+  :root{
+    --bg:#E9E7E0; --bg-soft:#F0EEE8; --ink:#2C2620; --ink-soft:#4A423A; --ink-mute:#665F53;
+    --accent:#565B3B; --accent-on:#E9E7E0;
+    --rule:rgba(44,38,32,0.16); --rule-strong:rgba(44,38,32,0.28); --field-line:rgba(44,38,32,0.55);
+    --bar-bg:rgba(233,231,224,0.82);
+    --travertine:#DCCDB3; --sandstone:#C7B08C; --greige:#8C8478;
+    --frame-grad:linear-gradient(135deg, var(--travertine), var(--sandstone) 60%, var(--greige));
+    --frame-label:rgba(44,38,32,0.72);
+    --footer-bg:#2C2620; --footer-ink:#E9E7E0; --footer-mute:rgba(233,231,224,0.70);
+    --measure:60ch; --edge:clamp(1.5rem, 6vw, 7rem);
+    --ff-display:"Jost", system-ui, sans-serif; --ff-text:"Spectral", Georgia, serif;
+  }
+  /* NIGHT (warm ~3000K) */
+  body.night{
+    --bg:#1A1410; --bg-soft:#221B14; --ink:#EEE7D6; --ink-soft:#CEC4AE; --ink-mute:#9E9376;
+    --accent:#9CA279; --accent-on:#15110B;
+    --rule:rgba(238,231,214,0.14); --rule-strong:rgba(238,231,214,0.30); --field-line:rgba(238,231,214,0.40);
+    --bar-bg:rgba(26,20,16,0.82);
+    --frame-grad:linear-gradient(135deg, #3A312A, #2C2620 60%, #211A14);
+    --frame-label:rgba(238,231,214,0.70);
+    --footer-bg:#140F0A; --footer-ink:#EEE7D6; --footer-mute:rgba(238,231,214,0.62);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--ff-text); font-weight:400; line-height:1.7;
+    font-size:clamp(1.02rem, 0.6vw + 0.95rem, 1.18rem);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    transition:background-color 0.7s ease, color 0.7s ease;
+  }
+  a{ color:inherit; }
+
+  .eyebrow{ font-family:var(--ff-display); font-weight:400; font-size:0.78rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 1rem; }
+  .measure{ max-width:var(--measure); }
+  h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3.1rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 1.2rem; }
+  h2.chap-title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.5rem, 2.6vw, 2.1rem); line-height:1.25; letter-spacing:-0.01em; margin:0 0 0.8rem; }
+  p{ margin:0 0 1.4rem; max-width:var(--measure); }
+  p:last-child{ margin-bottom:0; }
+
+  /* ---------- top bar (mirrors index.html) ---------- */
+  header.bar{
+    position:fixed; inset:0 0 auto 0; display:flex; align-items:center; justify-content:space-between;
+    padding:1.1rem var(--edge); z-index:50; border-bottom:1px solid transparent;
+    transition:background 600ms ease, backdrop-filter 600ms ease, border-color 600ms ease;
+  }
+  header.bar.scrolled{ background:var(--bar-bg); backdrop-filter:blur(8px); border-bottom-color:var(--rule); }
+  .bar .mark{ font-family:var(--ff-display); font-weight:400; letter-spacing:0.34em; font-size:0.92rem; text-decoration:none; padding-left:0.34em; }
+  .bar-right{ display:flex; align-items:center; gap:clamp(1.2rem, 3vw, 2.2rem); }
+  nav.links{ display:flex; gap:clamp(1.2rem, 3vw, 2.4rem); }
+  nav.links a{ font-family:var(--ff-display); font-weight:400; font-size:0.74rem; letter-spacing:0.18em; text-transform:uppercase; text-decoration:none; color:var(--ink-soft); padding-bottom:2px; border-bottom:1px solid transparent; transition:border-color 250ms ease, color 250ms ease; }
+  nav.links a:hover{ border-bottom-color:var(--accent); color:var(--ink); }
+  @media (max-width:640px){ nav.links{ display:none; } }
+
+  .toggle{ width:2.2rem; height:2.2rem; border-radius:50%; border:1px solid var(--field-line); background:transparent; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; line-height:1; flex:none; transition:border-color 250ms ease, color 250ms ease, background-color 700ms ease; }
+  .toggle:hover{ border-color:var(--accent); color:var(--accent); }
+  .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  @media (max-width:640px){ .toggle{ width:2.75rem; height:2.75rem; } }
+
+  /* ---------- gallery layout ---------- */
+  main{ padding-top:clamp(5rem, 12vh, 8rem); }
+  .wrap{ max-width:84rem; margin:0 auto; padding:0 var(--edge); }
+  .gal-intro{ padding:clamp(2rem, 5vw, 4rem) 0 clamp(1.5rem, 4vw, 3rem); }
+  .chapter{ padding:clamp(2.5rem, 6vw, 5rem) 0; }
+  .chap-head{ margin:0 0 clamp(1.6rem, 3vw, 2.4rem); }
+  .chap-head p{ color:var(--ink-soft); }
+
+  .plates{ display:grid; grid-template-columns:1fr; gap:clamp(0.8rem, 2vw, 1.4rem); }
+  @media (min-width:680px){ .plates{ grid-template-columns:1fr 1fr; } }
+  .plate{ position:relative; display:block; width:100%; aspect-ratio:3 / 2; background:var(--frame-grad); border:1px solid var(--rule); overflow:hidden; transition:background 0.7s ease; }
+  .plate.feature{ grid-column:1 / -1; aspect-ratio:21 / 9; }
+  .plate.portrait{ aspect-ratio:4 / 5; }
+  .plate img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .plate .label{ position:absolute; inset:auto 0 0 0; padding:0.7rem 0.9rem; font-family:var(--ff-display); font-size:0.66rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--frame-label); }
+
+  /* ---------- footer (mirrors index.html) ---------- */
+  footer{ margin-top:clamp(2.5rem, 6vw, 5rem); padding:clamp(3rem,7vw,5rem) var(--edge); background:var(--footer-bg); color:var(--footer-ink); transition:background-color 0.7s ease, color 0.7s ease; }
+  .foot-inner{ max-width:84rem; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.6rem 3rem; align-items:flex-end; justify-content:space-between; }
+  .foot-mark{ font-family:var(--ff-display); font-weight:300; letter-spacing:0.34em; font-size:1.5rem; text-indent:0.34em; text-decoration:none; color:inherit; }
+  .foot-meta{ font-family:var(--ff-display); font-size:0.74rem; letter-spacing:0.14em; color:var(--footer-mute); line-height:1.9; text-transform:uppercase; }
+  .foot-meta a{ color:var(--footer-ink); text-decoration:underline; text-underline-offset:0.18em; }
+
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity 900ms ease, transform 900ms ease; }
+  .reveal.in{ opacity:1; transform:none; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    *, *::before, *::after{ transition-duration:0.001ms !important; }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="bar" id="bar">
+  <a class="mark" href="/">AETHON</a>
+  <div class="bar-right">
+    <nav class="links" aria-label="Back to the house">
+      <a href="/">&larr; The house</a>
+    </nav>
+    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to night view">
+      <span class="toggle-icon" aria-hidden="true">&#9790;</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="gal-intro reveal">
+      <p class="eyebrow">Gallery</p>
+      <h1 class="title measure">A longer look.</h1>
+      <p class="measure">More of the house, for those who would like to see it. The order follows the day — arrival, the ground that gathers, the garden, the western evening, the quiet upstairs, and the materials close to hand. Photographs in time.</p>
+    </div>
+
+    <!--
+      SHOT BRIEF / WIRING — each .plate becomes a <figure> with a <picture> once photography
+      lands. Process the raws through the images/ pipeline at 800w / 1600w (see images/README.md),
+      into images/gallery/. To wire a slot, replace its <span class="label">…</span> with, e.g.:
+
+        <picture>
+          <source type="image/avif" srcset="/images/gallery/arrival-01-800.avif 800w, /images/gallery/arrival-01-1600.avif 1600w" sizes="(min-width:680px) 42vw, 92vw">
+          <source type="image/webp" srcset="/images/gallery/arrival-01-800.webp 800w, /images/gallery/arrival-01-1600.webp 1600w" sizes="(min-width:680px) 42vw, 92vw">
+          <img src="/images/gallery/arrival-01-1600.jpg" srcset="/images/gallery/arrival-01-800.jpg 800w, /images/gallery/arrival-01-1600.jpg 1600w" sizes="(min-width:680px) 42vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt="…">
+        </picture>
+
+      (feature plates are 21:9, portrait plates 4:5, the rest 3:2 — crop to match.)
+      A quiet lightbox can be added once the images are in.
+    -->
+
+    <section class="chapter reveal" aria-labelledby="c-arrival">
+      <div class="chap-head">
+        <p class="eyebrow">I · Arrival</p>
+        <h2 class="chap-title" id="c-arrival">The approach.</h2>
+        <p class="measure">The road off the coast, the threshold, the first quiet inside. A single, soft nod to the faros that names the shore — no more than that.</p>
+      </div>
+      <div class="plates">
+        <div class="plate feature"><span class="label">Approach · the western coast</span></div>
+        <div class="plate"><span class="label">The threshold</span></div>
+        <div class="plate"><span class="label">First light in the entrance</span></div>
+      </div>
+    </section>
+
+    <section class="chapter reveal" aria-labelledby="c-ground">
+      <div class="chap-head">
+        <p class="eyebrow">II · The ground that gathers</p>
+        <h2 class="chap-title" id="c-ground">Where the house opens.</h2>
+        <p class="measure">The ground level is for gathering — living and dining open to the terrace, the pool, and the sea beyond. Bauhaus lines, kept calm.</p>
+      </div>
+      <div class="plates">
+        <div class="plate feature"><span class="label">Living, toward the sea</span></div>
+        <div class="plate"><span class="label">Dining, at the long table</span></div>
+        <div class="plate"><span class="label">The kitchen, in stone and oak</span></div>
+        <div class="plate"><span class="label">The pool, mirroring the sky</span></div>
+      </div>
+    </section>
+
+    <section class="chapter reveal" aria-labelledby="c-garden">
+      <div class="chap-head">
+        <p class="eyebrow">III · The garden and terrace</p>
+        <h2 class="chap-title" id="c-garden">The western frame.</h2>
+        <p class="measure">Garden and terrace hold the horizon — old olives and cypress verticals, warm-sand shade sails for the midday, the evening kept for the sun.</p>
+      </div>
+      <div class="plates">
+        <div class="plate portrait"><span class="label">Sculptural olives</span></div>
+        <div class="plate portrait"><span class="label">Cypress verticals</span></div>
+        <div class="plate"><span class="label">The terrace, under shade sails</span></div>
+        <div class="plate"><span class="label">The lit olive, after dark</span></div>
+      </div>
+    </section>
+
+    <section class="chapter reveal" aria-labelledby="c-evening">
+      <div class="chap-head">
+        <p class="eyebrow">IV · The western evening</p>
+        <h2 class="chap-title" id="c-evening">The house&rsquo;s moment.</h2>
+        <p class="measure">The coast faces west. Each evening the sun meets the sea, and warmth takes its place across the stone.</p>
+      </div>
+      <div class="plates">
+        <div class="plate feature"><span class="label">West elevation · sunset</span></div>
+        <div class="plate"><span class="label">The terrace, golden hour</span></div>
+        <div class="plate"><span class="label">Last light on the water</span></div>
+      </div>
+    </section>
+
+    <section class="chapter reveal" aria-labelledby="c-withdraw">
+      <div class="chap-head">
+        <p class="eyebrow">V · The withdraw</p>
+        <h2 class="chap-title" id="c-withdraw">Upstairs, turned down.</h2>
+        <p class="measure">The upper floor withdraws for rest — a low fire, the slow heat of water, the rooms turned down to a glow.</p>
+      </div>
+      <div class="plates">
+        <div class="plate"><span class="label">The stair, rising</span></div>
+        <div class="plate portrait"><span class="label">A room, toward the sea</span></div>
+        <div class="plate"><span class="label">Evening, turned to a glow</span></div>
+      </div>
+    </section>
+
+    <section class="chapter reveal" aria-labelledby="c-materials">
+      <div class="chap-head">
+        <p class="eyebrow">VI · Materials, close to hand</p>
+        <h2 class="chap-title" id="c-materials">The palette, in detail.</h2>
+        <p class="measure">The colours gathered from the place — the light of the sea, the cliffs, the coastal herbs, the inland woods — in the materials that carry them.</p>
+      </div>
+      <div class="plates">
+        <div class="plate"><span class="label">Travertine and olive leather</span></div>
+        <div class="plate"><span class="label">Iroko, close at hand</span></div>
+        <div class="plate"><span class="label">Rosemary green, in fabric</span></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div><a class="foot-mark" href="/">AETHON</a></div>
+    <div class="foot-meta">
+      AETHON House &middot; Paphos, Cyprus<br/>
+      <a href="/">&larr; Back to the house</a><br/>
+      &copy; <span id="year">2026</span> &middot; A private residence
+    </div>
+  </div>
+</footer>
+
+<script>
+  // bar turns solid after a little scroll
+  var bar = document.getElementById('bar');
+  function onScroll(){ if (window.scrollY > 40) bar.classList.add('scrolled'); else bar.classList.remove('scrolled'); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // year
+  var y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
+
+  // day / night — shares the main page's choice via the same localStorage key
+  (function(){
+    var KEY = 'aethon-theme';
+    var body = document.body;
+    var btn = document.getElementById('theme-toggle');
+    var icon = btn.querySelector('.toggle-icon');
+    function apply(theme){
+      var night = theme === 'night';
+      body.classList.toggle('night', night);
+      btn.setAttribute('aria-pressed', night ? 'true' : 'false');
+      btn.setAttribute('aria-label', night ? 'Switch to day view' : 'Switch to night view');
+      icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
+    }
+    var saved = 'day';
+    try { var s = localStorage.getItem(KEY); if (s) saved = s; } catch (e) {}
+    apply(saved);
+    btn.addEventListener('click', function(){
+      var next = body.classList.contains('night') ? 'day' : 'night';
+      apply(next);
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+    });
+  })();
+
+  // scroll reveal
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
