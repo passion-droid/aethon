@@ -28,7 +28,8 @@ impression and the mobile layout matter.
   `<style>` block), and a little JavaScript (in a `<script>` block).
 - **No build step, no framework, no dependencies, no package manager. Do not
   introduce any.** Do not split the CSS or JS into separate files unless explicitly asked.
-- Fonts load from Google Fonts at runtime (Jost + Spectral). Everything else is local.
+- Fonts are **self-hosted** (Jost + Spectral, SIL OFL) — woff2 in `/fonts/` + `@font-face`
+  in each page's `<style>`; **no third-party CDN** (GDPR: no visitor IP to Google). Local too.
 
 ## Deploying a change
 - Hosted free on **GitHub Pages**, served from the **`main`** branch, root folder.
@@ -148,6 +149,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   slots + a SHOT BRIEF; awaiting images via the pipeline (800w/1600w into `images/gallery/`).
   Buildless, so its `<style>` mirrors index.html's tokens **by hand — keep them in sync**.
   A quiet lightbox can be added once images land.
+- **Legal page:** a discreet `/legal/` (`legal/index.html`) — self-contained, mirrors the
+  design; combines the provider/imprint, a GDPR privacy notice, and a cookie/storage
+  statement. Linked from every footer (next to *Gallery*). Controller is a **company**
+  (placeholders `[ ]` for legal name / registration / VAT / address, pending the lawyer);
+  contact `aethon-house-cy@outlook.com`. The form now links the privacy notice and the
+  "never shared" line is corrected (Brevo named as processor). **No cookie banner** — only
+  the functional day/night preference is stored (self-hosted fonts removed the Google CDN
+  transfer). Indexable (unlike the gallery).
 
 ## Still open (decide together — don't act unprompted)
 - Current section order (established): Hero → The place → The architecture → The plan →
