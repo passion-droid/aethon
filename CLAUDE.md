@@ -21,7 +21,9 @@ impression and the mobile layout matter.
 - Garden and terrace are central — they frame the western horizon where the sun meets
   the sea each evening.
 - Philosophy: Bauhaus discipline · Japandi emptiness · Feng Shui balance ·
-  Mediterranean warmth. Less, but better.
+  Mediterranean warmth. Less, but better. (Public copy names only Japandi, Mediterranean
+  and Feng Shui; **Bauhaus stays an *unstated* influence** — carried by “Reduction, not
+  decoration” and “proportion rather than ornament”, never name-dropped on the site.)
 
 ## How the site is built
 - The whole site is one self-contained file: **`index.html`** — HTML, CSS (in a
@@ -52,7 +54,7 @@ impression and the mobile layout matter.
 - **One accent colour only — green:** the accent is a single colour, green, carried in two weights — olive-green leather (primary; BoConcept Nordic Grain Olive Green) and a softer **rosemary-green fabric** (in curtains and some furniture). Everything else is stone; the **UI accent (links, buttons) stays the olive**. Never a blue accent.
 - **Comfort, never gadgetry:** the smart-home (KNX), climate/cooling, outdoor misting, hearth and spa are expressed *only* abstractly, through mood and feeling (e.g. comfort "felt rather than managed"; "warmth takes its place" in the evening). Never list features, brands, specs or amenities; no security/CCTV mention at all.
 - **Solar, kept poetic:** the PV/solar appears (if at all) only as the house living on the light it is named for — sustained by the western sun, quietly self-sufficient. Never panels, system sizes, savings, payback or eco-claims; no roof-panel imagery.
-- **Feng Shui is foundational:** Feng Shui ordered the plan (the design basis). Express it as principle.
+- **Feng Shui is foundational:** Feng Shui shaped the plan from the outset — a design basis, not the only one. Express it as principle, not primacy (copy reads “shaped from the outset by Feng Shui”, never “ordered before anything else” / “above architecture”).
 
 ## Palette — use these exact values
 Derived from the house's real materials:
