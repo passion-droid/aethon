@@ -159,10 +159,17 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   "never shared" line is corrected (Brevo named as processor). **No cookie banner** — only
   the functional day/night preference is stored (self-hosted fonts removed the Google CDN
   transfer). Indexable (unlike the gallery).
+- **Renewal section:** a before/after beat after *The architecture* (`#renewal`, field-paper,
+  in the desktop nav) — ~100 words that surface the **Faros Beach Houses** origin and the
+  elevation-not-rebuild story (kept deliberately light to avoid re-listing pool/courtyard,
+  which live in *The architecture*). A matched before/after image pair awaits construction
+  photography — placeholder + shot brief now; wire via the `<picture>` pipeline into
+  `images/renewal/`. The site is marketed only post-renovation, so the copy reads in the
+  past tense (“Completed in 2026”) with no “under construction / owners away” implication.
 
 ## Still open (decide together — don't act unprompted)
-- Current section order (established): Hero → The place → The architecture → The plan →
-  The garden → The interior → Materials → Views → Register interest → Credits.
+- Current section order (established): Hero → The place → The architecture → The renewal →
+  The plan → The garden → The interior → Materials → Views → Register interest → Credits.
 - Floor plans and credits placement — **decided:** the *Plan* sits after *The
   architecture*; *Credits* is a colophon before the footer.
 - **Hero motion / a short film** — slots are now in place (a hero ambient-loop and an
