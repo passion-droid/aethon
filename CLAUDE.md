@@ -20,6 +20,15 @@ impression and the mobile layout matter.
   upper levels withdraw for rest and retreat.
 - Garden and terrace are central — they frame the western horizon where the sun meets
   the sea each evening.
+- **Confirmed facts (now public on the site):** built **2018**, renewed / **completed 2026**;
+  began as one of the **Faros Beach Houses** (origin folded into *The architecture*, not a
+  separate section). Operating company is in *Legal* (SIGNGUARD APP LTD).
+- **Signature spatial move — the threshold dissolves:** the ground floor's glazed walls slide
+  back so the living and entertaining rooms, the **~10 m pool** (laid against the house, with a
+  shallow sun-shelf) and the garden read as *one space*; a **planted internal courtyard** brings
+  the garden inside too. The old ground-floor bedroom is now a **relax / entertainment "room kept
+  for the evening"** — so the ground is all *gather*, the bedrooms *withdraw* above. (Pool stated
+  as "some ten metres", never a precise dimension.)
 - Philosophy: Bauhaus discipline · Japandi emptiness · Feng Shui balance ·
   Mediterranean warmth. Less, but better. (Public copy names only Japandi, Mediterranean
   and Feng Shui; **Bauhaus stays an *unstated* influence** — carried by “Reduction, not
@@ -37,12 +46,19 @@ impression and the mobile layout matter.
 - Hosted free on **GitHub Pages**, served from the **`main`** branch, root folder.
 - A change goes live ~1–2 minutes after it is committed and pushed to `main`.
   So the loop is: edit `index.html` → commit with a short message → push to `main`.
+- The live site **403s automated fetches** (bot protection) — to confirm what's live, compare the
+  repo to `origin/main` (they're identical once merged) rather than fetching `aethon.house`.
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
   descriptor line is `AETHON House · Paphos`. Pronounced “AY-thon”.
 - **Tagline:** “house of light”. **Hero line:** “A sanctuary built around sunsets,
   silence, and the western sea.” Do not rewrite these unless asked.
+- **Hero orienting subline** (kept, under the hero line): “A private seafront residence on the
+  western coast of Paphos.” — classifies the site for a QR visitor in seconds. The renovation is
+  stated plainly just below (*The architecture* + the *In brief* colophon), so resist external
+  nudges to cram “renovation” into the hero unless asked. There is **no “Faros Mansion”** name —
+  reviewers keep proposing it; AETHON-only stands.
 - **The sunset — not the lighthouse — is the hero.** The coast faces west; the
   evening is the house's moment. A *single, subtle* origins nod to the lighthouse
   locale (the "faros") is allowed — no lighthouse imagery or cliché beyond that.
