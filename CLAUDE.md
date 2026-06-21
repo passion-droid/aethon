@@ -159,18 +159,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   "never shared" line is corrected (Brevo named as processor). **No cookie banner** — only
   the functional day/night preference is stored (self-hosted fonts removed the Google CDN
   transfer). Indexable (unlike the gallery).
-- **Renewal section:** a short *text* beat after *The architecture* (`#renewal`, field-paper,
-  in the desktop nav) — ~100 words that surface the **Faros Beach Houses** origin and the
-  elevation-not-rebuild story (kept deliberately light to avoid re-listing pool/courtyard,
-  which live in *The architecture*). **Text only — no before/after imagery** (no “before”
-  photographs of the original house exist); it references the Faros origin and the renewal
-  in words. New photography belongs in *Views* and the section plates, not here. The site is
-  marketed only post-renovation, so the copy reads in the past tense (“Completed in 2026”)
-  with no “under construction / owners away” implication.
+- **Renewal / origin (folded in):** the renovation story lives **inside *The architecture*** —
+  no separate section, not in the nav. Its opening names the **Faros Beach Houses** origin and
+  closes “Completed in 2026 … the same house, quietly raised.” No before/after imagery (no
+  “before” photographs of the original house exist). The site is marketed only post-renovation,
+  so it reads in the past tense, with no “under construction / owners away” implication.
 
 ## Still open (decide together — don't act unprompted)
-- Current section order (established): Hero → The place → The architecture → The renewal →
-  The plan → The garden → The interior → Materials → Views → Register interest → Credits.
+- Current section order (established): Hero → The place → The architecture → The plan →
+  The garden → The interior → Materials → Views → Register interest → Credits.
 - Floor plans and credits placement — **decided:** the *Plan* sits after *The
   architecture*; *Credits* is a colophon before the footer.
 - **Hero motion / a short film** — slots are now in place (a hero ambient-loop and an
