@@ -159,6 +159,11 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   "never shared" line is corrected (Brevo named as processor). **No cookie banner** — only
   the functional day/night preference is stored (self-hosted fonts removed the Google CDN
   transfer). Indexable (unlike the gallery).
+- **Renewal / origin (folded in):** the renovation story lives **inside *The architecture*** —
+  no separate section, not in the nav. Its opening names the **Faros Beach Houses** origin and
+  closes “Completed in 2026 … the same house, quietly raised.” No before/after imagery (no
+  “before” photographs of the original house exist). The site is marketed only post-renovation,
+  so it reads in the past tense, with no “under construction / owners away” implication.
 
 ## Still open (decide together — don't act unprompted)
 - Current section order (established): Hero → The place → The architecture → The plan →
