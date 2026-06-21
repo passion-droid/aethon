@@ -89,11 +89,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   are wired (48 assets in `images/materials/`, brand colour kept as a load-time tint).
   Still placeholders, awaiting real images via the same pipeline: the hero ambient loop,
   the establishing-film plate in *The place*, companion images under *The architecture* /
-  *The garden* / *The interior*, the two conceptual floor plans, and the eight-slot
-  *Views* gallery (in-code shot brief). Scales to ~20–30 photographs; once they land,
+  *The garden* / *The interior*, and the eight-slot *Views* gallery (in-code shot brief). Scales to ~20–30 photographs; once they land,
   consolidate woven vs. gallery to avoid duplication.
-- **Floor plans:** a conceptual *Plan* section (ground + first-floor placeholders) now
-  sits after *The architecture*; awaiting the redrawn, low-detail artwork.
+- **Floor plans: done.** The *Plan* section (after *The architecture*) shows the two floor
+  renders, **muted into the stone/olive palette** (global desaturation + the pool's blue
+  specifically collapsed to pale water, per the no-blue guardrail), processed via the
+  pipeline into `images/plan/` (AVIF/WebP/JPEG, 800/1600w, full √2 ratio, no crop). Keep
+  them muted — don't reinstate the saturated render. Raw HD originals shouldn't stay in the
+  repo (see `images/README.md`).
 - **Credits:** **done.** The colophon credits the full team with linked company sites
   (olive, underlined, new tab) — Original architecture: Vardastudio (Andreas Vardas);
   Renovation: G. Patsalides Construction & Renovation (Georgios Patsalides); Interior:
