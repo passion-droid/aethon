@@ -278,6 +278,11 @@
     font-size: clamp(1.3rem, 3.4vw, 2.15rem); line-height: 1.35;
     letter-spacing: -0.005em; color: var(--ink-soft); max-width: 28ch; margin: 0;
   }
+  .hero-orient{
+    font-family: var(--ff-display); font-weight: 400;
+    font-size: clamp(0.82rem, 1.05vw, 0.95rem); letter-spacing: 0.04em;
+    color: var(--ink-mute); max-width: 42ch; margin: 1.8rem 0 0;
+  }
   .scroll-cue{
     position:absolute; left: var(--edge); bottom: clamp(1.6rem,4vw,2.6rem); z-index:1;
     font-family: var(--ff-display); font-size: 0.66rem; letter-spacing: 0.28em;
@@ -406,6 +411,7 @@
 
   /* ---------- credits (colophon) ---------- */
   .credits-list{ margin-top: 2.4rem; max-width: var(--measure); }
+  .credits-sublabel{ margin-top: 3.2rem; }
   .credits-list > div{
     display:grid; grid-template-columns: 1fr; gap: 0.15rem;
     padding: 0.9rem 0; border-top: 1px solid var(--rule);
@@ -499,6 +505,7 @@
       <h1 class="wordmark">AETHON</h1>
       <p class="tagline">house of light</p>
       <p class="hero-line">A sanctuary built around sunsets, silence, and the western sea.</p>
+      <p class="hero-orient">A private seafront residence on the western coast of Paphos.</p>
     </div>
     <div class="hero-media"><span class="play" aria-hidden="true">&#9654;</span>Ambient loop · forthcoming</div>
     <a class="scroll-cue" href="#place"><span class="stroke"></span>Descend</a>
@@ -532,7 +539,7 @@
       <div>
         <p>AETHON is a quiet elevation of an existing seafront residence — not a reinvention. The original geometry is kept and honoured; the material and spatial language is refined toward stillness.</p>
         <p>The discipline of Bauhaus, the emptiness of Japandi, and the warmth of Mediterranean light — held in proportion rather than ornament. Light here is treated as a material in its own right: warm, indirect, and dimmed low as the day turns, so the house changes character with the hour. Warmth, air and shade are tuned quietly and out of sight; comfort here is felt rather than managed.</p>
-        <p>The plan is ordered by Feng Shui before anything else, so its calm is structural rather than styled. The ground opens to gather — living, dining, the pool and garden, the sea beyond; above, the rooms grow still. Surfaces stay few and honest: marble underfoot, travertine and coastal sandstone, dark oak, and a single green — olive leather and rosemary cloth.</p>
+        <p>The plan is ordered by Feng Shui before anything else, so its calm is structural rather than styled. The ground opens to gather — living, dining, the pool and garden, the sea beyond; above, the rooms grow still. Surfaces stay few and honest — chosen to age with the coast rather than to decorate.</p>
         <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
       </div>
     </div>
@@ -547,6 +554,7 @@
       <p class="eyebrow">The plan</p>
       <h2 class="section-title measure">Gather below, withdraw above.</h2>
       <p class="measure">Two conceptual views — redrawn for atmosphere, not measurement. Forthcoming.</p>
+      <p class="measure">Below, the house gathers: living, dining and kitchen open in a single line to the terrace, the pool and the garden, and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller as the house rises.</p>
       <!-- Placeholders sized as the redrawn, low-detail plans will sit (no dimensions):
            ground floor and first floor, side by side. -->
       <div class="frames">
@@ -582,7 +590,7 @@
         <h2 class="section-title">Above, the house withdraws.</h2>
       </div>
       <div>
-        <p>Where the ground opens to gather, the floor above withdraws. The rooms grow quieter as the house rises — kept for rest and retreat, and for the slow end of the day.</p>
+        <p>Where the ground opens to gather, the floor above withdraws. The rooms grow quieter as the house rises — kept for rest and retreat, and for the slow end of the day. They are made for restoration rather than display: calm, low-lit, and finished in materials that live easily by the sea.</p>
         <p>When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow. Lit softly from within, the house keeps its own evening: warm, unhurried, still.</p>
       </div>
     </div>
@@ -595,7 +603,7 @@
   <section id="materials" class="field-paper">
     <div class="materials reveal">
       <p class="eyebrow">The material language</p>
-      <h2 class="section-title measure">The palette is drawn from the coast.</h2>
+      <h2 class="section-title measure">The palette is drawn from this coast.</h2>
       <p class="measure">Nothing is chosen for its own sake. The colours are gathered from the place — the light of the sea, the sandstone of the cliffs, the green of the coastal herbs, the brown of the inland woods. The house answers each in material.</p>
 
       <div class="palette">
@@ -743,7 +751,7 @@
     <div class="interest reveal">
       <p class="eyebrow">Register interest</p>
       <h2 class="section-title">A short, private list.</h2>
-      <p class="measure">For those who would like to be told more, in time. No newsletters, no marketing — only a quiet word should the house ever become available.</p>
+      <p class="measure">The residence is privately owned and not on the market today — this is not a listing. Should that ever change, a short and private list is kept, for those who would like to be told first. No newsletters, no marketing — only a quiet word, in time.</p>
 
       <!--
         FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.
@@ -790,8 +798,15 @@
   <!-- CREDITS (colophon) -->
   <section id="credits">
     <div class="interest reveal">
-      <p class="eyebrow">Credits</p>
-      <h2 class="section-title">The minds behind the house.</h2>
+      <p class="eyebrow">In brief</p>
+      <h2 class="section-title">The house, plainly.</h2>
+      <dl class="credits-list">
+        <div><dt>Location</dt><dd>Faros coast, Paphos, Cyprus</dd></div>
+        <div><dt>Type</dt><dd>Private residence — a renovation, not a new build</dd></div>
+        <div><dt>Built</dt><dd>2018</dd></div>
+        <div><dt>Renewed</dt><dd>2026</dd></div>
+      </dl>
+      <p class="eyebrow credits-sublabel">The minds behind the house</p>
       <dl class="credits-list">
         <div><dt>Original architecture</dt><dd><a href="https://vardastudio.com/" target="_blank" rel="noopener">Vardastudio</a> — Andreas Vardas</dd></div>
         <div><dt>Renovation</dt><dd><a href="https://www.facebook.com/gpatsalidesconstructionrenovationltd/" target="_blank" rel="noopener">G. Patsalides Construction &amp; Renovation</a> — Georgios Patsalides</dd></div>
