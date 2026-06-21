@@ -722,29 +722,38 @@
       <p class="measure">For those who would like to be told more, in time. No newsletters, no marketing — only a quiet word should the house ever become available.</p>
 
       <!--
-        FORM DELIVERY: this form needs a free endpoint to actually send emails.
-        Replace YOUR_FORM_ID below with the ID from a free Formspree form (formspree.io).
-        We will set this up as a separate step.
+        FORM DELIVERY (Brevo): replace YOUR_BREVO_FORM_ID with your Brevo subscription
+        form's serve ID — Brevo > Contacts > Forms > (your form) > Share; the action URL
+        is https://sibforms.com/serve/<ID>. The Brevo form MUST add contacts to a
+        dedicated "AETHON — Interest" list (kept separate from the other site); the hidden
+        SOURCE field below tags them as aethon.house. Inputs map to Brevo attributes
+        FIRSTNAME / EMAIL / MESSAGE — create MESSAGE and SOURCE as text attributes and add
+        those fields to the Brevo form, or Brevo will ignore them. No API key is exposed
+        (native POST). Full setup checklist is in the commit message / PR.
       -->
-      <form class="register" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <form class="register" action="https://sibforms.com/serve/YOUR_BREVO_FORM_ID" method="POST">
         <div class="grid-2">
           <div class="field">
             <label for="name">Name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required />
+            <input id="name" name="FIRSTNAME" type="text" autocomplete="name" required />
           </div>
           <div class="field">
             <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required />
+            <input id="email" name="EMAIL" type="email" autocomplete="email" required />
           </div>
           <div class="field full">
             <label for="message">A note (optional)</label>
-            <textarea id="message" name="message" rows="3"></textarea>
+            <textarea id="message" name="MESSAGE" rows="3"></textarea>
           </div>
         </div>
+        <!-- tags every AETHON registrant so they stay distinct from the other site's contacts -->
+        <input type="hidden" name="SOURCE" value="aethon.house" />
+        <!-- Brevo anti-bot honeypot: must remain empty -->
         <div class="hp" aria-hidden="true">
           <label for="company">Company</label>
-          <input id="company" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+          <input id="company" name="email_address_check" type="text" tabindex="-1" autocomplete="off" />
         </div>
+        <input type="hidden" name="locale" value="en" />
         <button class="submit" type="submit">Register interest</button>
       </form>
       <p class="form-note">Your details are kept privately and are never shared.</p>

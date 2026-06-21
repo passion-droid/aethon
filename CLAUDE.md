@@ -95,8 +95,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   Talks Interiors (Vicky Savva); Landscape: Antoine; Lighting: DARK Architectural
   Lighting; Feng Shui: Cliff Tan (Dear Modern). Still awaiting the **original
   architect's** name/studio.
-- **Interest form:** `index.html` contains `action="https://formspree.io/f/YOUR_FORM_ID"`
-  — replace with a real Formspree ID so the form actually delivers.
+- **Interest form:** wired to **Brevo** — `action="https://sibforms.com/serve/YOUR_BREVO_FORM_ID"`
+  (replace with the real serve ID once the Brevo form exists). Native POST, no API key
+  exposed. Submissions go to a dedicated **"AETHON — Interest"** list with a hidden
+  `SOURCE=aethon.house` tag, kept separate from the owner's *other* Brevo site; visible
+  fields map to attributes `FIRSTNAME` / `EMAIL` / `MESSAGE`, honeypot `email_address_check`.
+  Note Brevo's contact DB is global (unique by email) — separate AETHON interest by **list
+  membership + SOURCE**, not separate databases. Optional polish: AJAX submit to stay
+  on-page, and a Brevo custom redirect back to the site.
 - **Domain:** `aethon.house` is connected (a `CNAME` file is on `main`); the site uses it
   as the canonical / Open Graph URL.
 
