@@ -333,6 +333,10 @@
   @media (min-width: 760px){
     .frames{ grid-template-columns: 1fr 1fr; }
     .frame.wide, .frame.band{ grid-column: 1 / -1; }
+  .pf{ margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  .frame.plan{ aspect-ratio: 1600 / 1132; background: var(--bg-soft); }
+  .frame .shot{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .pf figcaption{ font-family: var(--ff-display); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute); }
   }
   .frame{
     position: relative; aspect-ratio: 16 / 10; overflow: hidden;
@@ -553,13 +557,30 @@
     <div class="gallery reveal">
       <p class="eyebrow">The plan</p>
       <h2 class="section-title measure">Gather below, withdraw above.</h2>
-      <p class="measure">Two conceptual views — redrawn for atmosphere, not measurement. Forthcoming.</p>
+      <p class="measure">Two conceptual views — kept soft, for atmosphere rather than measurement.</p>
       <p class="measure">Below, the house gathers: living, dining, kitchen and a room kept for the evening open in a single line to the terrace, the pool and the garden, and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller as the house rises.</p>
-      <!-- Placeholders sized as the redrawn, low-detail plans will sit (no dimensions):
-           ground floor and first floor, side by side. -->
+      <!-- Muted, low-detail floor renders (no dimensions); processed via images/README.md into images/plan/. -->
       <div class="frames">
-        <div class="frame"><span class="label">Ground floor · gather</span></div>
-        <div class="frame"><span class="label">First floor · withdraw</span></div>
+        <figure class="pf">
+          <div class="frame plan">
+            <picture>
+              <source type="image/avif" srcset="images/plan/ground-floor-800.avif 800w, images/plan/ground-floor-1600.avif 1600w" sizes="(min-width:760px) 40vw, 92vw">
+              <source type="image/webp" srcset="images/plan/ground-floor-800.webp 800w, images/plan/ground-floor-1600.webp 1600w" sizes="(min-width:760px) 40vw, 92vw">
+              <img class="shot" src="images/plan/ground-floor-1600.jpg" srcset="images/plan/ground-floor-800.jpg 800w, images/plan/ground-floor-1600.jpg 1600w" sizes="(min-width:760px) 40vw, 92vw" width="1600" height="1132" loading="lazy" decoding="async" alt="Ground floor — living, dining and kitchen opening to the terrace, the pool and the garden">
+            </picture>
+          </div>
+          <figcaption>Ground floor &middot; gather</figcaption>
+        </figure>
+        <figure class="pf">
+          <div class="frame plan">
+            <picture>
+              <source type="image/avif" srcset="images/plan/first-floor-800.avif 800w, images/plan/first-floor-1600.avif 1600w" sizes="(min-width:760px) 40vw, 92vw">
+              <source type="image/webp" srcset="images/plan/first-floor-800.webp 800w, images/plan/first-floor-1600.webp 1600w" sizes="(min-width:760px) 40vw, 92vw">
+              <img class="shot" src="images/plan/first-floor-1600.jpg" srcset="images/plan/first-floor-800.jpg 800w, images/plan/first-floor-1600.jpg 1600w" sizes="(min-width:760px) 40vw, 92vw" width="1600" height="1132" loading="lazy" decoding="async" alt="First floor — bedrooms and quiet rooms set above for rest">
+            </picture>
+          </div>
+          <figcaption>First floor &middot; withdraw</figcaption>
+        </figure>
       </div>
     </div>
   </section>
