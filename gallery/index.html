@@ -95,6 +95,15 @@
   .plate.portrait{ aspect-ratio:4 / 5; }
   .plate img{ width:100%; height:100%; object-fit:cover; display:block; }
   .plate .label{ position:absolute; inset:auto 0 0 0; padding:0.7rem 0.9rem; font-family:var(--ff-display); font-size:0.66rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--frame-label); }
+  /* Daylight ↔ Afterglow paired imagery — drop a day + warm-evening capture of the SAME viewpoint
+     into .shot-pair; the evening layer crossfades in under .night. See docs/imagery-brief.md. */
+  .shot-pair{ position:relative; }
+  .shot-pair .shot-night{ position:absolute; inset:0; opacity:0; transition:opacity 800ms ease; }
+  body.night .shot-pair .shot-night{ opacity:1; }
+  .shot-pair .shot-day{ transition:opacity 800ms ease; }
+  body.night .shot-pair .shot-day{ opacity:0; }
+  .shot-pair img{ display:block; width:100%; height:100%; object-fit:cover; }
+  @media (prefers-reduced-motion: reduce){ .shot-pair .shot-day, .shot-pair .shot-night{ transition:none; } }
 
   /* ---------- footer (mirrors index.html) ---------- */
   footer{ margin-top:clamp(2.5rem, 6vw, 5rem); padding:clamp(3rem,7vw,5rem) var(--edge); background:var(--footer-bg); color:var(--footer-ink); transition:background-color 0.7s ease, color 0.7s ease; }
@@ -114,6 +123,7 @@
 </head>
 
 <body>
+<script>try{if(localStorage.getItem('aethon-theme')==='night')document.body.classList.add('night');}catch(e){}</script>
 
 <header class="bar" id="bar">
   <a class="mark" href="/">AETHON</a>
@@ -121,7 +131,7 @@
     <nav class="links" aria-label="Back to the house">
       <a href="/">&larr; The house</a>
     </nav>
-    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to night view">
+    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to the afterglow (evening) view">
       <span class="toggle-icon" aria-hidden="true">&#9790;</span>
     </button>
   </div>
@@ -265,7 +275,7 @@
       var night = theme === 'night';
       body.classList.toggle('night', night);
       btn.setAttribute('aria-pressed', night ? 'true' : 'false');
-      btn.setAttribute('aria-label', night ? 'Switch to day view' : 'Switch to night view');
+      btn.setAttribute('aria-label', night ? 'Switch to the daylight view' : 'Switch to the afterglow (evening) view');
       icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
     }
     var saved = 'day';

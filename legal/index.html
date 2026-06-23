@@ -78,6 +78,7 @@
 </head>
 
 <body>
+<script>try{if(localStorage.getItem('aethon-theme')==='night')document.body.classList.add('night');}catch(e){}</script>
 
 <header class="bar" id="bar">
   <a class="mark" href="/">AETHON</a>
@@ -85,7 +86,7 @@
     <nav class="links" aria-label="Back to the house">
       <a href="/">&larr; The house</a>
     </nav>
-    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to night view">
+    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to the afterglow (evening) view">
       <span class="toggle-icon" aria-hidden="true">&#9790;</span>
     </button>
   </div>
@@ -172,7 +173,7 @@
       var night = theme === 'night';
       body.classList.toggle('night', night);
       btn.setAttribute('aria-pressed', night ? 'true' : 'false');
-      btn.setAttribute('aria-label', night ? 'Switch to day view' : 'Switch to night view');
+      btn.setAttribute('aria-label', night ? 'Switch to the daylight view' : 'Switch to the afterglow (evening) view');
       icon.innerHTML = night ? '&#9728;' : '&#9790;';
     }
     var saved = 'day';
