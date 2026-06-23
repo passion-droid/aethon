@@ -164,6 +164,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   hard-coded colour will not adapt and will break the night view. The green accent is
   intentionally lighter at night so it reads against the dark. The real lighting scheme
   is warm (~3000 K), indirect and DALI-dimmable, so keep the night mood warm and soft.
+  Framed as **Daylight / Afterglow** (the *afterglow* = the warm hour after sunset — **never
+  blue**; aria-labels say so, ☀/☾ icons kept). A no-flash init `<script>` at the top of each
+  `<body>` applies the saved theme before paint. A **`.shot-pair`** crossfade scaffold is in
+  place (a day + warm-evening capture of the *same* viewpoint; the evening layer fades in under
+  `.night`) for when paired photography lands — see **`docs/imagery-brief.md`** (the full
+  photo/film brief). Plan: swap only the hero + *Views*/gallery; materials, plans, credits and
+  the form stay static.
 - **Gallery subpage:** a deeper photo-essay at `/gallery/` (`gallery/index.html`) —
   self-contained, **noindex**, **not** in the main nav; reached only by understated links
   at the end of *Views* and in the footer. Six chapters (Arrival → the ground that gathers
