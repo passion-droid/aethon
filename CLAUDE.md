@@ -42,6 +42,13 @@ impression and the mobile layout matter.
 - Fonts are **self-hosted** (Jost + Spectral, SIL OFL) — 6 woff2 in `/fonts/` (**latin subset
   only**; the copy is basic-Latin — add latin-ext only if accented text appears) + `@font-face`
   in each page's `<style>`; **no third-party CDN** (GDPR: no visitor IP to Google). Local too.
+- **Mobile is the primary (QR) audience — mobile-first.** Fluid `clamp()` type, `100svh` hero,
+  ~44px touch targets, 16px inputs (no iOS zoom), single-column stacking. Desktop shows the
+  inline nav links; **below 640px they are replaced by a quiet full-screen overlay menu**
+  (`#menu` + `#menu-btn` → "Menu"/"Close"; Esc to close, scroll-lock, background set `inert`,
+  closes on link tap). The hero is a **still on mobile** (ambient motion/video reserved for
+  larger/wifi); the hero light-drift is disabled < 640px. When paired photos land, limit the
+  `.shot-pair` day↔afterglow swap to the hero on mobile (cellular data).
 
 ## Deploying a change
 - Hosted free on **GitHub Pages**, served from the **`main`** branch, root folder.
