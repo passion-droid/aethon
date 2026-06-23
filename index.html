@@ -216,6 +216,40 @@
   /* comfortable touch target on phones (QR arrival) */
   @media (max-width: 640px){ .toggle{ width: 2.75rem; height: 2.75rem; } }
 
+  /* mobile overlay menu — replaces the nav links that are hidden < 640px */
+  .menu-btn{
+    display: none;
+    font-family: var(--ff-display); font-weight: 400; font-size: 0.74rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+    background: transparent; border: 0; cursor: pointer; padding: 1rem 0.3rem; line-height: 1;
+    transition: color 250ms ease;
+  }
+  .menu-btn:hover{ color: var(--ink); }
+  .menu-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+  .menu{
+    position: fixed; inset: 0; z-index: 40; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity 450ms ease, visibility 450ms ease, background-color 0.7s ease;
+  }
+  body.menu-open .menu{ opacity: 1; visibility: visible; }
+  .menu-list{ list-style: none; margin: 0; padding: 0 var(--edge); display: flex; flex-direction: column; gap: clamp(1.3rem, 4.5vh, 2.4rem); text-align: center; }
+  .menu-list a{
+    font-family: var(--ff-display); font-weight: 300;
+    font-size: clamp(1.5rem, 7vw, 2.1rem); letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none; display: inline-block; padding: 0.35rem 0.7rem;
+    transition: color 250ms ease;
+  }
+  .menu-list a:hover{ color: var(--accent); }
+  .menu-list .menu-cta{ color: var(--accent); }
+  @media (min-width: 641px){ .menu{ display: none; } }     /* desktop never shows the overlay */
+  @media (max-width: 640px){
+    .menu-btn{ display: inline-block; }
+    .hero-media{ display: none; }        /* hero is a still on mobile — no loop affordance */
+    .hero::before{ animation: none; }    /* quiet the light-drift on phones (battery) */
+    .more-link, .foot-meta a, .credits-list dd a{ display: inline-block; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+  }
+
   /* ---------- hero: light is the subject ---------- */
   .hero{
     position: relative;
@@ -490,8 +524,19 @@
     <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to the afterglow (evening) view">
       <span class="toggle-icon" aria-hidden="true">&#9790;</span>
     </button>
+    <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
 </header>
+
+<nav id="menu" class="menu" aria-label="Menu" aria-hidden="true">
+  <ul class="menu-list">
+    <li><a href="#place">Place</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#garden">Garden</a></li>
+    <li><a href="#interior">Interior</a></li>
+    <li><a href="#interest" class="menu-cta">Register interest</a></li>
+  </ul>
+</nav>
 
 <main id="top">
 
@@ -916,6 +961,30 @@
       apply(next);
       try { localStorage.setItem(KEY, next); } catch (e) {}
     });
+  })();
+
+  // Mobile menu (overlay)
+  (function(){
+    var btn = document.getElementById('menu-btn');
+    var menu = document.getElementById('menu');
+    if (!btn || !menu) return;
+    var body = document.body;
+    var main = document.getElementById('top');
+    var foot = document.querySelector('footer');
+    function setOpen(open){
+      body.classList.toggle('menu-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? 'Close' : 'Menu';
+      menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+      body.style.overflow = open ? 'hidden' : '';
+      if (main) main.inert = open;
+      if (foot) foot.inert = open;
+      if (open){ var a = menu.querySelector('a'); if (a) a.focus(); }
+    }
+    btn.addEventListener('click', function(){ setOpen(!body.classList.contains('menu-open')); });
+    menu.addEventListener('click', function(e){ if (e.target.closest('a')) setOpen(false); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && body.classList.contains('menu-open')){ setOpen(false); btn.focus(); } });
+    window.addEventListener('resize', function(){ if (window.innerWidth > 640 && body.classList.contains('menu-open')) setOpen(false); }, { passive: true });
   })();
 
   // Scroll reveal
