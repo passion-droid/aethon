@@ -119,8 +119,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   House Talks Interiors (Vicky Savva); Landscape: Antoine Garden Design & Construction
   (Antoine Hadjialexandrou); Lighting: DARK Architectural Lighting; Feng Shui: Dear
   Modern (Cliff Tan).
-- **Interest form:** wired to **Brevo** — `action="https://sibforms.com/serve/YOUR_BREVO_FORM_ID"`
-  (replace with the real serve ID once the Brevo form exists). Native POST, no API key
+- **Interest form:** wired to **Brevo** — the live subscription-form serve URL is in
+  `index.html` (`…sibforms.com/serve/MUIF…`, the AETHON form); native POST, no API key
   exposed. Submissions go to a dedicated **"AETHON — Interest"** list with a hidden
   `SOURCE=aethon.house` tag, kept separate from the owner's *other* Brevo site; visible
   fields map to attributes `FIRSTNAME` / `EMAIL` / `MESSAGE`, honeypot `email_address_check`.
@@ -131,8 +131,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   as the canonical / Open Graph URL.
 
 ## Decided / planned
-- **Floor plans:** included as a conceptual *Plan* section after *The architecture* —
-  redrawn, atmospheric, low-detail only (placeholders in now; awaiting redrawn assets).
+- **Floor plans:** a conceptual *Plan* section after *The architecture* — atmospheric,
+  low-detail only. **Done** — the two muted floor renders are wired (see *Known TODOs*).
 - **Credits:** a minimal colophon before the footer crediting the team (roles, names,
   linked company sites; no bios). **Complete** — original architect confirmed as
   Vardastudio (Andreas Vardas); Renovation by G. Patsalides Construction & Renovation
