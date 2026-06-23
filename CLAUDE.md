@@ -39,7 +39,8 @@ impression and the mobile layout matter.
   `<style>` block), and a little JavaScript (in a `<script>` block).
 - **No build step, no framework, no dependencies, no package manager. Do not
   introduce any.** Do not split the CSS or JS into separate files unless explicitly asked.
-- Fonts are **self-hosted** (Jost + Spectral, SIL OFL) — woff2 in `/fonts/` + `@font-face`
+- Fonts are **self-hosted** (Jost + Spectral, SIL OFL) — 6 woff2 in `/fonts/` (**latin subset
+  only**; the copy is basic-Latin — add latin-ext only if accented text appears) + `@font-face`
   in each page's `<style>`; **no third-party CDN** (GDPR: no visitor IP to Google). Local too.
 
 ## Deploying a change
