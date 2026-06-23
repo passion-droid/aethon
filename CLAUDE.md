@@ -114,7 +114,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   Still placeholders, awaiting real images via the same pipeline: the hero ambient loop,
   the establishing-film plate in *The place*, companion images under *The architecture* /
   *The garden* / *The interior*, and the eight-slot *Views* gallery (in-code shot brief). Scales to ~20–30 photographs; once they land,
-  consolidate woven vs. gallery to avoid duplication.
+  consolidate woven vs. gallery to avoid duplication. **The full brief is `docs/imagery-brief.md`**
+  (project background + tiered shot list). Key viewpoints must be shot as **matched Daylight +
+  warm-evening pairs (same locked-off viewpoint)** for the `.shot-pair` crossfade — warm afterglow,
+  **never blue**; strip GPS/EXIF; deliver masters (the pipeline makes the web assets).
 - **Floor plans: done.** The *Plan* section (after *The architecture*) shows the two floor
   renders, **muted into the stone/olive palette** (global desaturation + the pool's blue
   specifically collapsed to pale water, per the no-blue guardrail), processed via the
@@ -204,6 +207,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   The garden → The interior → Materials → Views → Register interest → Credits.
 - Floor plans and credits placement — **decided:** the *Plan* sits after *The
   architecture*; *Credits* is a colophon before the footer.
-- **Hero motion / a short film** — slots are now in place (a hero ambient-loop and an
-  establishing-film plate in *The place*, each marked with a ▶ affordance); whether to
-  actually commission them is pending footage and the photo/video brief.
+- **Hero motion / a short film** — slots in place (a hero ambient-loop and an establishing-film
+  plate in *The place*); commissioning is pending footage. Device policy: the **hero is a still
+  on mobile** — any motion/video is desktop/wifi only. Brief: `docs/imagery-brief.md`.
+- **Next up (the real frontier): photography.** Text + structure + responsive UX are
+  essentially complete; the remaining quality is visual — commission the matched Daylight/
+  Afterglow shoot per `docs/imagery-brief.md`, then drop pairs into `.shot-pair`, wire the
+  woven plates + *Views* + `/gallery/`, and add the lightbox.
