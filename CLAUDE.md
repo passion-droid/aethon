@@ -39,9 +39,12 @@ impression and the mobile layout matter.
   `<style>` block), and a little JavaScript (in a `<script>` block).
 - **No build step, no framework, no dependencies, no package manager. Do not
   introduce any.** Do not split the CSS or JS into separate files unless explicitly asked.
-- Fonts are **self-hosted** (Jost + Spectral, SIL OFL) — 6 woff2 in `/fonts/` (**latin subset
+- Fonts are **self-hosted** (Jost + Spectral, SIL OFL) — 4 woff2 in `/fonts/` (**latin subset
   only**; the copy is basic-Latin — add latin-ext only if accented text appears) + `@font-face`
   in each page's `<style>`; **no third-party CDN** (GDPR: no visitor IP to Google). Local too.
+  **Jost is a variable font** (`jost-lt.woff2`, wght 100–900) served via one `@font-face
+  { font-weight: 100 900 }` — it covers 300/400/500 in a single download; don't re-split it
+  into per-weight files (they'd be identical and fetched 3×). Spectral is 3 static faces.
 - **Mobile is the primary (QR) audience — mobile-first.** Fluid `clamp()` type, `100svh` hero,
   ~44px touch targets, 16px inputs (no iOS zoom), single-column stacking. Desktop shows the
   inline nav links; **below 640px they are replaced by a quiet full-screen overlay menu**
