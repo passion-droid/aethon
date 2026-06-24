@@ -143,6 +143,22 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   on-page, and a Brevo custom redirect back to the site.
 - **Domain:** `aethon.house` is connected (a `CNAME` file is on `main`); the site uses it
   as the canonical / Open Graph URL.
+- **Icons / brand mark: open.** No `favicon`, `apple-touch-icon` or `web-manifest` ship yet —
+  **awaiting the designer's brand-mark assets** (delivering soon). When they land, add a small
+  favicon set + `apple-touch-icon` + a minimal manifest (self-hosted, no CDN), and wire the
+  mark into the header if wanted. The header wordmark already has a 44px tap target reserved.
+- **`og:image`: open (todo).** No social-share image yet — **awaiting photography** (needs a
+  1200×630 master, warm/afterglow register, never blue; run through the image pipeline). Until
+  then the Open Graph card has no image. og:url / site_name / locale / description are already set.
+- **Deep audit — done (PR #34).** Code-only hardening across all three pages: `theme-color`
+  follows the Daylight/Afterglow toggle; mobile overlay menu got a focus trap + iOS-safe
+  `position:fixed` scroll-lock (wordmark set `inert` too); `<noscript>` `.reveal` fallback;
+  `overflow-x: clip`; `section{ scroll-margin-top }`; 44px wordmark tap target; `<360px` header
+  tracking. **Optional polish still open:** `size-adjust`/font-metric overrides to trim CLS on
+  the font swap; gating `.reveal`'s initial hidden state behind a `js` class so non-JS *and*
+  slow-JS never flash hidden. **Held for sign-off:** a short list of voice/copy refinements
+  (warmth-word thinning, the dense Nea Paphos sentence, gallery↔index de-duplication) — present
+  to the owner before shipping; never auto-apply voice changes.
 
 ## Decided / planned
 - **Floor plans:** a conceptual *Plan* section after *The architecture* — atmospheric,
