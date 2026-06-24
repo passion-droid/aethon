@@ -113,7 +113,7 @@
 
   *{ box-sizing: border-box; }
 
-  html{ scroll-behavior: smooth; }
+  html{ scroll-behavior: smooth; overflow-x: clip; }
   @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
 
   body{
@@ -183,6 +183,7 @@
     font-size: 0.92rem;
     text-decoration: none;
     padding-left: 0.34em;
+    display: inline-flex; align-items: center; min-height: 44px;
   }
   .bar-right{ display:flex; align-items:center; gap: clamp(1.2rem, 3vw, 2.2rem); }
   nav.links{ display:flex; gap: clamp(1.2rem, 3vw, 2.4rem); }
@@ -320,7 +321,8 @@
   .scroll-cue .stroke{ width: 2.4rem; height:1px; background: var(--ink-mute); display:inline-block; }
 
   /* ---------- generic section ---------- */
-  section{ padding: var(--section-y) var(--edge); position: relative; }
+  section{ padding: var(--section-y) var(--edge); position: relative; scroll-margin-top: 5rem; }
+  @media (max-width: 360px){ .wordmark{ letter-spacing: 0.2em; } .bar .mark{ font-size: 0.82rem; letter-spacing: 0.24em; } }
   .field-paper{ background: var(--bg-soft); transition: background-color 0.7s ease; }
 
   .two-col{
@@ -506,6 +508,7 @@
     *, *::before, *::after{ transition-duration: 0.001ms !important; }
   }
 </style>
+<noscript><style>.reveal{ opacity:1 !important; transform:none !important; }</style></noscript>
 </head>
 
 <body>
@@ -946,12 +949,14 @@
     var body = document.body;
     var btn = document.getElementById('theme-toggle');
     var icon = btn.querySelector('.toggle-icon');
+    var themeMeta = document.querySelector('meta[name="theme-color"]');
     function apply(theme){
       var night = theme === 'night';
       body.classList.toggle('night', night);
       btn.setAttribute('aria-pressed', night ? 'true' : 'false');
       btn.setAttribute('aria-label', night ? 'Switch to the daylight view' : 'Switch to the afterglow (evening) view');
       icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
+      if (themeMeta) themeMeta.setAttribute('content', night ? '#1A1410' : '#E9E7E0');
     }
     var saved = 'day';
     try { var s = localStorage.getItem(KEY); if (s) saved = s; } catch (e) {}
@@ -971,19 +976,40 @@
     var body = document.body;
     var main = document.getElementById('top');
     var foot = document.querySelector('footer');
+    var mark = document.querySelector('.bar .mark');
+    var toggle = document.getElementById('theme-toggle');
+    var scrollY = 0;
+    function focusables(){ return [toggle, btn].concat(Array.prototype.slice.call(menu.querySelectorAll('a'))).filter(Boolean); }
     function setOpen(open){
       body.classList.toggle('menu-open', open);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       btn.textContent = open ? 'Close' : 'Menu';
       menu.setAttribute('aria-hidden', open ? 'false' : 'true');
-      body.style.overflow = open ? 'hidden' : '';
       if (main) main.inert = open;
       if (foot) foot.inert = open;
-      if (open){ var a = menu.querySelector('a'); if (a) a.focus(); }
+      if (mark) mark.inert = open;            // the wordmark links into the inert region
+      if (open){
+        scrollY = window.scrollY || window.pageYOffset || 0;
+        body.style.position = 'fixed'; body.style.top = (-scrollY) + 'px';
+        body.style.left = '0'; body.style.right = '0'; body.style.width = '100%';
+        var a = menu.querySelector('a'); if (a) a.focus();
+      } else {
+        body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = '';
+        window.scrollTo(0, scrollY);
+      }
     }
     btn.addEventListener('click', function(){ setOpen(!body.classList.contains('menu-open')); });
     menu.addEventListener('click', function(e){ if (e.target.closest('a')) setOpen(false); });
-    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && body.classList.contains('menu-open')){ setOpen(false); btn.focus(); } });
+    document.addEventListener('keydown', function(e){
+      if (!body.classList.contains('menu-open')) return;
+      if (e.key === 'Escape'){ setOpen(false); btn.focus(); return; }
+      if (e.key === 'Tab'){
+        var f = focusables(); if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    });
     window.addEventListener('resize', function(){ if (window.innerWidth > 640 && body.classList.contains('menu-open')) setOpen(false); }, { passive: true });
   })();
 
