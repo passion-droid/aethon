@@ -156,9 +156,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   `overflow-x: clip`; `section{ scroll-margin-top }`; 44px wordmark tap target; `<360px` header
   tracking. **Optional polish still open:** `size-adjust`/font-metric overrides to trim CLS on
   the font swap; gating `.reveal`'s initial hidden state behind a `js` class so non-JS *and*
-  slow-JS never flash hidden. **Held for sign-off:** a short list of voice/copy refinements
-  (warmth-word thinning, the dense Nea Paphos sentence, gallery↔index de-duplication) — present
-  to the owner before shipping; never auto-apply voice changes.
+  slow-JS never flash hidden.
+- **Voice edits — owner-reviewed (PR #36).** Two of the held copy refinements shipped after
+  sign-off: the dense *The place* locator sentence was split in two and the doubled
+  "lighthouse coast" dropped (the *faros* idea is developed one paragraph later); the gallery's
+  *western evening* + *withdraw* captions were rewritten so they no longer reuse index 669
+  verbatim. **Left as-is by choice (don't re-raise unprompted):** the warmth/warm echo in *The
+  interior* (~669), the "built, not furnished" button (~601), Register's "no newsletters, no
+  marketing" line (~831), and the "In brief" / "The house, plainly." colophon pairing (~878–879).
+  **Never auto-apply voice changes — always present for sign-off first.**
 
 ## Decided / planned
 - **Floor plans:** a conceptual *Plan* section after *The architecture* — atmospheric,
