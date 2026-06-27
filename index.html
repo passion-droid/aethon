@@ -474,7 +474,7 @@
   .form-note a{ color: var(--accent); text-decoration: underline; text-underline-offset: 0.15em; }
 
   /* ---------- credits (colophon) ---------- */
-  .credits-list{ margin-top: 2.4rem; max-width: var(--measure); }
+  .credits-list{ margin-top: 2.4rem; }
   .credits-sublabel{ margin-top: 3.2rem; }
   .credits-list > div{
     display:grid; grid-template-columns: 1fr; gap: 0.15rem;
@@ -629,10 +629,16 @@
   <!-- THE PLAN (conceptual) -->
   <section id="plan">
     <div class="gallery reveal">
-      <p class="eyebrow">The plan</p>
-      <h2 class="section-title measure">Gather below, withdraw above.</h2>
-      <p class="measure">Two conceptual views — kept soft, for atmosphere rather than measurement.</p>
-      <p class="measure">Below, the house gathers: living, dining, kitchen and a room kept for the evening open in a single line to the terrace, the pool and the garden, and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller as the house rises.</p>
+      <div class="two-col">
+        <div>
+          <p class="eyebrow">The plan</p>
+          <h2 class="section-title">Gather below, withdraw above.</h2>
+        </div>
+        <div>
+          <p>Two conceptual views — kept soft, for atmosphere rather than measurement.</p>
+          <p>Below, the house gathers: living, dining, kitchen and a room kept for the evening open in a single line to the terrace, the pool and the garden, and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller as the house rises.</p>
+        </div>
+      </div>
       <!-- Muted, low-detail floor renders (no dimensions); processed via images/README.md into images/plan/. -->
       <div class="frames">
         <figure class="pf">
@@ -697,9 +703,15 @@
   <!-- MATERIALS -->
   <section id="materials" class="field-paper">
     <div class="materials reveal">
-      <p class="eyebrow">The material language</p>
-      <h2 class="section-title measure">The palette is drawn from this coast.</h2>
-      <p class="measure">Nothing is chosen for its own sake. The colours are gathered from the place — the light of the sea, the sandstone of the cliffs, the green of the coastal herbs, the brown of the inland woods. The house answers each in material.</p>
+      <div class="two-col">
+        <div>
+          <p class="eyebrow">The material language</p>
+          <h2 class="section-title">The palette is drawn from this coast.</h2>
+        </div>
+        <div>
+          <p>Nothing is chosen for its own sake. The colours are gathered from the place — the light of the sea, the sandstone of the cliffs, the green of the coastal herbs, the brown of the inland woods. The house answers each in material.</p>
+        </div>
+      </div>
 
       <div class="palette">
 
@@ -810,9 +822,15 @@
   <!-- GALLERY (render slots) -->
   <section id="gallery">
     <div class="gallery reveal">
-      <p class="eyebrow">Views</p>
-      <h2 class="section-title measure">The house, toward the evening.</h2>
-      <p class="measure">A curated selection, forthcoming — sized and sequenced as the photography will sit.</p>
+      <div class="two-col">
+        <div>
+          <p class="eyebrow">Views</p>
+          <h2 class="section-title">The house, toward the evening.</h2>
+        </div>
+        <div>
+          <p>A curated selection, forthcoming — sized and sequenced as the photography will sit.</p>
+        </div>
+      </div>
       <!--
         SHOT BRIEF — placeholders mirror final size / ratio / position; grey until real
         photography lands; the set scales to the eventual 20–30:
@@ -845,49 +863,53 @@
 
   <!-- REGISTER INTEREST -->
   <section id="interest" class="field-paper">
-    <div class="interest reveal">
-      <p class="eyebrow">Register interest</p>
-      <h2 class="section-title">A short, private list.</h2>
-      <p class="intro">The residence is privately owned and not on the market today — this is not a listing. Should that ever change, a short and private list is kept, for those who would like to be told first. No newsletters, no marketing — only a quiet word, in time.</p>
+    <div class="two-col reveal">
+      <div>
+        <p class="eyebrow">Register interest</p>
+        <h2 class="section-title">A short, private list.</h2>
+      </div>
+      <div class="interest">
+        <p class="intro">The residence is privately owned and not on the market today — this is not a listing. Should that ever change, a short and private list is kept, for those who would like to be told first. No newsletters, no marketing — only a quiet word, in time.</p>
 
-      <!--
-        FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.
-        Enhanced to submit via AJAX (script below) so visitors stay on the page and get an
-        inline thank-you; the plain POST is the no-JS fallback. Fields map to Brevo
-        attributes FIRSTNAME / EMAIL / MESSAGE; honeypot email_address_check; hidden
-        SOURCE=aethon.house (stored only if a SOURCE attribute exists in Brevo — otherwise
-        the dedicated "AETHON — Interest" list is what keeps these contacts separate).
-      -->
-      <form id="register-form" class="register" action="https://06e3f483.sibforms.com/serve/MUIFALZtNwrfYRie9sz1bG8YnRNZPOTrFhddbiapvcGS7lsNjlRfOOaYD3ioukppoi1DGr3ljYQtJwdAlKHyYy-8U5AKSsy7vqzWFX20XrTkJuKC7AXd28q87w-AYZVgJDxx_ZPXcCaDXOKww5fU560hl4Z_eMe5-BBqnO2y2MTsAHBLHuGK9AKJOeDDYv-9L_CU2eqH0x3jh9ytmQ==" method="POST">
-        <div class="grid-2">
-          <div class="field">
-            <label for="name">Name</label>
-            <input id="name" name="FIRSTNAME" type="text" autocomplete="name" required />
+        <!--
+          FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.
+          Enhanced to submit via AJAX (script below) so visitors stay on the page and get an
+          inline thank-you; the plain POST is the no-JS fallback. Fields map to Brevo
+          attributes FIRSTNAME / EMAIL / MESSAGE; honeypot email_address_check; hidden
+          SOURCE=aethon.house (stored only if a SOURCE attribute exists in Brevo — otherwise
+          the dedicated "AETHON — Interest" list is what keeps these contacts separate).
+        -->
+        <form id="register-form" class="register" action="https://06e3f483.sibforms.com/serve/MUIFALZtNwrfYRie9sz1bG8YnRNZPOTrFhddbiapvcGS7lsNjlRfOOaYD3ioukppoi1DGr3ljYQtJwdAlKHyYy-8U5AKSsy7vqzWFX20XrTkJuKC7AXd28q87w-AYZVgJDxx_ZPXcCaDXOKww5fU560hl4Z_eMe5-BBqnO2y2MTsAHBLHuGK9AKJOeDDYv-9L_CU2eqH0x3jh9ytmQ==" method="POST">
+          <div class="grid-2">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="FIRSTNAME" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="EMAIL" type="email" autocomplete="email" required />
+            </div>
+            <div class="field full">
+              <label for="message">A note (optional)</label>
+              <textarea id="message" name="MESSAGE" rows="3"></textarea>
+            </div>
           </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="EMAIL" type="email" autocomplete="email" required />
+          <!-- tags every AETHON registrant so they stay distinct from the other site's contacts -->
+          <input type="hidden" name="SOURCE" value="aethon.house" />
+          <!-- Brevo anti-bot honeypot: must remain empty -->
+          <div class="hp" aria-hidden="true">
+            <label for="company">Company</label>
+            <input id="company" name="email_address_check" type="text" tabindex="-1" autocomplete="off" />
           </div>
-          <div class="field full">
-            <label for="message">A note (optional)</label>
-            <textarea id="message" name="MESSAGE" rows="3"></textarea>
-          </div>
+          <input type="hidden" name="locale" value="en" />
+          <button class="submit" type="submit">Register interest</button>
+        </form>
+        <p class="form-note" id="register-note">Your details are used only to contact you about the house, and are shared only with the service that delivers this form. See our <a href="/legal/">privacy notice</a>.</p>
+        <p class="form-note" id="register-error" hidden>That didn’t go through. Please try again in a moment.</p>
+        <div class="register-done" id="register-thanks" hidden>
+          <p class="register-done__line">Thank you. Your interest has been noted.</p>
+          <p class="form-note">We’ll be in touch only in time, and only should the house become available.</p>
         </div>
-        <!-- tags every AETHON registrant so they stay distinct from the other site's contacts -->
-        <input type="hidden" name="SOURCE" value="aethon.house" />
-        <!-- Brevo anti-bot honeypot: must remain empty -->
-        <div class="hp" aria-hidden="true">
-          <label for="company">Company</label>
-          <input id="company" name="email_address_check" type="text" tabindex="-1" autocomplete="off" />
-        </div>
-        <input type="hidden" name="locale" value="en" />
-        <button class="submit" type="submit">Register interest</button>
-      </form>
-      <p class="form-note" id="register-note">Your details are used only to contact you about the house, and are shared only with the service that delivers this form. See our <a href="/legal/">privacy notice</a>.</p>
-      <p class="form-note" id="register-error" hidden>That didn’t go through. Please try again in a moment.</p>
-      <div class="register-done" id="register-thanks" hidden>
-        <p class="register-done__line">Thank you. Your interest has been noted.</p>
-        <p class="form-note">We’ll be in touch only in time, and only should the house become available.</p>
       </div>
     </div>
   </section>
@@ -902,7 +924,7 @@
       <div>
       <dl class="credits-list">
         <div><dt>Location</dt><dd>Faros coast, Paphos, Cyprus</dd></div>
-        <div><dt>Type</dt><dd>Private residence — a renovation, not a new build</dd></div>
+        <div><dt>Type</dt><dd>Private residence</dd></div>
         <div><dt>Built</dt><dd>2018</dd></div>
         <div><dt>Renewed</dt><dd>2026</dd></div>
       </dl>
