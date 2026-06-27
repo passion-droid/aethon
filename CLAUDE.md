@@ -52,6 +52,15 @@ impression and the mobile layout matter.
   closes on link tap). The hero is a **still on mobile** (ambient motion/video reserved for
   larger/wifi); the hero light-drift is disabled < 640px. When paired photos land, limit the
   `.shot-pair` day↔afterglow swap to the hero on mobile (cellular data).
+- **Desktop rhythm — one uniform two-column system.** Every content section is a `.two-col`:
+  eyebrow + section title in a narrow left column, body in a wider right column —
+  `minmax(0,1fr) minmax(0,2fr)` at ≥880px, collapsing to a single stacked column below. Image-led
+  sections (*The plan*, *Materials*, *Views*) keep the two-col for their header + intro and drop
+  their media **full-width below it** (the same place *The place* puts its `.plate`); *Register
+  interest* puts the form in the right column, *In brief* the detail lists. Keep new sections on
+  this pattern — don't reintroduce a centered single column or a `.measure`-capped title. Page
+  width is `--wrap` (84rem), so the right column caps at ~56rem (relevant when sizing list/figure
+  content inside it).
 
 ## Deploying a change
 - Hosted free on **GitHub Pages**, served from the **`main`** branch, root folder.
@@ -291,6 +300,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Hero motion / a short film** — slots in place (a hero ambient-loop and an establishing-film
   plate in *The place*); commissioning is pending footage. Device policy: the **hero is a still
   on mobile** — any motion/video is desktop/wifi only. Brief: `docs/imagery-brief.md`.
+- **Desktop layout — settled.** The 1/3 · 2/3 two-column rhythm is now applied uniformly to
+  *every* section (the makeover + a follow-up pass brought *The plan*, *Materials*, *Views*,
+  *Register interest* and *In brief* onto it; see *How the site is built*). The structure/UX
+  frontier is essentially closed — don't re-open the column layout unprompted.
 - **Next up (the real frontier): photography.** Text + structure + responsive UX are
   essentially complete; the remaining quality is visual — commission the matched Daylight/
   Afterglow shoot per `docs/imagery-brief.md`, then drop pairs into `.shot-pair`, wire the
