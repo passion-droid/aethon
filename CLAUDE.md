@@ -147,9 +147,23 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   **awaiting the designer's brand-mark assets** (delivering soon). When they land, add a small
   favicon set + `apple-touch-icon` + a minimal manifest (self-hosted, no CDN), and wire the
   mark into the header if wanted. The header wordmark already has a 44px tap target reserved.
-- **`og:image`: open (todo).** No social-share image yet — **awaiting photography** (needs a
-  1200×630 master, warm/afterglow register, never blue; run through the image pipeline). Until
-  then the Open Graph card has no image. og:url / site_name / locale / description are already set.
+- **`og:image` / `twitter:image`: open (todo).** Still **no social-share image** — **awaiting
+  photography** (needs a 1200×630 master, warm/afterglow register, never blue; run through the
+  image pipeline). Both tags are **pre-wired as comments** in `index.html` (with `og:image:alt`
+  + `og:image:width/height`): drop the photo at `/images/og.jpg` and uncomment to activate. Until
+  then shared links show text only (no image) — this is the one preview gap that's asset-blocked.
+- **SEO / meta pass — done (PR #39).** Balanced lean (owner-approved): the `<title>` and meta/OG
+  descriptions now carry the searchable terms ("private seafront residence · Paphos, Cyprus ·
+  Faros beach") while `og:title` stays the poetic "house of light"; added a `twitter:card`
+  (`summary_large_image`, text now, image-ready), region-level geo tags (`geo.region=CY-05`,
+  `geo.placename=Paphos, Cyprus` — no coordinates, per the no-address rule), `lang="en-GB"`, and
+  synced the `WebSite` JSON-LD. **Strategy (don't undo):** this is a one-page brand site — it can
+  own the **brand** terms (AETHON / AETHON House / AETHON Paphos) and **on-brand long-tail**
+  (seafront residence / Faros beach / Kato Paphos / Tombs of the Kings), but **cannot and should
+  not chase head terms** ("luxury villa Paphos" etc.) — portals (JamesEdition, Rightmove, Sotheby's,
+  Leptos) own those, and "luxury"/"for sale"/"investment" wording is off-brand. Keep the visible
+  page museal; let the **meta layer** carry the keywords. Owner still needs to verify the site in
+  **Google Search Console** + submit `sitemap.xml` (that's what gets it indexed).
 - **Deep audit — done (PR #34).** Code-only hardening across all three pages: `theme-color`
   follows the Daylight/Afterglow toggle; mobile overlay menu got a focus trap + iOS-safe
   `position:fixed` scroll-lock (wordmark set `inert` too); `<noscript>` `.reveal` fallback;
