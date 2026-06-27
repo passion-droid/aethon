@@ -79,6 +79,23 @@ def main():
             out.append(f"**DNS records lookup failed:** {errstr(d, err)}")
             out.append("_(If this is a permissions error, the token needs **Zone → DNS → Read**.)_")
 
+    # Web Analytics (RUM) sites — to find CF_SITE_TAG (optional secret)
+    if ACCOUNT:
+        d, err = call(f"/accounts/{ACCOUNT}/rum/site_info/list")
+        if d and d.get("success"):
+            sites = d.get("result", [])
+            if sites:
+                out += ["", "**Web Analytics sites — `CF_SITE_TAG` is the `site_tag` (not secret):**",
+                        "", "| host | site_tag |", "|---|---|"]
+                for s in sites:
+                    host = (s.get("ruleset") or {}).get("zone_name") or s.get("host") or "—"
+                    out.append(f"| {host} | `{s.get('site_tag', '?')}` |")
+            else:
+                out.append("**Web Analytics:** no sites yet (enable it first; CF_SITE_TAG is optional).")
+        else:
+            out.append(f"**Web Analytics lookup failed:** {errstr(d, err)} "
+                       "_(needs Account → Analytics → Read; CF_SITE_TAG is optional regardless)_")
+
     emit(out)
 
 
