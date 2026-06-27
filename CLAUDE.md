@@ -127,7 +127,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   `images/plan/` (AVIF/WebP/JPEG, 800/1600w, full √2 ratio, no crop). **Re-shot from new 4K
   masters and now transparent** (AVIF/WebP keep alpha; the JPEG fallback is flattened on
   `--bg-soft`) so the plan sits on the page and **adapts to Daylight/Afterglow** — it floats on
-  the warm dark stone at night. The exact muting recipe is reproducible in
+  the warm dark stone at night — the frame's background box is removed so they sit on the page
+  `--bg`, with a **contour-following `filter: drop-shadow`** (`--plan-shadow`: a dark lift in
+  Daylight, a warm afterglow halo at night) that follows the plan's cut-out shape, never a box.
+  The exact muting recipe is reproducible in
   `scripts/process-plan.py` (run it on the raw masters; the asset filenames/dims are unchanged,
   so `index.html` needs no edit). Keep them muted + transparent — don't reinstate the saturated
   or background-baked render. Raw HD originals shouldn't stay in the repo (see `images/README.md`).
