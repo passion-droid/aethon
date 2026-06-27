@@ -117,34 +117,43 @@ For on-page event detail later, the on-brand step up is **self-hosted Umami**.
 
 ---
 
-## 4 · Automated insights (GSC + PageSpeed) — `scripts/seo-pull.py`
+## 4 · Automated insights (GSC + PageSpeed + Cloudflare) — `scripts/seo-pull.py`
 
-A fortnightly GitHub Action pulls Search Console + PageSpeed Insights and writes
-a dated report. Tooling only — the website stays buildless/static.
+A fortnightly GitHub Action pulls Search Console + PageSpeed Insights + Cloudflare
+Web Analytics and writes a dated report. Tooling only — the website stays buildless/static.
 
-- Script: `scripts/seo-pull.py` (stdlib for PSI; `google-api-python-client` +
-  `google-auth` for GSC, in `scripts/requirements.txt`).
+- Script: `scripts/seo-pull.py` (stdlib for PSI + Cloudflare; `google-api-python-client`
+  + `google-auth` for GSC, in `scripts/requirements.txt`).
 - Workflow: `.github/workflows/seo-insights.yml` — runs on the **1st & 15th** of
   each month (≈ every two weeks) and via **Run workflow** (manual). Output is a
   **workflow artifact** + the **run summary** (safe whether the repo is public or
   private — nothing is committed).
 
 ### One-time setup (owner)
-1. **Google Cloud:** create/pick a project → enable the **"Google Search Console
-   API"** → create a **service account** → create a **JSON key** and download it.
-2. **Grant the service account read access to the data:** GSC → **Settings →
-   Users and permissions → Add user** → paste the service account's
-   `client_email` → role **Restricted** (read is enough).
-3. **(Optional) PageSpeed key:** Google Cloud → enable **"PageSpeed Insights
-   API"** → create an **API key**. Without it PSI still runs but shares a small
-   anonymous quota that's often exhausted.
-4. **GitHub secrets:** repo → **Settings → Secrets and variables → Actions → New
-   repository secret**:
-   - `GSC_SA_KEY` — paste the **entire** service-account JSON.
-   - `PSI_API_KEY` — the PageSpeed key (optional).
-   The Action reads these from the environment; they never touch the repo.
-5. Trigger a first run (Actions → **SEO insights → Run workflow**) → download the
-   artifact / read the run summary.
+1. **Google Cloud:** create/pick a project → **APIs & Services → Library** → enable
+   **"Google Search Console API"** *and* **"PageSpeed Insights API"** → create a
+   **service account** → **JSON key** → download.
+2. **Grant GSC read access:** GSC → **Settings → Users and permissions → Add user**
+   → paste the service account `client_email` → role **Restricted**.
+3. **PageSpeed key:** Google Cloud → **Credentials → Create credentials → API key** →
+   copy. ⚠️ The key must be in the **same project where the PageSpeed Insights API is
+   enabled**, and must **not** carry an HTTP-referrer restriction (server-side calls
+   send no referrer — leave it unrestricted, or restrict it to *only* the PageSpeed
+   Insights API). A `400 — API key not valid` in the report means one of these is off.
+4. **Cloudflare token (audience analytics):** Cloudflare dashboard → **Manage Account
+   → API Tokens → Create Token → Custom token** → permission **Account · Analytics ·
+   Read** → scope to your account → create → copy. Also note the **Account ID**
+   (account home / dashboard URL) and, from **Web Analytics → your site → settings**,
+   the **site tag**.
+5. **GitHub secrets:** repo → **Settings → Secrets and variables → Actions → New
+   repository secret** (the Action reads these from the env; they never touch the repo):
+   - `GSC_SA_KEY` — the **entire** service-account JSON
+   - `PSI_API_KEY` — the PageSpeed key
+   - `CLOUDFLARE_API_TOKEN` — the Cloudflare token
+   - `CF_ACCOUNT_TAG` — the Cloudflare account ID
+   - `CF_SITE_TAG` — the Web Analytics site tag (optional; account-wide if omitted)
+6. Trigger a run (Actions → **SEO insights → Run workflow**) → read the run summary /
+   download the artifact.
 
 Before the secrets exist the workflow still runs green and reports "unavailable —
 pending setup". Real-user (CrUX) field data stays "insufficient" until the site
