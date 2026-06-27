@@ -1,0 +1,25 @@
+name: Cloudflare DNS check
+
+# One-off, on-demand diagnostic: uses the Cloudflare API token (secret) to report
+# the aethon.house zone status, nameservers and DNS records — to debug the
+# GitHub Pages / NXDOMAIN migration. Prints only public DNS data, never secrets.
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Cloudflare diagnostic
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_TAG: ${{ secrets.CF_ACCOUNT_TAG }}
+        run: python scripts/cf-dns-check.py
