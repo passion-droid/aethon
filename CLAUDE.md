@@ -123,10 +123,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   **never blue**; strip GPS/EXIF; deliver masters (the pipeline makes the web assets).
 - **Floor plans: done.** The *Plan* section (after *The architecture*) shows the two floor
   renders, **muted into the stone/olive palette** (global desaturation + the pool's blue
-  specifically collapsed to pale water, per the no-blue guardrail), processed via the
-  pipeline into `images/plan/` (AVIF/WebP/JPEG, 800/1600w, full √2 ratio, no crop). Keep
-  them muted — don't reinstate the saturated render. Raw HD originals shouldn't stay in the
-  repo (see `images/README.md`).
+  specifically collapsed to pale water, per the no-blue guardrail), processed into
+  `images/plan/` (AVIF/WebP/JPEG, 800/1600w, full √2 ratio, no crop). **Re-shot from new 4K
+  masters and now transparent** (AVIF/WebP keep alpha; the JPEG fallback is flattened on
+  `--bg-soft`) so the plan sits on the page and **adapts to Daylight/Afterglow** — it floats on
+  the warm dark stone at night. The exact muting recipe is reproducible in
+  `scripts/process-plan.py` (run it on the raw masters; the asset filenames/dims are unchanged,
+  so `index.html` needs no edit). Keep them muted + transparent — don't reinstate the saturated
+  or background-baked render. Raw HD originals shouldn't stay in the repo (see `images/README.md`).
 - **Credits:** **done.** The colophon credits the full team with linked company sites
   (olive, underlined, new tab) — Original architecture: Vardastudio (Andreas Vardas);
   Renovation: G. Patsalides Construction & Renovation (Georgios Patsalides); Interior:

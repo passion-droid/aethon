@@ -84,3 +84,16 @@ image lazy-loads, and if it ever fails):
 ```
 plus `.mat-chip{ object-fit: cover }` for the image. Width/height reserve space to
 avoid layout shift (CLS). The browser downloads exactly one source.
+
+## Floor plans (`plan/`) — a different recipe
+Unlike the 3:2 material chips, the floor renders keep their **full √2 ratio (no crop)** at
+**800w / 1600w**, are **muted into the stone/olive palette** with the **pool's blue collapsed
+to pale water** (the no-blue guardrail), and keep their **transparent margin** so the plan
+floats on the page's `--bg-soft` and adapts to Daylight/Afterglow — AVIF + WebP carry alpha; the
+JPEG fallback is flattened on the day stone. Reproducible:
+```sh
+pip install pillow numpy
+python scripts/process-plan.py          # reads plan/<Ground|First>-floor_4K.png masters
+```
+Outputs overwrite `plan/{ground,first}-floor-{800,1600}.{avif,webp,jpg}` — the exact files
+`index.html` already references, so no markup change. The 4K masters are **not** committed.
