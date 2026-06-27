@@ -159,9 +159,11 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   image pipeline). Both tags are **pre-wired as comments** in `index.html` (with `og:image:alt`
   + `og:image:width/height`): drop the photo at `/images/og.jpg` and uncomment to activate. Until
   then shared links show text only (no image) — this is the one preview gap that's asset-blocked.
-- **SEO / meta pass — done (PR #39).** Balanced lean (owner-approved): the `<title>` and meta/OG
-  descriptions now carry the searchable terms ("private seafront residence · Paphos, Cyprus ·
-  Faros beach") while `og:title` stays the poetic "house of light"; added a `twitter:card`
+- **SEO / meta pass — done (PR #39; title refined #49).** The meta/OG **descriptions** carry the
+  searchable terms (seafront residence · Paphos, Cyprus · Faros beach, "a sanctuary…"); the
+  **`<title>` + og/twitter titles** all lead with the branded **"AETHON House — house of light"**
+  lockup (owner-directed in #49 for a more luxurious, branded SERP — supersedes #39/#40's
+  descriptive "private seafront residence" title; keywords now live in the description). Added a `twitter:card`
   (`summary_large_image`, text now, image-ready), region-level geo tags (`geo.region=CY-05`,
   `geo.placename=Paphos, Cyprus` — no coordinates, per the no-address rule), `lang="en-GB"`, and
   synced the `WebSite` JSON-LD. **Strategy (don't undo):** this is a one-page brand site — it can
@@ -177,8 +179,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   portal-locked: **this is the winnable, on-brand niche**). Position AETHON as *an architecturally
   significant private seafront residence*, discovered via design — not a listing. **Brand collisions
   to know:** "Aethon" also = **Almyra Hotel's "Aethon" sea-view rooms** (same city) + the **"House of
-  Aion"** mosaic site → always use the **"AETHON House"** lockup; the `<title>` now leads with it
-  (PR #40, supersedes #39's "AETHON —" title) to disambiguate + match the `.house` domain. Highest-
+  Aion"** mosaic site → always use the **"AETHON House"** lockup — the `<title>`/og/twitter titles
+  lead with **"AETHON House — house of light"** (#49) to disambiguate + match the `.house` domain. Highest-
   leverage off-page win: a backlink from the **credited team** (Vardastudio, House Talks, Dear Modern
   / Cliff Tan). **GSC + sitemap: done by owner** (domain verified, `sitemap.xml` submitted, `/` +
   `/legal/` discovered).
