@@ -179,12 +179,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   leverage off-page win: a backlink from the **credited team** (Vardastudio, House Talks, Dear Modern
   / Cliff Tan). **GSC + sitemap: done by owner** (domain verified, `sitemap.xml` submitted, `/` +
   `/legal/` discovered).
-- **SEO measurement — automated (PR #40).** `scripts/seo-pull.py` + `.github/workflows/seo-insights.yml`
-  pull **Search Console + PageSpeed Insights** on the **1st & 15th** (≈ fortnightly) and on demand,
-  emitting a dated report as a **workflow artifact + run summary** (nothing committed — safe for any
-  repo visibility). Auth via GitHub secrets **`GSC_SA_KEY`** (service-account JSON added as a GSC
-  user) + optional **`PSI_API_KEY`**; degrades gracefully before they're set. This is **tooling, not
-  part of the site** (the page stays buildless). Setup steps in `docs/seo-and-search.md`.
+- **SEO measurement — automated (PR #40, extended #42).** `scripts/seo-pull.py` +
+  `.github/workflows/seo-insights.yml` pull **Search Console + PageSpeed Insights + Cloudflare Web
+  Analytics** on the **1st & 15th** (≈ fortnightly) and on demand, emitting a dated report as a
+  **workflow artifact + run summary** (nothing committed — safe for any repo visibility). Auth via
+  GitHub secrets **`GSC_SA_KEY`** (service-account JSON added as a GSC user), **`PSI_API_KEY`**, and
+  **`CLOUDFLARE_API_TOKEN`** + **`CF_ACCOUNT_TAG`** (+ optional **`CF_SITE_TAG`**); every source
+  degrades gracefully before its secret is set. **First run (2026-06-27): GSC live** (1 impression,
+  pos 27); **PSI 400** until the key/API-enable is fixed (the script now surfaces the real reason).
+  This is **tooling, not part of the site** (the page stays buildless). Setup in `docs/seo-and-search.md`.
 - **Analytics — decided: cookieless, no banner (no Google Analytics).** GA4 = personal data to Google
   + cookies → EU consent banner, and re-introduces the visitor-IP-to-Google transfer the self-hosted
   fonts removed. Chosen: **GSC (search) + Cloudflare** (dashboard if the domain is proxied — zero code;

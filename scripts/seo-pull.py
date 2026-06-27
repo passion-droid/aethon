@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-AETHON — SEO insights pull (Google Search Console + PageSpeed Insights).
+AETHON — insights pull: Google Search Console + PageSpeed Insights + Cloudflare
+Web Analytics (cookieless audience data).
 
-This is *tooling*, NOT part of the website. The site itself stays buildless and
-static (a single index.html); this script only reads metrics and writes reports.
-It runs in CI (.github/workflows/seo-insights.yml) on a schedule, or locally.
+Tooling, NOT part of the website. The site stays buildless/static; this only
+reads metrics and writes reports. Runs in CI (.github/workflows/seo-insights.yml)
+on a schedule, or locally.
 
-Auth — nothing secret lives in the repo; both come from env vars / GitHub secrets:
-  GSC_SA_KEY   contents of a Google service-account JSON key whose client_email
-               has been added as a USER on the Search Console *domain* property
-               (sc-domain:aethon.house). Read scope only.
-  PSI_API_KEY  a PageSpeed Insights API key (optional — PSI also runs keyless,
-               but the shared anonymous quota is small and often exhausted).
-
-Either may be absent: the script degrades gracefully and still writes a report
-("unavailable — pending setup") so the workflow stays green before you wire the
-secrets up.
+Auth — nothing secret in the repo; all from env vars / GitHub secrets, each
+optional (missing sources degrade gracefully so the workflow stays green):
+  GSC_SA_KEY            service-account JSON whose client_email is a USER on the
+                        Search Console domain property. Read scope.
+  PSI_API_KEY           PageSpeed Insights API key (PSI also runs keyless, but the
+                        shared anonymous quota is small).
+  CLOUDFLARE_API_TOKEN  Cloudflare token with **Account Analytics: Read**.
+  CF_ACCOUNT_TAG        Cloudflare account ID.
+  CF_SITE_TAG           Web Analytics site tag (optional; account-wide if omitted).
 
 Output: a dated Markdown report + raw JSON in --out (default seo-reports/), and
 the same summary appended to $GITHUB_STEP_SUMMARY when running in Actions.
@@ -27,10 +27,12 @@ import argparse
 import datetime
 import urllib.parse
 import urllib.request
+import urllib.error
 
 SITE = os.environ.get("SEO_SITE", "aethon.house")
 PROPERTY = f"sc-domain:{SITE}"
 PSI_ENDPOINT = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
+CF_GRAPHQL = "https://api.cloudflare.com/client/v4/graphql"
 GSC_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly"
 
 
@@ -62,8 +64,7 @@ def pull_gsc(days):
     svc, err = gsc_service()
     if not svc:
         return {"available": False, "reason": err}
-    # GSC data lags ~2 days; look back `days` from there.
-    end = datetime.date.today() - datetime.timedelta(days=2)
+    end = datetime.date.today() - datetime.timedelta(days=2)   # GSC data lags ~2 days
     start = end - datetime.timedelta(days=days)
     s, e = start.isoformat(), end.isoformat()
     try:
@@ -90,6 +91,15 @@ def pull_psi(strategy):
     try:
         with urllib.request.urlopen(url, timeout=120) as resp:
             data = json.load(resp)
+    except urllib.error.HTTPError as ex:
+        # Surface the real reason (e.g. "API key not valid", "API not enabled")
+        body = ex.read().decode("utf-8", "replace")
+        msg = body
+        try:
+            msg = json.loads(body).get("error", {}).get("message", body)
+        except Exception:  # noqa: BLE001
+            pass
+        return {"available": False, "reason": f"HTTP {ex.code} — {msg[:180]}"}
     except Exception as ex:  # noqa: BLE001
         return {"available": False, "reason": str(ex)}
     if "error" in data:
@@ -106,9 +116,58 @@ def pull_psi(strategy):
     }
 
 
+# ---------- Cloudflare Web Analytics (RUM, cookieless) ----------
+def pull_cloudflare(days):
+    token = os.environ.get("CLOUDFLARE_API_TOKEN")
+    account = os.environ.get("CF_ACCOUNT_TAG")
+    if not token or not account:
+        return {"available": False, "reason": "no CLOUDFLARE_API_TOKEN / CF_ACCOUNT_TAG set"}
+    site = os.environ.get("CF_SITE_TAG")
+    end = datetime.date.today()
+    start = end - datetime.timedelta(days=days)
+    site_filter = f', siteTag: "{site}"' if site else ""
+    flt = f'date_geq: "{start.isoformat()}", date_leq: "{end.isoformat()}"{site_filter}'
+    query = """query {
+      viewer { accounts(filter: {accountTag: "%s"}) {
+        totals: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 1) { count sum { visits } }
+        pages: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 15, orderBy: [count_DESC]) {
+          count sum { visits } dimensions { requestPath } }
+        countries: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 10, orderBy: [count_DESC]) {
+          count dimensions { countryName } }
+      } }
+    }""" % (account, flt, flt, flt)
+    req = urllib.request.Request(
+        CF_GRAPHQL, data=json.dumps({"query": query}).encode(),
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.load(resp)
+    except urllib.error.HTTPError as ex:
+        return {"available": False, "reason": f"HTTP {ex.code} — {ex.read().decode('utf-8','replace')[:180]}"}
+    except Exception as ex:  # noqa: BLE001
+        return {"available": False, "reason": str(ex)}
+    if data.get("errors"):
+        return {"available": False, "reason": "; ".join(e.get("message", "") for e in data["errors"])[:200]}
+    try:
+        acct = data["data"]["viewer"]["accounts"][0]
+        tot = acct["totals"][0] if acct.get("totals") else {}
+        return {
+            "available": True,
+            "range": [start.isoformat(), end.isoformat()],
+            "pageviews": tot.get("count", 0),
+            "visits": (tot.get("sum") or {}).get("visits", 0),
+            "pages": [{"path": g["dimensions"]["requestPath"], "views": g["count"],
+                       "visits": (g.get("sum") or {}).get("visits", 0)} for g in acct.get("pages", [])],
+            "countries": [{"country": g["dimensions"]["countryName"], "views": g["count"]}
+                          for g in acct.get("countries", [])],
+        }
+    except Exception as ex:  # noqa: BLE001
+        return {"available": False, "reason": f"parse error: {ex}"}
+
+
 # ---------- report ----------
-def render(gsc, psi_mobile, psi_desktop, when):
-    out = [f"# AETHON — SEO insights · {when}", ""]
+def render(gsc, psi_mobile, psi_desktop, cf, when):
+    out = [f"# AETHON — insights · {when}", ""]
 
     out.append("## PageSpeed Insights (lab)")
     for label, psi in [("Mobile", psi_mobile), ("Desktop", psi_desktop)]:
@@ -121,7 +180,7 @@ def render(gsc, psi_mobile, psi_desktop, when):
             out.append(f"    - LCP {m['largest-contentful-paint']} · CLS {m['cumulative-layout-shift']} · "
                        f"TBT {m['total-blocking-time']} · FCP {m['first-contentful-paint']} · SI {m['speed-index']}")
         else:
-            out.append(f"- **{label}** — unavailable ({psi.get('reason', '')[:140]})")
+            out.append(f"- **{label}** — unavailable ({psi.get('reason', '')[:180]})")
     out.append("")
 
     out.append("## Search Console")
@@ -137,40 +196,57 @@ def render(gsc, psi_mobile, psi_desktop, when):
         else:
             out.append("- No impressions in range yet.")
 
-        def table(rows, head):
+        def gsc_table(rows, head):
             if not rows:
                 return ["", f"_No {head} yet._"]
             lines = ["", f"### Top {head}", "",
-                     f"| {head} | clicks | impressions | CTR | avg pos |",
-                     "|---|--:|--:|--:|--:|"]
+                     f"| {head} | clicks | impressions | CTR | avg pos |", "|---|--:|--:|--:|--:|"]
             for r in rows:
                 lines.append(f"| {r['keys'][0]} | {int(r.get('clicks', 0))} | {int(r.get('impressions', 0))} | "
                              f"{r.get('ctr', 0) * 100:.1f}% | {r.get('position', 0):.1f} |")
             return lines
 
-        out += table(gsc.get("queries"), "queries")
-        out += table(gsc.get("pages"), "pages")
+        out += gsc_table(gsc.get("queries"), "queries")
+        out += gsc_table(gsc.get("pages"), "pages")
+    out.append("")
+
+    out.append("## Cloudflare Web Analytics (cookieless)")
+    if not cf.get("available"):
+        out.append(f"_Unavailable: {cf.get('reason', '')[:200]}_")
+    else:
+        out.append(f"Range **{cf['range'][0]} → {cf['range'][1]}** — "
+                   f"**{cf['visits']} visits · {cf['pageviews']} page views**")
+        if cf.get("pages"):
+            out += ["", "### Top pages", "", "| path | views | visits |", "|---|--:|--:|"]
+            for p in cf["pages"]:
+                out.append(f"| {p['path']} | {p['views']} | {p['visits']} |")
+        if cf.get("countries"):
+            out += ["", "### Top countries", "", "| country | views |", "|---|--:|"]
+            for c in cf["countries"]:
+                out.append(f"| {c['country']} | {c['views']} |")
+    out.append("")
     return "\n".join(out) + "\n"
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Pull GSC + PSI insights for AETHON.")
+    ap = argparse.ArgumentParser(description="Pull GSC + PSI + Cloudflare insights for AETHON.")
     ap.add_argument("--out", default="seo-reports", help="output directory")
-    ap.add_argument("--days", type=int, default=28, help="GSC look-back window")
+    ap.add_argument("--days", type=int, default=28, help="look-back window (days)")
     args = ap.parse_args()
 
     when = datetime.date.today().isoformat()
     gsc = pull_gsc(args.days)
     psi_mobile = pull_psi("mobile")
     psi_desktop = pull_psi("desktop")
+    cf = pull_cloudflare(args.days)
 
     os.makedirs(args.out, exist_ok=True)
-    report = render(gsc, psi_mobile, psi_desktop, when)
+    report = render(gsc, psi_mobile, psi_desktop, cf, when)
     base = os.path.join(args.out, when)
     with open(base + ".md", "w", encoding="utf-8") as fh:
         fh.write(report)
     with open(base + ".json", "w", encoding="utf-8") as fh:
-        json.dump({"date": when, "gsc": gsc,
+        json.dump({"date": when, "gsc": gsc, "cloudflare": cf,
                    "psi": {"mobile": psi_mobile, "desktop": psi_desktop}}, fh, indent=2)
 
     print(report)
@@ -178,8 +254,6 @@ def main():
     if step:
         with open(step, "a", encoding="utf-8") as fh:
             fh.write(report)
-
-    # Never fail the job just because data isn't flowing yet.
     return 0
 
 

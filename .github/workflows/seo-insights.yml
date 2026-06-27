@@ -27,10 +27,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Pull GSC + PSI insights
+      - name: Pull GSC + PSI + Cloudflare insights
         env:
           GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_TAG: ${{ secrets.CF_ACCOUNT_TAG }}
+          CF_SITE_TAG: ${{ secrets.CF_SITE_TAG }}
         run: python scripts/seo-pull.py --out seo-reports --days 28
 
       - name: Upload report
