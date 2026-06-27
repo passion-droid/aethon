@@ -1,0 +1,41 @@
+name: SEO insights
+
+# Pulls Google Search Console + PageSpeed Insights metrics on a ~fortnightly
+# cadence and on demand. Output is uploaded as a workflow artifact and printed
+# to the run summary — nothing is committed, so it is safe whether this repo is
+# public or private. (To keep dated reports in-repo instead, see
+# docs/seo-and-search.md → "Switching to committed reports".)
+
+on:
+  schedule:
+    - cron: "0 7 1,15 * *"   # 1st & 15th each month, 07:00 UTC ≈ every two weeks
+  workflow_dispatch: {}       # "Run workflow" button for an on-demand pull
+
+permissions:
+  contents: read
+
+jobs:
+  insights:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Pull GSC + PSI insights
+        env:
+          GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
+          PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
+        run: python scripts/seo-pull.py --out seo-reports --days 28
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-insights-${{ github.run_id }}
+          path: seo-reports/
+          retention-days: 90

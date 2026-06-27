@@ -1,0 +1,4 @@
+# Dependencies for scripts/seo-pull.py (CI tooling only — NOT shipped to the website).
+# PageSpeed Insights uses the stdlib (urllib); only the Search Console pull needs these.
+google-api-python-client>=2.100
+google-auth>=2.23

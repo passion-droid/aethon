@@ -162,8 +162,31 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   (seafront residence / Faros beach / Kato Paphos / Tombs of the Kings), but **cannot and should
   not chase head terms** ("luxury villa Paphos" etc.) — portals (JamesEdition, Rightmove, Sotheby's,
   Leptos) own those, and "luxury"/"for sale"/"investment" wording is off-brand. Keep the visible
-  page museal; let the **meta layer** carry the keywords. Owner still needs to verify the site in
-  **Google Search Console** + submit `sitemap.xml` (that's what gets it indexed).
+  page museal; let the **meta layer** carry the keywords.
+- **SERP analysis + positioning — done (PR #40); full write-up in `docs/seo-and-search.md`.**
+  Live-SERP research found **two arenas**: the estate/portal SERP (luxury/seafront villa Paphos —
+  owned by JamesEdition/Rightmove/Zoopla/Sotheby's; **don't compete**, off-brand + unwinnable) and
+  the **design/architecture SERP** (architect-designed/minimalist/Japandi villa — editorial, *not*
+  portal-locked: **this is the winnable, on-brand niche**). Position AETHON as *an architecturally
+  significant private seafront residence*, discovered via design — not a listing. **Brand collisions
+  to know:** "Aethon" also = **Almyra Hotel's "Aethon" sea-view rooms** (same city) + the **"House of
+  Aion"** mosaic site → always use the **"AETHON House"** lockup; the `<title>` now leads with it
+  (PR #40, supersedes #39's "AETHON —" title) to disambiguate + match the `.house` domain. Highest-
+  leverage off-page win: a backlink from the **credited team** (Vardastudio, House Talks, Dear Modern
+  / Cliff Tan). **GSC + sitemap: done by owner** (domain verified, `sitemap.xml` submitted, `/` +
+  `/legal/` discovered).
+- **SEO measurement — automated (PR #40).** `scripts/seo-pull.py` + `.github/workflows/seo-insights.yml`
+  pull **Search Console + PageSpeed Insights** on the **1st & 15th** (≈ fortnightly) and on demand,
+  emitting a dated report as a **workflow artifact + run summary** (nothing committed — safe for any
+  repo visibility). Auth via GitHub secrets **`GSC_SA_KEY`** (service-account JSON added as a GSC
+  user) + optional **`PSI_API_KEY`**; degrades gracefully before they're set. This is **tooling, not
+  part of the site** (the page stays buildless). Setup steps in `docs/seo-and-search.md`.
+- **Analytics — decided: cookieless, no banner (no Google Analytics).** GA4 = personal data to Google
+  + cookies → EU consent banner, and re-introduces the visitor-IP-to-Google transfer the self-hosted
+  fonts removed. Chosen: **GSC (search) + Cloudflare** (dashboard if the domain is proxied — zero code;
+  else the cookieless Web Analytics beacon). Self-hosted **Umami** is the on-brand step up for on-page
+  events. Owner action + the one-line beacon snippet are in `docs/seo-and-search.md`. **Never add GA
+  or any cookie-setting analytics without revisiting the consent/no-banner stance.**
 - **Deep audit — done (PR #34).** Code-only hardening across all three pages: `theme-color`
   follows the Daylight/Afterglow toggle; mobile overlay menu got a focus trap + iOS-safe
   `position:fixed` scroll-lock (wordmark set `inert` too); `<noscript>` `.reveal` fallback;
