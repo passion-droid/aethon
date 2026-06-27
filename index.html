@@ -93,6 +93,7 @@
     --wrap: 84rem;
     --edge: clamp(1.5rem, 6vw, 7rem);
     --section-y: clamp(3.5rem, 12vw, 11rem);
+    --plan-shadow: drop-shadow(0 6px 16px rgba(44, 38, 32, 0.20));
 
     --ff-display: "Jost", "Jost fallback", system-ui, sans-serif;
     --ff-text: "Spectral", "Spectral fallback", Georgia, serif;
@@ -107,6 +108,7 @@
     --ink-mute:  #9E9376;
     --accent:    #9CA279;   /* olive, brought up so it reads against the dark */
     --accent-on: #15110B;
+    --plan-shadow: drop-shadow(0 0 18px rgba(206, 166, 118, 0.32));   /* warm afterglow halo */
 
     --rule:        rgba(238,231,214,0.14);
     --rule-strong: rgba(238,231,214,0.30);
@@ -381,7 +383,9 @@
     .frame.wide, .frame.band{ grid-column: 1 / -1; }
   }
   .pf{ margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-  .frame.plan{ aspect-ratio: 1600 / 1132; background: var(--bg-soft); }
+  .frame.plan{ aspect-ratio: 1600 / 1132; background: transparent; overflow: visible; }
+  .frame.plan::after{ content: none; }                              /* drop the rectangular glow */
+  .frame.plan .shot{ filter: var(--plan-shadow); transition: filter 0.7s ease; }  /* shadow follows the plan's contour, not a box */
   .frame .shot{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
   .pf figcaption{ font-family: var(--ff-display); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute); }
   /* Daylight ↔ Afterglow paired imagery — drop a day + warm-evening capture of the SAME viewpoint
