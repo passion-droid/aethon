@@ -90,6 +90,7 @@
     --footer-mute: rgba(233,231,224,0.70);
 
     --measure: 60ch;
+    --wrap: 84rem;
     --edge: clamp(1.5rem, 6vw, 7rem);
     --section-y: clamp(3.5rem, 12vw, 11rem);
 
@@ -342,25 +343,26 @@
   .two-col{
     display:grid; grid-template-columns: 1fr;
     gap: clamp(2rem, 5vw, 5rem); align-items: start;
-    max-width: 78rem; margin: 0 auto;
+    max-width: var(--wrap); margin: 0 auto;
   }
   @media (min-width: 880px){
-    .two-col{ grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+    .two-col{ grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
   }
+  .two-col > div:last-child > p{ max-width: 44rem; }
 
   /* ---------- materials (a palette drawn from the coast) ---------- */
-  .materials{ max-width: 78rem; margin: 0 auto; }
+  .materials{ max-width: var(--wrap); margin: 0 auto; }
   .palette{ margin-top: clamp(2.4rem, 5vw, 3.6rem); display:grid; gap: clamp(2.2rem, 4.5vw, 3.6rem); }
   .note{ display:grid; grid-template-columns: 1fr; gap: 1.1rem; }
   @media (min-width: 760px){
-    .note{ grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: clamp(2rem, 4vw, 3.5rem); align-items: start; }
+    .note{ grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(2rem, 4vw, 3.5rem); align-items: start; }
   }
   .note + .note{ border-top: 1px solid var(--rule); padding-top: clamp(2.2rem, 4.5vw, 3.6rem); }
   .note-title{
     font-family: var(--ff-text); font-weight: 300; font-size: clamp(1.2rem, 2vw, 1.55rem);
     line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 0.5rem;
   }
-  .note-source{ font-family: var(--ff-text); font-style: italic; color: var(--ink-soft); margin: 0; max-width: 32ch; }
+  .note-source{ font-family: var(--ff-text); font-style: italic; color: var(--ink-soft); margin: 0; max-width: 40ch; }
   .note-mats{ display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: clamp(0.9rem, 2vw, 1.4rem); }
   .mat{ margin: 0; }
   .mat-chip{ display:block; width:100%; height: clamp(7rem, 13vw, 10rem); border: 1px solid var(--rule); object-fit: cover; }
@@ -369,7 +371,7 @@
   .mat-note{ font-size: 0.84rem; color: var(--ink-mute); line-height: 1.45; }
 
   /* ---------- gallery (render slots) ---------- */
-  .gallery{ max-width: 84rem; margin: 0 auto; }
+  .gallery{ max-width: var(--wrap); margin: 0 auto; }
   .frames{
     display:grid; grid-template-columns: 1fr; gap: clamp(1rem, 2.4vw, 1.6rem);
     margin-top: 2.6rem;
@@ -412,7 +414,7 @@
   }
 
   /* ---------- woven media plates + film/loop affordance ---------- */
-  .plate{ max-width: 84rem; margin: clamp(2rem, 5vw, 3.4rem) auto 0; }
+  .plate{ max-width: var(--wrap); margin: clamp(2rem, 5vw, 3.4rem) auto 0; }
   .play{
     display:inline-flex; align-items:center; justify-content:center; flex:none;
     width: 3.4rem; height: 3.4rem; border: 1px solid currentColor; border-radius: 50%;
@@ -431,7 +433,8 @@
   .hero-media .play{ width: 1.9rem; height: 1.9rem; font-size: 0.56rem; padding-left: 0.14em; }
 
   /* ---------- interest form ---------- */
-  .interest{ max-width: 46rem; margin: 0 auto; }
+  .interest{ max-width: 58rem; margin: 0 auto; }
+  .interest .intro{ max-width: 66ch; }
   form.register{ margin-top: 2.4rem; }
   .register-done{ margin-top: 2.4rem; }
   .register-done__line{ font-family: var(--ff-display); font-weight: 300; font-size: clamp(1.15rem, 1.7vw, 1.45rem); letter-spacing: 0.01em; color: var(--accent); margin: 0 0 0.5rem; transition: color 0.7s ease; }
@@ -499,7 +502,7 @@
     transition: background-color 0.7s ease, color 0.7s ease;
   }
   .foot-inner{
-    max-width: 84rem; margin: 0 auto;
+    max-width: var(--wrap); margin: 0 auto;
     display:flex; flex-wrap:wrap; gap: 1.6rem 3rem; align-items:flex-end; justify-content:space-between;
   }
   .foot-mark{
@@ -841,7 +844,7 @@
     <div class="interest reveal">
       <p class="eyebrow">Register interest</p>
       <h2 class="section-title">A short, private list.</h2>
-      <p class="measure">The residence is privately owned and not on the market today — this is not a listing. Should that ever change, a short and private list is kept, for those who would like to be told first. No newsletters, no marketing — only a quiet word, in time.</p>
+      <p class="intro">The residence is privately owned and not on the market today — this is not a listing. Should that ever change, a short and private list is kept, for those who would like to be told first. No newsletters, no marketing — only a quiet word, in time.</p>
 
       <!--
         FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.
@@ -887,9 +890,12 @@
 
   <!-- CREDITS (colophon) -->
   <section id="credits">
-    <div class="interest reveal">
-      <p class="eyebrow">In brief</p>
-      <h2 class="section-title">The house, plainly.</h2>
+    <div class="two-col reveal">
+      <div>
+        <p class="eyebrow">In brief</p>
+        <h2 class="section-title">The house, plainly.</h2>
+      </div>
+      <div>
       <dl class="credits-list">
         <div><dt>Location</dt><dd>Faros coast, Paphos, Cyprus</dd></div>
         <div><dt>Type</dt><dd>Private residence — a renovation, not a new build</dd></div>
@@ -905,6 +911,7 @@
         <div><dt>Lighting</dt><dd><a href="https://www.dark-cy.com/" target="_blank" rel="noopener">DARK Architectural Lighting</a></dd></div>
         <div><dt>Feng Shui</dt><dd><a href="https://www.dearmodern.com/" target="_blank" rel="noopener">Dear Modern</a> — Cliff Tan</dd></div>
       </dl>
+      </div>
     </div>
   </section>
 
