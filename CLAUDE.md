@@ -185,9 +185,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   **workflow artifact + run summary** (nothing committed — safe for any repo visibility). Auth via
   GitHub secrets **`GSC_SA_KEY`** (service-account JSON added as a GSC user), **`PSI_API_KEY`**, and
   **`CLOUDFLARE_API_TOKEN`** + **`CF_ACCOUNT_TAG`** (+ optional **`CF_SITE_TAG`**); every source
-  degrades gracefully before its secret is set. **First run (2026-06-27): GSC live** (1 impression,
-  pos 27); **PSI 400** until the key/API-enable is fixed (the script now surfaces the real reason).
-  This is **tooling, not part of the site** (the page stays buildless). Setup in `docs/seo-and-search.md`.
+  degrades gracefully before its secret is set. **All three live (2026-06-27):** GSC (1 impression,
+  pos 27); **PSI 100/100/100/100 on mobile + desktop** (CLS 0, TBT 0 — validates the buildless/perf
+  work); Cloudflare pull authenticating (0 visits until the beacon collects). A one-off
+  **`cf-dns-check.yml`** diagnostic also exists (it debugged the Porkbun→Cloudflare nameserver
+  migration via the same `CLOUDFLARE_API_TOKEN`). This is **tooling, not part of the site** (the
+  page stays buildless). Setup in `docs/seo-and-search.md`.
 - **Analytics — decided: cookieless, no banner (no Google Analytics).** GA4 = personal data to Google
   + cookies → EU consent banner, and re-introduces the visitor-IP-to-Google transfer the self-hosted
   fonts removed. Chosen: **GSC (search) + Cloudflare** (dashboard if the domain is proxied — zero code;
