@@ -154,9 +154,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   follows the Daylight/Afterglow toggle; mobile overlay menu got a focus trap + iOS-safe
   `position:fixed` scroll-lock (wordmark set `inert` too); `<noscript>` `.reveal` fallback;
   `overflow-x: clip`; `section{ scroll-margin-top }`; 44px wordmark tap target; `<360px` header
-  tracking. **Optional polish still open:** `size-adjust`/font-metric overrides to trim CLS on
-  the font swap; gating `.reveal`'s initial hidden state behind a `js` class so non-JS *and*
-  slow-JS never flash hidden.
+  tracking. **Optional polish — done (PR #38):** metric-matched fallback `@font-face`s
+  (`size-adjust` + ascent/descent overrides computed from the woff2 via fontTools, tuned to
+  Arial/Times; Liberation faces cover Linux; `local()` only, no extra fetch) trim font-swap
+  CLS — added as the first fallback in the `--ff-display`/`--ff-text` stacks across
+  index/gallery/legal (404 left minimal). And `.reveal`'s hidden state is now gated behind a
+  `.js` class (added to `<html>` by the no-flash init script) so non-JS *and* broken/slow-JS
+  render visible — this **superseded** the `<noscript>` `.reveal` fallback above, now removed.
 - **Voice edits — owner-reviewed (PR #36).** Two of the held copy refinements shipped after
   sign-off: the dense *The place* locator sentence was split in two and the doubled
   "lighthouse coast" dropped (the *faros* idea is developed one paragraph later); the gallery's
