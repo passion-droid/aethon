@@ -48,13 +48,12 @@ def main():
         emit(out)
         return
 
-    d, err = call("/user/tokens/verify")
-    ok = bool(d and d.get("success"))
-    out.append(f"**Token:** {'valid ✓' if ok else 'INVALID — ' + errstr(d, err)}")
-
     zid = None
     q = f"/zones?name={ZONE}" + (f"&account.id={ACCOUNT}" if ACCOUNT else "")
     d, err = call(q)
+    # Judge token health by a real call — account-scoped tokens fail the
+    # /user/tokens/verify endpoint but work fine for account/zone/analytics calls.
+    out.append(f"**Token:** {'working ✓ (returned zone data)' if d and d.get('success') else 'request failed — ' + errstr(d, err)}")
     if d and d.get("success") and d.get("result"):
         z = d["result"][0]
         zid = z["id"]
