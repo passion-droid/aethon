@@ -61,6 +61,16 @@ impression and the mobile layout matter.
   this pattern — don't reintroduce a centered single column or a `.measure`-capped title. Page
   width is `--wrap` (84rem), so the right column caps at ~56rem (relevant when sizing list/figure
   content inside it).
+- **Spacing encodes grouping (proximity), not vibes.** Vertical gaps follow the Gestalt law of
+  proximity: related items sit closer, group breaks sit wider, on **one consistent ratio** (tight
+  ≈ ½ of loose) and ideally on the 8-pt grid. **A label hugs what it labels** — an eyebrow should
+  sit closer to its title than two body paragraphs sit to each other; a sub-label should hug its
+  list, not float between two. Worked example: the **hero** is two proximity groups
+  (`[descriptor + AETHON]` · gap · `[house of light + hero-line + subline]`) via
+  `--hero-gap-tight` (≈16px) / `--hero-gap-loose` (≈40px, ~2.5×). When adding or adjusting spacing,
+  reuse the existing rhythm and make the gap *say* the relationship — don't invent a one-off rem
+  value. (The rest of the site still uses ad-hoc per-element gaps; a shared `--space-*` scale is
+  the proposed next step.)
 
 ## Deploying a change
 - Hosted free on **GitHub Pages**, served from the **`main`** branch, root folder.
