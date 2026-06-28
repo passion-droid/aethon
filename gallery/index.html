@@ -30,6 +30,9 @@
     --frame-label:rgba(44,38,32,0.72);
     --footer-bg:#2C2620; --footer-ink:#E9E7E0; --footer-mute:rgba(233,231,224,0.70);
     --measure:60ch; --edge:clamp(1.5rem, 6vw, 7rem);
+    /* spacing scale — synced with index.html (8pt grid; proximity model) */
+    --space-3xs:0.25rem; --space-2xs:0.5rem; --space-xs:0.75rem; --space-sm:1rem;
+    --space-md:1.5rem; --space-lg:2rem; --space-xl:2.5rem; --space-2xl:3rem;
     --ff-display:"Jost", "Jost fallback", system-ui, sans-serif; --ff-text:"Spectral", "Spectral fallback", Georgia, serif;
   }
   /* NIGHT (warm ~3000K) */
@@ -55,11 +58,11 @@
   }
   a{ color:inherit; }
 
-  .eyebrow{ font-family:var(--ff-display); font-weight:400; font-size:0.78rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 1rem; }
+  .eyebrow{ font-family:var(--ff-display); font-weight:400; font-size:0.78rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 var(--space-sm); }
   .measure{ max-width:var(--measure); }
-  h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3.1rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 1.2rem; }
-  h2.chap-title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.5rem, 2.6vw, 2.1rem); line-height:1.25; letter-spacing:-0.01em; margin:0 0 0.8rem; }
-  p{ margin:0 0 1.4rem; max-width:var(--measure); }
+  h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3.1rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 var(--space-sm); }
+  h2.chap-title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.5rem, 2.6vw, 2.1rem); line-height:1.25; letter-spacing:-0.01em; margin:0 0 var(--space-xs); }
+  p{ margin:0 0 var(--space-md); max-width:var(--measure); }
   p:last-child{ margin-bottom:0; }
 
   /* ---------- top bar (mirrors index.html) ---------- */
@@ -108,7 +111,7 @@
 
   /* ---------- footer (mirrors index.html) ---------- */
   footer{ margin-top:clamp(2.5rem, 6vw, 5rem); padding:clamp(3rem,7vw,5rem) var(--edge); background:var(--footer-bg); color:var(--footer-ink); transition:background-color 0.7s ease, color 0.7s ease; }
-  .foot-inner{ max-width:84rem; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.6rem 3rem; align-items:flex-end; justify-content:space-between; }
+  .foot-inner{ max-width:84rem; margin:0 auto; display:flex; flex-wrap:wrap; gap:var(--space-md) var(--space-2xl); align-items:flex-end; justify-content:space-between; }
   .foot-mark{ font-family:var(--ff-display); font-weight:300; letter-spacing:0.34em; font-size:1.5rem; text-indent:0.34em; text-decoration:none; color:inherit; }
   .foot-meta{ font-family:var(--ff-display); font-size:0.74rem; letter-spacing:0.14em; color:var(--footer-mute); line-height:1.9; text-transform:uppercase; }
   .foot-meta a{ color:var(--footer-ink); text-decoration:underline; text-underline-offset:0.18em; }

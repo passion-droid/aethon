@@ -93,6 +93,18 @@
     --wrap: 84rem;
     --edge: clamp(1.5rem, 6vw, 7rem);
     --section-y: clamp(3.5rem, 12vw, 11rem);
+    /* Spacing scale — 8pt grid (+ 4pt sub-steps). Proximity model: tight pairs use
+       3xs/2xs, items within a group sm, prose flow md, block / group breaks lg–2xl.
+       Keep ONE step between related items; jump a step to signal a new group.
+       (The hero keeps its own --hero-gap-* clamps: tight/loose ≈ 16/40px = sm/xl.) */
+    --space-3xs: 0.25rem;  /*  4px */
+    --space-2xs: 0.5rem;   /*  8px — tight pairs: label→input, title→source */
+    --space-xs:  0.75rem;  /* 12px */
+    --space-sm:  1rem;     /* 16px — within a group: eyebrow→title */
+    --space-md:  1.5rem;   /* 24px — prose flow (paragraphs) */
+    --space-lg:  2rem;     /* 32px */
+    --space-xl:  2.5rem;   /* 40px — block separations */
+    --space-2xl: 3rem;     /* 48px — group breaks */
     --plan-shadow: drop-shadow(0 6px 16px rgba(44, 38, 32, 0.20));
 
     --ff-display: "Jost", "Jost fallback", system-ui, sans-serif;
@@ -156,7 +168,7 @@
     letter-spacing: 0.32em;
     text-transform: uppercase;
     color: var(--ink-mute);
-    margin: 0 0 1.4rem;
+    margin: 0 0 var(--space-sm);   /* eyebrow → title: bind the label to its heading */
   }
 
   .measure{ max-width: var(--measure); }
@@ -167,10 +179,10 @@
     font-size: clamp(1.6rem, 3vw, 2.3rem);
     line-height: 1.25;
     letter-spacing: -0.01em;
-    margin: 0 0 1.6rem;
+    margin: 0 0 var(--space-md);
   }
 
-  p{ margin: 0 0 1.4rem; max-width: var(--measure); }
+  p{ margin: 0 0 var(--space-md); max-width: var(--measure); }
   p:last-child{ margin-bottom: 0; }
 
   .hairline{
@@ -364,34 +376,34 @@
   /* ---------- materials (a palette drawn from the coast) ---------- */
   .materials{ max-width: var(--wrap); margin: 0 auto; }
   .palette{ margin-top: clamp(2.4rem, 5vw, 3.6rem); display:grid; gap: clamp(2.2rem, 4.5vw, 3.6rem); }
-  .note{ display:grid; grid-template-columns: 1fr; gap: 1.1rem; }
+  .note{ display:grid; grid-template-columns: 1fr; gap: var(--space-sm); }
   @media (min-width: 760px){
     .note{ grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(2rem, 4vw, 3.5rem); align-items: start; }
   }
   .note + .note{ border-top: 1px solid var(--rule); padding-top: clamp(2.2rem, 4.5vw, 3.6rem); }
   .note-title{
     font-family: var(--ff-text); font-weight: 300; font-size: clamp(1.2rem, 2vw, 1.55rem);
-    line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 0.5rem;
+    line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 var(--space-2xs);
   }
   .note-source{ font-family: var(--ff-text); font-style: italic; color: var(--ink-soft); margin: 0; max-width: 40ch; }
   .note-mats{ display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: clamp(0.9rem, 2vw, 1.4rem); }
   .mat{ margin: 0; }
   .mat-chip{ display:block; width:100%; height: clamp(7rem, 13vw, 10rem); border: 1px solid var(--rule); object-fit: cover; }
   .mat figcaption{ display:block; padding-top: 0.7rem; }
-  .mat-name{ font-family: var(--ff-display); font-size: 0.84rem; letter-spacing: 0.06em; display:block; margin-bottom: 0.15rem; }
+  .mat-name{ font-family: var(--ff-display); font-size: 0.84rem; letter-spacing: 0.06em; display:block; margin-bottom: var(--space-3xs); }
   .mat-note{ font-size: 0.84rem; color: var(--ink-mute); line-height: 1.45; }
 
   /* ---------- gallery (render slots) ---------- */
   .gallery{ max-width: var(--wrap); margin: 0 auto; }
   .frames{
     display:grid; grid-template-columns: 1fr; gap: clamp(1rem, 2.4vw, 1.6rem);
-    margin-top: 2.6rem;
+    margin-top: var(--space-xl);
   }
   @media (min-width: 760px){
     .frames{ grid-template-columns: 1fr 1fr; }
     .frame.wide, .frame.band{ grid-column: 1 / -1; }
   }
-  .pf{ margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  .pf{ margin: 0; display: flex; flex-direction: column; gap: var(--space-xs); }
   .frame.plan{ aspect-ratio: 1600 / 1132; background: transparent; overflow: visible; }
   .frame.plan::after{ content: none; }                              /* drop the rectangular glow */
   .frame.plan .shot{ filter: var(--plan-shadow); transition: filter 0.7s ease; }  /* shadow follows the plan's contour, not a box */
@@ -448,12 +460,12 @@
   /* ---------- interest form ---------- */
   .interest{ max-width: 58rem; margin: 0 auto; }
   .interest .intro{ max-width: 66ch; }
-  form.register{ margin-top: 2.4rem; }
-  .register-done{ margin-top: 2.4rem; }
-  .register-done__line{ font-family: var(--ff-display); font-weight: 300; font-size: clamp(1.15rem, 1.7vw, 1.45rem); letter-spacing: 0.01em; color: var(--accent); margin: 0 0 0.5rem; transition: color 0.7s ease; }
-  .grid-2{ display:grid; grid-template-columns:1fr; gap: 1.4rem; }
+  form.register{ margin-top: var(--space-xl); }
+  .register-done{ margin-top: var(--space-xl); }
+  .register-done__line{ font-family: var(--ff-display); font-weight: 300; font-size: clamp(1.15rem, 1.7vw, 1.45rem); letter-spacing: 0.01em; color: var(--accent); margin: 0 0 var(--space-2xs); transition: color 0.7s ease; }
+  .grid-2{ display:grid; grid-template-columns:1fr; gap: var(--space-md); }
   @media (min-width: 620px){ .grid-2{ grid-template-columns: 1fr 1fr; } }
-  .field{ display:flex; flex-direction:column; gap: 0.5rem; }
+  .field{ display:flex; flex-direction:column; gap: var(--space-2xs); }
   .field.full{ grid-column: 1 / -1; }
   label{
     font-family: var(--ff-display); font-size: 0.72rem; letter-spacing: 0.16em;
@@ -470,7 +482,7 @@
   .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 
   button.submit{
-    margin-top: 2.2rem;
+    margin-top: var(--space-lg);
     font-family: var(--ff-display); font-size: 0.76rem; letter-spacing: 0.22em;
     text-transform: uppercase; color: var(--accent-on);
     background: var(--accent); border: 1px solid var(--accent);
@@ -479,14 +491,15 @@
   }
   button.submit:hover{ background: transparent; color: var(--accent); }
   button.submit:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
-  .form-note{ font-size: 0.86rem; color: var(--ink-mute); margin-top: 1.4rem; }
+  .form-note{ font-size: 0.86rem; color: var(--ink-mute); margin-top: var(--space-md); }
   .form-note a{ color: var(--accent); text-decoration: underline; text-underline-offset: 0.15em; }
 
   /* ---------- credits (colophon) ---------- */
-  .credits-list{ margin-top: 2.4rem; }
-  .credits-sublabel{ margin-top: 3.2rem; }
+  .credits-list{ margin-top: var(--space-xl); }
+  .credits-sublabel{ margin-top: var(--space-2xl); }                 /* loose: a clear break from the facts list above */
+  .credits-sublabel + .credits-list{ margin-top: var(--space-sm); }  /* close: the label hugs the team list it introduces */
   .credits-list > div{
-    display:grid; grid-template-columns: 1fr; gap: 0.15rem;
+    display:grid; grid-template-columns: 1fr; gap: var(--space-3xs);
     padding: 0.9rem 0; border-top: 1px solid var(--rule);
   }
   .credits-list > div:last-child{ border-bottom: 1px solid var(--rule); }
@@ -498,7 +511,7 @@
   .credits-list dd a{ color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; transition: color 0.7s ease, opacity 0.2s ease; }
   .credits-list dd a:hover{ opacity: 0.72; }
   @media (min-width: 620px){
-    .credits-list > div{ grid-template-columns: 13rem 1fr; gap: 1.4rem; align-items: baseline; }
+    .credits-list > div{ grid-template-columns: 13rem 1fr; gap: var(--space-md); align-items: baseline; }
   }
 
   /* gallery entry link (end of Views) + footer link */
@@ -516,7 +529,7 @@
   }
   .foot-inner{
     max-width: var(--wrap); margin: 0 auto;
-    display:flex; flex-wrap:wrap; gap: 1.6rem 3rem; align-items:flex-end; justify-content:space-between;
+    display:flex; flex-wrap:wrap; gap: var(--space-md) var(--space-2xl); align-items:flex-end; justify-content:space-between;
   }
   .foot-mark{
     font-family: var(--ff-display); font-weight: 300; letter-spacing: 0.34em;

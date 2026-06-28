@@ -69,8 +69,10 @@ impression and the mobile layout matter.
   (`[descriptor + AETHON]` · gap · `[house of light + hero-line + subline]`) via
   `--hero-gap-tight` (≈16px) / `--hero-gap-loose` (≈40px, ~2.5×). When adding or adjusting spacing,
   reuse the existing rhythm and make the gap *say* the relationship — don't invent a one-off rem
-  value. (The rest of the site still uses ad-hoc per-element gaps; a shared `--space-*` scale is
-  the proposed next step.)
+  value. (Now applied site-wide as the **`--space-*` scale** — 8-pt tokens in each page's `:root`,
+  hand-synced across all four files like the colour tokens; fluid section rhythm stays
+  `clamp()`-based. The full scale, proximity model and the audit it came from:
+  `docs/spacing-and-rhythm.md`.)
 
 ## Deploying a change
 - Hosted free on **GitHub Pages**, served from the **`main`** branch, root folder.
