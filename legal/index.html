@@ -23,6 +23,9 @@
     --rule:rgba(44,38,32,0.16); --field-line:rgba(44,38,32,0.55); --bar-bg:rgba(233,231,224,0.82);
     --footer-bg:#2C2620; --footer-ink:#E9E7E0; --footer-mute:rgba(233,231,224,0.70);
     --edge:clamp(1.5rem, 6vw, 7rem);
+    /* spacing scale — synced with index.html (8pt grid; proximity model) */
+    --space-3xs:0.25rem; --space-2xs:0.5rem; --space-xs:0.75rem; --space-sm:1rem;
+    --space-md:1.5rem; --space-lg:2rem; --space-xl:2.5rem; --space-2xl:3rem;
     --ff-display:"Jost", "Jost fallback", system-ui, sans-serif; --ff-text:"Spectral", "Spectral fallback", Georgia, serif;
   }
   body.night{
@@ -53,23 +56,23 @@
 
   .legal{ max-width:64rem; margin:0 auto; padding:clamp(5.5rem, 13vh, 8.5rem) var(--edge) clamp(3rem, 7vw, 5rem); }
   .measure{ max-width:64ch; }
-  .eyebrow{ font-family:var(--ff-display); font-weight:400; font-size:0.78rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 1rem; }
-  h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 0.8rem; }
-  .lede{ color:var(--ink-soft); margin:0 0 2.6rem; }
-  h2{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.35rem, 2.4vw, 1.8rem); line-height:1.25; letter-spacing:-0.01em; margin:2.8rem 0 1rem; }
-  h3{ font-family:var(--ff-display); font-weight:500; font-size:0.74rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); margin:1.8rem 0 0.6rem; }
-  p{ margin:0 0 1.2rem; max-width:64ch; }
+  .eyebrow{ font-family:var(--ff-display); font-weight:400; font-size:0.78rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 var(--space-sm); }
+  h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 var(--space-xs); }
+  .lede{ color:var(--ink-soft); margin:0 0 var(--space-xl); }
+  h2{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.35rem, 2.4vw, 1.8rem); line-height:1.25; letter-spacing:-0.01em; margin:var(--space-2xl) 0 var(--space-sm); }
+  h3{ font-family:var(--ff-display); font-weight:500; font-size:0.74rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); margin:var(--space-lg) 0 var(--space-2xs); }
+  p{ margin:0 0 var(--space-md); max-width:64ch; }
   a.link, .legal a:not(.mark):not(.foot-mark){ color:var(--accent); text-decoration:underline; text-underline-offset:0.16em; }
-  dl.imprint{ margin:0 0 1rem; display:grid; gap:0.35rem 1.4rem; }
+  dl.imprint{ margin:0 0 var(--space-sm); display:grid; gap:var(--space-3xs) var(--space-md); }
   @media (min-width:560px){ dl.imprint{ grid-template-columns:11rem 1fr; align-items:baseline; } }
   dl.imprint dt{ font-family:var(--ff-display); font-size:0.74rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-mute); }
   dl.imprint dd{ margin:0; }
   .ph{ color:var(--ink-mute); font-style:italic; }
   .small{ font-size:0.86rem; color:var(--ink-mute); }
-  hr.rule{ height:1px; border:0; background:var(--rule); margin:2.4rem 0; }
+  hr.rule{ height:1px; border:0; background:var(--rule); margin:var(--space-xl) 0; }
 
   footer{ margin-top:clamp(2.5rem, 6vw, 5rem); padding:clamp(3rem,7vw,5rem) var(--edge); background:var(--footer-bg); color:var(--footer-ink); transition:background-color 0.7s ease, color 0.7s ease; }
-  .foot-inner{ max-width:64rem; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.6rem 3rem; align-items:flex-end; justify-content:space-between; }
+  .foot-inner{ max-width:64rem; margin:0 auto; display:flex; flex-wrap:wrap; gap:var(--space-md) var(--space-2xl); align-items:flex-end; justify-content:space-between; }
   .foot-mark{ font-family:var(--ff-display); font-weight:300; letter-spacing:0.34em; font-size:1.5rem; text-indent:0.34em; text-decoration:none; color:inherit; }
   .foot-meta{ font-family:var(--ff-display); font-size:0.74rem; letter-spacing:0.14em; color:var(--footer-mute); line-height:1.9; text-transform:uppercase; }
   .foot-meta a{ color:var(--footer-ink); text-decoration:underline; text-underline-offset:0.18em; }
