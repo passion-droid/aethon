@@ -54,14 +54,14 @@
   .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
   @media (max-width:640px){ .toggle{ width:2.75rem; height:2.75rem; } }
 
-  .legal{ max-width:64rem; margin:0 auto; padding:clamp(5.5rem, 13vh, 8.5rem) var(--edge) clamp(3rem, 7vw, 5rem); }
-  .measure{ max-width:64ch; }
+  .legal{ max-width:66rem; margin:0 auto; padding:clamp(5.5rem, 13vh, 8.5rem) var(--edge) clamp(3rem, 7vw, 5rem); }
+  .measure{ max-width:92ch; }   /* wider reading measure on legal — fewer line breaks, less scrolling */
   .eyebrow{ font-family:var(--ff-display); font-weight:400; font-size:0.78rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 var(--space-sm); }
   h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 var(--space-xs); }
   .lede{ color:var(--ink-soft); margin:0 0 var(--space-xl); }
   h2{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.35rem, 2.4vw, 1.8rem); line-height:1.25; letter-spacing:-0.01em; margin:var(--space-2xl) 0 var(--space-sm); }
   h3{ font-family:var(--ff-display); font-weight:500; font-size:0.74rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); margin:var(--space-lg) 0 var(--space-2xs); }
-  p{ margin:0 0 var(--space-md); max-width:64ch; }
+  p{ margin:0 0 var(--space-md); max-width:92ch; }
   a.link, .legal a:not(.mark):not(.foot-mark){ color:var(--accent); text-decoration:underline; text-underline-offset:0.16em; }
   dl.imprint{ margin:0 0 var(--space-sm); display:grid; gap:var(--space-3xs) var(--space-md); }
   @media (min-width:560px){ dl.imprint{ grid-template-columns:11rem 1fr; align-items:baseline; } }
