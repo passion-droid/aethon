@@ -134,7 +134,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Images:** an `images/` folder + a **buildless optimisation pipeline** now exist — see
   `images/README.md` (AVIF→WebP→JPEG via `<picture>`, 400/800w, uniform 3:2, sRGB,
   metadata stripped; Pillow runs it in-session). **Materials done:** the 8 macro swatches
-  are wired (48 assets in `images/materials/`, brand colour kept as a load-time tint).
+  are wired (48 assets in `images/materials/`, brand colour kept as a load-time tint;
+  **Patiti** — the Mediterranean hand-pressed lime plaster — replaced Venetian plaster, #53).
   Still placeholders, awaiting real images via the same pipeline: the hero ambient loop,
   the establishing-film plate in *The place*, companion images under *The architecture* /
   *The garden* / *The interior*, and the eight-slot *Views* gallery (in-code shot brief). Scales to ~20–30 photographs; once they land,
@@ -311,6 +312,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   The garden → The interior → Materials → Views → Register interest → Credits.
 - Floor plans and credits placement — **decided:** the *Plan* sits after *The
   architecture*; *Credits* is a colophon before the footer.
+- **Hero — copy & spacing settled (#50, #52).** Both hero sentences run on one line on desktop
+  (uncapped + `text-wrap: balance`/`pretty`; hero-line max font 2rem), balanced-wrapping on phones.
+  Vertical rhythm is two proximity groups — `[descriptor + AETHON]` · gap · `[house of light +
+  hero-line + subline]` — via `--hero-gap-tight`/`--hero-gap-loose` (≈16/40px). The fixed top bar
+  solidifies at **20%** of viewport scroll (`innerHeight*0.2`, was 0.6) so it no longer overlaps the
+  descending hero; the mobile hero-media overlap was fixed. Don't re-open these unprompted.
 - **Hero motion / a short film** — slots in place (a hero ambient-loop and an establishing-film
   plate in *The place*); commissioning is pending footage. Device policy: the **hero is a still
   on mobile** — any motion/video is desktop/wifi only. Brief: `docs/imagery-brief.md`.
