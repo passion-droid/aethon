@@ -118,7 +118,7 @@ Do **not** introduce other accent colours (e.g. ocean blue, from an earlier draf
 The sea is evoked through light and stone — never a blue accent.
 
 Added finishes (from the interior plans; chip tones are indicative, not exact):
-- Venetian plaster / Stucco Veneziano ~ `#D9CFBE` (warm hand-troweled wall texture)
+- Patiti (πατητή) — Mediterranean hand-pressed lime plaster ~ `#C5B292` (wave-structured wall texture; replaced Venetian plaster in *The material language*)
 - Corian "Witch Hazel" ~ `#E8DDC9` (pale, lit shelving)
 - Iroko solid wood ~ `#9C6A3E` (warm hardwood)
 
@@ -182,9 +182,11 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   then shared links show text only (no image) — this is the one preview gap that's asset-blocked.
 - **SEO / meta pass — done (PR #39; title refined #49).** The meta/OG **descriptions** carry the
   searchable terms (seafront residence · Paphos, Cyprus · Faros beach, "a sanctuary…"); the
-  **`<title>` + og/twitter titles** all lead with the branded **"AETHON House — house of light"**
-  lockup (owner-directed in #49 for a more luxurious, branded SERP — supersedes #39/#40's
-  descriptive "private seafront residence" title; keywords now live in the description). Added a `twitter:card`
+  **site name** (`og:site_name` + `WebSite` JSON-LD `name`) is the poetic lockup **"AETHON ·
+  House of Light"** (#52 — Google was ignoring bare "AETHON" and falling back to the domain), while
+  the **`<title>` + og/twitter titles** lead with **"AETHON House — private seafront residence"**
+  (#52 de-duped the tagline out of the title now that the site-name line carries it — both still
+  lead with the **"AETHON House"** lockup; the #49 "house of light" title moved into the site name). Added a `twitter:card`
   (`summary_large_image`, text now, image-ready), region-level geo tags (`geo.region=CY-05`,
   `geo.placename=Paphos, Cyprus` — no coordinates, per the no-address rule), `lang="en-GB"`, and
   synced the `WebSite` JSON-LD. **Strategy (don't undo):** this is a one-page brand site — it can
@@ -201,7 +203,7 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   significant private seafront residence*, discovered via design — not a listing. **Brand collisions
   to know:** "Aethon" also = **Almyra Hotel's "Aethon" sea-view rooms** (same city) + the **"House of
   Aion"** mosaic site → always use the **"AETHON House"** lockup — the `<title>`/og/twitter titles
-  lead with **"AETHON House — house of light"** (#49) to disambiguate + match the `.house` domain. Highest-
+  lead with the **"AETHON House"** lockup to disambiguate + match the `.house` domain (the site-name line carries *House of Light*, #52). Highest-
   leverage off-page win: a backlink from the **credited team** (Vardastudio, House Talks, Dear Modern
   / Cliff Tan). **GSC + sitemap: done by owner** (domain verified, `sitemap.xml` submitted, `/` +
   `/legal/` discovered).
