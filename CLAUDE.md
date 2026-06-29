@@ -42,9 +42,9 @@ impression and the mobile layout matter.
 - Fonts are **self-hosted** (LT Museum + Spectral, SIL OFL) — 4 woff2 in `/fonts/` (**latin subset
   only**; the copy is basic-Latin — add latin-ext only if accented text appears) + `@font-face`
   in each page's `<style>`; **no third-party CDN** (GDPR: no visitor IP to Google). Local too.
-  **`--ff-display` is LT Museum** (`ltmuseum-lt.woff2` — the brand display face: logo, nav,
-  eyebrows, labels, buttons; one Medium weight, declared across `font-weight: 100 900` so every
-  requested weight maps to it). **`--ff-text` is Spectral** (3 static faces — the body serif:
+  **`--ff-display` is LT Museum** (`ltmuseum-lt.woff2` **Medium** + `ltmuseum-bold-lt.woff2`
+  **Bold** — the brand display face: Medium for nav / labels / lockups, **Bold for the section
+  eyebrows**; declared as two ranges `font-weight: 100 550` / `551 900`). **`--ff-text` is Spectral** (3 static faces — the body serif:
   headings + prose). LT Museum replaced **Jost** with Oli's brand assets; each face has a
   metric-matched `local()` fallback to hold CLS. (Brand mark + favicon also shipped — see *Known TODOs*.)
 - **Mobile is the primary (QR) audience — mobile-first.** Fluid `clamp()` type, `100svh` hero,
@@ -180,7 +180,7 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   body/headings); the **AETHON logo** image-replaces the header mark, hero wordmark and footer mark
   (`/brand/logo-{dark,white,whiteout}.svg`; the "AETHON" text is kept off-screen for SEO/a11y) —
   **day = dark + gold dot · night = white + gold dot · footer = whiteout**; and a **favicon set**
-  from the "A" icon (round tab favicon + square olive `apple-touch`/maskable) + `site.webmanifest`,
+  from the square "A" icon (crisp `icon.svg` SVG favicon + ico/PNG fallback + maskable `apple-touch`) + `site.webmanifest`,
   linked in every `<head>`. **Gold stays logo-only** (owner decision — UI accent stays green; gold
   reads close to coastal-sandstone, so it sits in the stone palette). Brand palette **gold
   `#C1A152` · olive `#4C5039` · warm black `#222216`** (+ 60/20% tints) recorded for future use.
