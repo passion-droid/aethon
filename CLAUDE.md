@@ -172,10 +172,17 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   on-page, and a Brevo custom redirect back to the site.
 - **Domain:** `aethon.house` is connected (a `CNAME` file is on `main`); the site uses it
   as the canonical / Open Graph URL.
-- **Icons / brand mark: open.** No `favicon`, `apple-touch-icon` or `web-manifest` ship yet —
-  **awaiting the designer's brand-mark assets** (delivering soon). When they land, add a small
-  favicon set + `apple-touch-icon` + a minimal manifest (self-hosted, no CDN), and wire the
-  mark into the header if wanted. The header wordmark already has a 44px tap target reserved.
+- **Icons / brand mark: in progress — Oli's styleguide received (2026-06).** Full spec in
+  **`docs/brand-styleguide.md`** (+ the PDF). It delivers: the **AETHON logotype** (olive `#4C5039`
+  letters + a **gold `#C1A152` dot** over the O) as SVG + a **whiteout** version; the **"A" icon**
+  (favicon basis); the **LT Museum** display font (Medium/Bold → replaces **Jost**; **Spectral**
+  stays for body — self-host the `.ttf` as subset woff2, **license check needed**); and a brand
+  palette **gold `#C1A152` · olive `#4C5039` · warm black `#222216`** (+ 60/20% tints).
+  **Gold is new** (the site is currently green-accent-only) → **how far gold travels into the UI is
+  an open owner decision** (logo-only / second accent / primary accent — see the memo). To ship
+  once the SVGs/font/favicon upload + the gold call is made: favicon set + `apple-touch-icon` +
+  manifest, **header logo replacing the text wordmark** (confirmed), footer whiteout logo, and the
+  LT Museum font. The header wordmark already has a 44px tap target reserved.
 - **`og:image` / `twitter:image`: open (todo).** Still **no social-share image** — **awaiting
   photography** (needs a 1200×630 master, warm/afterglow register, never blue; run through the
   image pipeline). Both tags are **pre-wired as comments** in `index.html` (with `og:image:alt`
