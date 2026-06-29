@@ -190,6 +190,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   image pipeline). Both tags are **pre-wired as comments** in `index.html` (with `og:image:alt`
   + `og:image:width/height`): drop the photo at `/images/og.jpg` and uncomment to activate. Until
   then shared links show text only (no image) — this is the one preview gap that's asset-blocked.
+  **Interim option now available:** with the brand assets shipped, a **branded** `og:image` (the
+  AETHON logo on warm stone / afterglow, 1200×630) could fill the gap before the photo shoot.
 - **SEO / meta pass — done (PR #39; title refined #49).** The meta/OG **descriptions** carry the
   searchable terms (seafront residence · Paphos, Cyprus · Faros beach, "a sanctuary…"); the
   **site name** (`og:site_name` + `WebSite` JSON-LD `name`) is the poetic lockup **"AETHON ·
@@ -334,7 +336,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   *every* section (the makeover + a follow-up pass brought *The plan*, *Materials*, *Views*,
   *Register interest* and *In brief* onto it; see *How the site is built*). The structure/UX
   frontier is essentially closed — don't re-open the column layout unprompted.
-- **Next up (the real frontier): photography.** Text + structure + responsive UX are
-  essentially complete; the remaining quality is visual — commission the matched Daylight/
+- **Brand identity — done (Oli's styleguide, #54–#55).** LT Museum (Medium + Bold) self-hosted;
+  the AETHON logo replaces the wordmark in header / hero / footer (day dark · night white · footer
+  whiteout, gold dot kept); square "A" favicon + maskable app icons + `site.webmanifest`; section
+  eyebrows set in LT Museum Bold; gold stays logo-only. Full record: `docs/brand-styleguide.md`
+  + the *Icons / brand mark* TODO.
+- **Next up (the real frontier): photography.** Text, structure, responsive UX **and the brand
+  identity** are now complete; the remaining quality is visual — commission the matched Daylight/
   Afterglow shoot per `docs/imagery-brief.md`, then drop pairs into `.shot-pair`, wire the
-  woven plates + *Views* + `/gallery/`, and add the lightbox.
+  woven plates + *Views* + `/gallery/`, and add the lightbox. (A branded `og:image` — the logo on
+  warm stone — is now possible as an interim until photography lands; see the og:image TODO.)
