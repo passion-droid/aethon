@@ -39,12 +39,14 @@ impression and the mobile layout matter.
   `<style>` block), and a little JavaScript (in a `<script>` block).
 - **No build step, no framework, no dependencies, no package manager. Do not
   introduce any.** Do not split the CSS or JS into separate files unless explicitly asked.
-- Fonts are **self-hosted** (Jost + Spectral, SIL OFL) — 4 woff2 in `/fonts/` (**latin subset
+- Fonts are **self-hosted** (LT Museum + Spectral, SIL OFL) — 4 woff2 in `/fonts/` (**latin subset
   only**; the copy is basic-Latin — add latin-ext only if accented text appears) + `@font-face`
   in each page's `<style>`; **no third-party CDN** (GDPR: no visitor IP to Google). Local too.
-  **Jost is a variable font** (`jost-lt.woff2`, wght 100–900) served via one `@font-face
-  { font-weight: 100 900 }` — it covers 300/400/500 in a single download; don't re-split it
-  into per-weight files (they'd be identical and fetched 3×). Spectral is 3 static faces.
+  **`--ff-display` is LT Museum** (`ltmuseum-lt.woff2` — the brand display face: logo, nav,
+  eyebrows, labels, buttons; one Medium weight, declared across `font-weight: 100 900` so every
+  requested weight maps to it). **`--ff-text` is Spectral** (3 static faces — the body serif:
+  headings + prose). LT Museum replaced **Jost** with Oli's brand assets; each face has a
+  metric-matched `local()` fallback to hold CLS. (Brand mark + favicon also shipped — see *Known TODOs*.)
 - **Mobile is the primary (QR) audience — mobile-first.** Fluid `clamp()` type, `100svh` hero,
   ~44px touch targets, 16px inputs (no iOS zoom), single-column stacking. Desktop shows the
   inline nav links; **below 640px they are replaced by a quiet full-screen overlay menu**
@@ -172,17 +174,17 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   on-page, and a Brevo custom redirect back to the site.
 - **Domain:** `aethon.house` is connected (a `CNAME` file is on `main`); the site uses it
   as the canonical / Open Graph URL.
-- **Icons / brand mark: in progress — Oli's styleguide received (2026-06).** Full spec in
-  **`docs/brand-styleguide.md`** (+ the PDF). It delivers: the **AETHON logotype** (olive `#4C5039`
-  letters + a **gold `#C1A152` dot** over the O) as SVG + a **whiteout** version; the **"A" icon**
-  (favicon basis); the **LT Museum** display font (Medium/Bold → replaces **Jost**; **Spectral**
-  stays for body — self-host the `.ttf` as subset woff2, **license check needed**); and a brand
-  palette **gold `#C1A152` · olive `#4C5039` · warm black `#222216`** (+ 60/20% tints).
-  **Gold is new** (the site is currently green-accent-only) → **how far gold travels into the UI is
-  an open owner decision** (logo-only / second accent / primary accent — see the memo). To ship
-  once the SVGs/font/favicon upload + the gold call is made: favicon set + `apple-touch-icon` +
-  manifest, **header logo replacing the text wordmark** (confirmed), footer whiteout logo, and the
-  LT Museum font. The header wordmark already has a 44px tap target reserved.
+- **Icons / brand mark — DONE (Oli's styleguide, wired).** Full spec in
+  **`docs/brand-styleguide.md`** (+ the PDF). Shipped across all four pages: **LT Museum** (OFL)
+  self-hosted as `ltmuseum-lt.woff2`, now `--ff-display` (replaced **Jost**; **Spectral** stays for
+  body/headings); the **AETHON logo** image-replaces the header mark, hero wordmark and footer mark
+  (`/brand/logo-{dark,white,whiteout}.svg`; the "AETHON" text is kept off-screen for SEO/a11y) —
+  **day = dark + gold dot · night = white + gold dot · footer = whiteout**; and a **favicon set**
+  from the "A" icon (round tab favicon + square olive `apple-touch`/maskable) + `site.webmanifest`,
+  linked in every `<head>`. **Gold stays logo-only** (owner decision — UI accent stays green; gold
+  reads close to coastal-sandstone, so it sits in the stone palette). Brand palette **gold
+  `#C1A152` · olive `#4C5039` · warm black `#222216`** (+ 60/20% tints) recorded for future use.
+  Masters (`.ttf`, source SVGs, the raw favicon) aren't committed — only the served assets are.
 - **`og:image` / `twitter:image`: open (todo).** Still **no social-share image** — **awaiting
   photography** (needs a 1200×630 master, warm/afterglow register, never blue; run through the
   image pipeline). Both tags are **pre-wired as comments** in `index.html` (with `og:image:alt`

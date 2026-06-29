@@ -5,6 +5,11 @@ designer's authoritative brand sheet. Where it differs from the site's existing 
 rules in `CLAUDE.md`, those differences are **flagged below** — to be reconciled with the owner,
 not silently overwritten.
 
+> **Status — wired across all four pages (2026-06).** LT Museum is now `--ff-display`; the logo
+> image-replaces the header mark, hero wordmark and footer mark (day = dark + gold dot, night =
+> white + gold dot, footer = whiteout); favicon set + `site.webmanifest` shipped. **Gold decision:
+> logo-only** (UI accent stays green). Masters removed — only the served assets are committed.
+
 ---
 
 ## Logo
@@ -48,7 +53,7 @@ which are drawn from the house and remain the page grounds. The three guide colo
 - **Gold `#C1A152`** is **new** — the current brand is **green-accent-only** (`CLAUDE.md`: "one
   accent colour only — green … never a blue accent"). Gold enters at minimum via the **logo dot**.
 
-### OPEN DECISION — how far does gold travel? (owner's call)
+### DECISION (resolved) — gold travels **logo-only**; the options considered were:
 1. **Logo only** — gold lives only in the logo dot + favicon; the site keeps its green UI accent
    (links/buttons) and stone palette unchanged. *Safest; smallest change.*
 2. **Gold as a second accent** — green stays the UI accent, gold used sparingly for special
