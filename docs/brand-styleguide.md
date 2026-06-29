@@ -9,6 +9,8 @@ not silently overwritten.
 > image-replaces the header mark, hero wordmark and footer mark (day = dark + gold dot, night =
 > white + gold dot, footer = whiteout); favicon set + `site.webmanifest` shipped. **Gold decision:
 > logo-only** (UI accent stays green). Masters removed — only the served assets are committed.
+> **Both weights wired:** LT Museum **Medium** for nav/labels, **Bold** for the section eyebrows.
+> Favicon uses Oli's **square** "A" icon — a crisp `icon.svg` SVG favicon + maskable app icons.
 
 ---
 
