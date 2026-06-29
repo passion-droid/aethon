@@ -7,9 +7,14 @@
 <meta name="description" content="A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros beach." />
 <link rel="canonical" href="https://aethon.house/" />
 <meta name="theme-color" content="#E9E7E0" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
 <meta name="geo.region" content="CY-05" />
 <meta name="geo.placename" content="Paphos, Cyprus" />
-<link rel="preload" as="font" type="font/woff2" href="/fonts/jost-lt.woff2" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="/fonts/ltmuseum-lt.woff2" crossorigin />
 <link rel="preload" as="font" type="font/woff2" href="/fonts/spectral-300i-lt.woff2" crossorigin />
 
 <!-- Open Graph (how the link looks when shared) -->
@@ -45,13 +50,14 @@
 
 
 <style>
-  /* Self-hosted fonts (Jost + Spectral, SIL OFL) — no third-party CDN; no visitor IP sent to Google. */
-  @font-face{ font-family:'Jost'; font-style:normal; font-weight:100 900; font-display:swap; src:url(/fonts/jost-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  /* Self-hosted fonts (LT Museum + Spectral, SIL OFL) — no third-party CDN; no visitor IP sent to Google.
+     LT Museum is one weight (Medium); declared across 100–900 so every display weight maps to it. */
+  @font-face{ font-family:'LT Museum'; font-style:normal; font-weight:100 900; font-display:swap; src:url(/fonts/ltmuseum-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:italic; font-weight:300; font-display:swap; src:url(/fonts/spectral-300i-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:300; font-display:swap; src:url(/fonts/spectral-300-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:400; font-display:swap; src:url(/fonts/spectral-400-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   /* Metric-matched fallbacks — local() fonts scaled to the web fonts so the swap doesn't shift layout (CLS). */
-  @font-face{ font-family:'Jost fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:95.9%; ascent-override:111.6%; descent-override:39.1%; line-gap-override:0%; }
+  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:116.7%; ascent-override:81.3%; descent-override:18.2%; line-gap-override:0%; }
   @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
 
   :root{
@@ -107,7 +113,7 @@
     --space-2xl: 3rem;     /* 48px — group breaks */
     --plan-shadow: drop-shadow(0 6px 16px rgba(44, 38, 32, 0.20));
 
-    --ff-display: "Jost", "Jost fallback", system-ui, sans-serif;
+    --ff-display: "LT Museum", "LT Museum fallback", system-ui, sans-serif;
     --ff-text: "Spectral", "Spectral fallback", Georgia, serif;
   }
 
@@ -206,14 +212,12 @@
     border-bottom-color: var(--rule);
   }
   .bar .mark{
-    font-family: var(--ff-display);
-    font-weight: 400;
-    letter-spacing: 0.34em;
-    font-size: 0.92rem;
+    display: inline-block; min-height: 44px; width: 6rem;
+    background: url(/brand/logo-dark.svg) left center / contain no-repeat;
+    text-indent: -9999px; overflow: hidden; white-space: nowrap;
     text-decoration: none;
-    padding-left: 0.34em;
-    display: inline-flex; align-items: center; min-height: 44px;
   }
+  body.night .bar .mark{ background-image: url(/brand/logo-white.svg); }
   .bar-right{ display:flex; align-items:center; gap: clamp(1.2rem, 3vw, 2.2rem); }
   nav.links{ display:flex; gap: clamp(1.2rem, 3vw, 2.4rem); }
   nav.links a{
@@ -329,10 +333,11 @@
     color: var(--ink-mute); margin: 0 0 var(--hero-gap-tight);   /* close: descriptor → AETHON */
   }
   .wordmark{
-    font-family: var(--ff-display); font-weight: 300;
-    font-size: clamp(3rem, 11vw, 7.2rem); letter-spacing: 0.34em;
-    line-height: 0.95; margin: 0; text-indent: 0.34em; color: var(--ink);
+    width: clamp(16rem, 44vw, 27rem); aspect-ratio: 366.78 / 85.09; margin: 0;
+    background: url(/brand/logo-dark.svg) left center / contain no-repeat;
+    text-indent: -9999px; overflow: hidden; white-space: nowrap;
   }
+  body.night .wordmark{ background-image: url(/brand/logo-white.svg); }
   .tagline{
     font-family: var(--ff-display); font-weight: 400;
     font-size: clamp(0.8rem, 1.4vw, 0.95rem); letter-spacing: 0.26em;
@@ -532,8 +537,9 @@
     display:flex; flex-wrap:wrap; gap: var(--space-md) var(--space-2xl); align-items:flex-end; justify-content:space-between;
   }
   .foot-mark{
-    font-family: var(--ff-display); font-weight: 300; letter-spacing: 0.34em;
-    font-size: 1.5rem; text-indent: 0.34em;
+    display: inline-block; width: 9rem; aspect-ratio: 366.78 / 85.09;
+    background: url(/brand/logo-whiteout.svg) left center / contain no-repeat;
+    text-indent: -9999px; overflow: hidden; white-space: nowrap;
   }
   .foot-meta{
     font-family: var(--ff-display); font-size: 0.74rem; letter-spacing: 0.14em;
