@@ -87,6 +87,14 @@
   nav.links a:hover{ border-bottom-color:var(--accent); color:var(--ink); }
   @media (max-width:480px){ nav.links a{ font-size:0.66rem; letter-spacing:0.1em; } }
 
+  /* section tracker — a quiet scroll position indicator (chapters I–VI), centred in the bar */
+  .tracker{ position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:clamp(0.5rem, 1.4vw, 1rem); }
+  .tracker a{ font-family:var(--ff-display); font-size:0.72rem; letter-spacing:0.1em; line-height:1; color:var(--ink-mute); text-decoration:none; opacity:0.55; padding:0.45rem 0.15rem; transition:opacity 0.3s ease, color 0.3s ease; }
+  .tracker a span{ display:inline-block; min-width:1.1em; text-align:center; }
+  .tracker a:hover{ opacity:1; color:var(--ink); }
+  .tracker a.active{ opacity:1; color:var(--accent); }
+  @media (max-width:600px){ .tracker{ display:none; } }   /* desktop / tablet enhancement */
+
   .toggle{ width:2.2rem; height:2.2rem; border-radius:50%; border:1px solid var(--field-line); background:transparent; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; line-height:1; flex:none; transition:border-color 250ms ease, color 250ms ease, background-color 700ms ease; }
   .toggle:hover{ border-color:var(--accent); color:var(--accent); }
   .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
@@ -96,18 +104,27 @@
   main{ padding-top:clamp(5rem, 12vh, 8rem); }
   .wrap{ max-width:84rem; margin:0 auto; padding:0 var(--edge); }
   .gal-intro{ padding:clamp(2rem, 5vw, 4rem) 0 clamp(1.5rem, 4vw, 3rem); }
-  .chapter{ padding:clamp(2.5rem, 6vw, 5rem) 0; }
+  .chapter{ padding:clamp(3rem, 7vw, 6rem) 0; scroll-margin-top:5rem; }
   .chap-head{ margin:0 0 clamp(1.6rem, 3vw, 2.4rem); }
   .chap-head p{ color:var(--ink-soft); }
 
   /* plates are figures with a caption *beneath* (a wall label), not an overlay; a placeholder
      .ph holds the slot until a <picture> lands. Layout varies per chapter for rhythm. */
-  .plates{ display:grid; grid-template-columns:1fr; gap:clamp(1rem, 2.4vw, 1.8rem); }
+  .plates{ display:grid; grid-template-columns:1fr; gap:clamp(1.2rem, 2.6vw, 2.2rem); }
+  @media (min-width:480px){
+    .plates.three{ grid-template-columns:1fr 1fr; }
+  }
   @media (min-width:680px){
     .plates{ grid-template-columns:1fr 1fr; }
-    .plates.offset{ grid-template-columns:1.5fr 1fr; }      /* editorial asymmetry */
+    .plates.offset{ grid-template-columns:1.5fr 1fr; }        /* editorial asymmetry, two plates */
     .plates.solo{ grid-template-columns:minmax(0, 58rem); justify-content:center; }  /* a quiet single */
+    .plates.three{ grid-template-columns:repeat(3, 1fr); }    /* a collection row — the artifacts */
+    .plates.trio{ grid-template-columns:1.6fr 1fr; }          /* one large + two stacked beside it */
+    .plates.trio > .plate:first-child{ grid-row:1 / span 2; }
   }
+  /* trio: the lead plate fills the height of the two stacked alongside (no orphaned single) */
+  .plates.trio > .plate:first-child{ display:flex; flex-direction:column; }
+  .plates.trio > .plate:first-child .ph{ aspect-ratio:auto; flex:1 1 auto; min-height:18rem; }
   .plate{ margin:0; }
   .ph{ position:relative; width:100%; aspect-ratio:3 / 2; background:var(--frame-grad); border:1px solid var(--rule); overflow:hidden; transition:background 0.7s ease; }
   .plate.portrait .ph{ aspect-ratio:4 / 5; }
@@ -118,7 +135,7 @@
     mix-blend-mode:screen; opacity:0.4; pointer-events:none;
   }
   .plate img, .plate picture{ display:block; width:100%; height:100%; object-fit:cover; }
-  .plate:has(img){ cursor:zoom-in; }                        /* a real photo invites a closer look */
+  .js .plate{ cursor:zoom-in; }                             /* every plate opens in the lightbox */
   .cap{ margin-top:0.7rem; font-family:var(--ff-display); font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); }
   /* a full-bleed feature — the chapter's anchor image, edge to edge; caption realigned to the text column */
   .plate.feature{ width:100vw; margin-left:calc(50% - 50vw); margin-bottom:clamp(1rem, 2.4vw, 1.8rem); }
@@ -143,10 +160,14 @@
   .back-link:hover{ color:var(--ink); border-bottom-color:var(--accent); }
 
   /* ---------- quiet lightbox (native <dialog>; wakes once plates hold real photos) ---------- */
-  .lightbox{ border:0; padding:0; margin:0; width:100vw; max-width:100vw; height:100svh; max-height:100svh; background:transparent; }
+  .lightbox{ position:fixed; inset:0; width:100%; height:100%; max-width:100vw; max-height:100vh; border:0; padding:0; margin:0; background:transparent; }
+  .lightbox[open]{ display:flex; align-items:center; justify-content:center; }
   .lightbox::backdrop{ background:rgba(20,15,10,0.88); backdrop-filter:blur(3px); }
-  .lb-figure{ margin:0; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(0.8rem, 2vw, 1.2rem); padding:clamp(1.5rem, 5vw, 4rem); }
+  .lb-figure{ margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(0.8rem, 2vw, 1.2rem); padding:clamp(1.5rem, 5vw, 4rem); max-height:100%; }
   .lb-img{ max-width:min(92vw, 1400px); max-height:80svh; object-fit:contain; box-shadow:0 12px 48px rgba(0,0,0,0.5); }
+  /* placeholder panel — lets the lightbox be tested before photography lands */
+  .lb-ph{ display:none; width:min(86vw, 1080px); max-height:78svh; aspect-ratio:3 / 2; position:relative; background:var(--frame-grad); border:1px solid var(--rule-strong); box-shadow:0 12px 48px rgba(0,0,0,0.5); }
+  .lb-ph::after{ content:"Photograph forthcoming"; position:absolute; left:0; right:0; bottom:1rem; text-align:center; font-family:var(--ff-display); font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--frame-label); }
   .lb-cap{ font-family:var(--ff-display); font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(238,231,214,0.82); text-align:center; }
   .lb-btn{ position:fixed; background:transparent; border:0; color:#EEE7D6; cursor:pointer; line-height:1; padding:0.9rem; opacity:0.8; transition:opacity 0.2s ease; }
   .lb-btn:hover{ opacity:1; }
@@ -178,6 +199,14 @@
 
 <header class="bar" id="bar">
   <a class="mark" href="/">AETHON</a>
+  <nav class="tracker" id="tracker" aria-label="Chapters">
+    <a href="#ch-arrival" title="Arrival"><span>I</span></a>
+    <a href="#ch-ground" title="The ground that gathers"><span>II</span></a>
+    <a href="#ch-garden" title="The garden and terrace"><span>III</span></a>
+    <a href="#ch-evening" title="The western evening"><span>IV</span></a>
+    <a href="#ch-withdraw" title="The withdraw"><span>V</span></a>
+    <a href="#ch-materials" title="Materials, close to hand"><span>VI</span></a>
+  </nav>
   <div class="bar-right">
     <nav class="links" aria-label="Back to the house">
       <a href="/">&larr; The house</a>
@@ -219,7 +248,7 @@
       .shot-day / .shot-night (see docs/imagery-brief.md).
     -->
 
-    <section class="chapter reveal" aria-labelledby="c-arrival">
+    <section id="ch-arrival" class="chapter reveal" aria-labelledby="c-arrival">
       <div class="chap-head">
         <p class="eyebrow">I · Arrival</p>
         <h2 class="chap-title" id="c-arrival">The approach.</h2>
@@ -235,7 +264,7 @@
       </div>
     </section>
 
-    <section class="chapter reveal" aria-labelledby="c-ground">
+    <section id="ch-ground" class="chapter reveal" aria-labelledby="c-ground">
       <div class="chap-head">
         <p class="eyebrow">II · The ground that gathers</p>
         <h2 class="chap-title" id="c-ground">Where the house opens.</h2>
@@ -245,14 +274,14 @@
         <div class="ph" aria-hidden="true"></div>
         <figcaption class="cap">Living, toward the sea</figcaption>
       </figure>
-      <div class="plates">
+      <div class="plates trio">
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Dining, at the long table</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The kitchen, in stone and oak</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The pool, mirroring the sky</figcaption></figure>
       </div>
     </section>
 
-    <section class="chapter reveal" aria-labelledby="c-garden">
+    <section id="ch-garden" class="chapter reveal" aria-labelledby="c-garden">
       <div class="chap-head">
         <p class="eyebrow">III · The garden and terrace</p>
         <h2 class="chap-title" id="c-garden">The western frame.</h2>
@@ -261,12 +290,14 @@
       <div class="plates">
         <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Sculptural olives</figcaption></figure>
         <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Cypress verticals</figcaption></figure>
+      </div>
+      <div class="plates">
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The terrace, under shade sails</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The lit olive, after dark</figcaption></figure>
       </div>
     </section>
 
-    <section class="chapter reveal" aria-labelledby="c-evening">
+    <section id="ch-evening" class="chapter reveal" aria-labelledby="c-evening">
       <div class="chap-head">
         <p class="eyebrow">IV · The western evening</p>
         <h2 class="chap-title" id="c-evening">The house&rsquo;s moment.</h2>
@@ -282,28 +313,26 @@
       </div>
     </section>
 
-    <section class="chapter reveal" aria-labelledby="c-withdraw">
+    <section id="ch-withdraw" class="chapter reveal" aria-labelledby="c-withdraw">
       <div class="chap-head">
         <p class="eyebrow">V · The withdraw</p>
         <h2 class="chap-title" id="c-withdraw">Upstairs, turned down.</h2>
         <p class="measure">The upper floor withdraws for rest — the day&rsquo;s warmth drawn inward, the rooms quieted and dimmed.</p>
       </div>
-      <div class="plates">
+      <div class="plates trio">
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">A room, toward the sea</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The stair, rising</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Evening, turned to a glow</figcaption></figure>
       </div>
-      <div class="plates solo">
-        <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">A room, toward the sea</figcaption></figure>
-      </div>
     </section>
 
-    <section class="chapter reveal" aria-labelledby="c-materials">
+    <section id="ch-materials" class="chapter reveal" aria-labelledby="c-materials">
       <div class="chap-head">
         <p class="eyebrow">VI · Materials, close to hand</p>
         <h2 class="chap-title" id="c-materials">The palette, in detail.</h2>
         <p class="measure">The colours gathered from the place — the light of the sea, the cliffs, the coastal herbs, the inland woods — in the materials that carry them.</p>
       </div>
-      <div class="plates">
+      <div class="plates three">
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Patiti, pressed like the sea</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Travertine and olive leather</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Iroko, close at hand</figcaption></figure>
@@ -337,6 +366,7 @@
   <button class="lb-btn lb-prev" type="button" aria-label="Previous photograph">&larr;</button>
   <figure class="lb-figure">
     <img class="lb-img" alt="" />
+    <div class="lb-ph" aria-hidden="true"></div>
     <figcaption class="lb-cap"></figcaption>
   </figure>
   <button class="lb-btn lb-next" type="button" aria-label="Next photograph">&rarr;</button>
@@ -388,33 +418,40 @@
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
   }
 
-  // Quiet lightbox — native <dialog>; attaches to any .plate that holds a real <img>
-  // (placeholders stay inert). Click / Enter to enlarge; Esc / backdrop / ✕ to close;
-  // ←/→ to move; focus returns to the thumbnail. No library.
+  // Quiet lightbox — native <dialog>; opens any .plate (a real photo, or the stone
+  // placeholder so the feature can be tested before photography lands). Click / Enter to
+  // enlarge; Esc / backdrop / ✕ to close; ←/→ to move; focus returns to the thumbnail.
   (function(){
     var dlg = document.getElementById('lightbox');
     if (!dlg || typeof dlg.showModal !== 'function') return;     // graceful no-op on old engines
-    var lbImg = dlg.querySelector('.lb-img'), lbCap = dlg.querySelector('.lb-cap');
+    var lbImg = dlg.querySelector('.lb-img'), lbPh = dlg.querySelector('.lb-ph'), lbCap = dlg.querySelector('.lb-cap');
     var main = document.querySelector('main');
     var figs = [], idx = 0, lastFocus = null;
     function collect(){
-      figs = Array.prototype.slice.call(main.querySelectorAll('.plate')).filter(function(f){ return f.querySelector('img'); });
+      figs = Array.prototype.slice.call(main.querySelectorAll('.plate'));   // every plate — photo or placeholder
     }
     function show(i){
       if (!figs.length) return;
       idx = (i + figs.length) % figs.length;
       var f = figs[idx], im = f.querySelector('img'), c = f.querySelector('.cap');
-      lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt || '';
+      if (im){
+        lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt || '';
+        lbImg.style.display = ''; lbPh.style.display = 'none';
+      } else {
+        lbImg.removeAttribute('src'); lbImg.style.display = 'none';
+        lbPh.style.aspectRatio = f.classList.contains('feature') ? '21 / 9' : (f.classList.contains('portrait') ? '4 / 5' : '3 / 2');
+        lbPh.style.display = 'block';
+      }
       lbCap.textContent = c ? c.textContent.trim() : '';
     }
     function openFrom(f){ collect(); lastFocus = document.activeElement; show(figs.indexOf(f)); dlg.showModal(); }
     main.addEventListener('click', function(e){
-      var f = e.target.closest('.plate'); if (!f || !f.querySelector('img')) return;
+      var f = e.target.closest('.plate'); if (!f) return;
       e.preventDefault(); openFrom(f);
     });
     main.addEventListener('keydown', function(e){
       if (e.key !== 'Enter' && e.key !== ' ') return;
-      var f = e.target.closest('.plate'); if (!f || !f.querySelector('img')) return;
+      var f = e.target.closest('.plate'); if (!f) return;
       e.preventDefault(); openFrom(f);
     });
     dlg.querySelector('.lb-next').addEventListener('click', function(){ show(idx + 1); });
@@ -433,6 +470,24 @@
       var c = f.querySelector('.cap');
       f.setAttribute('aria-label', c ? ('View: ' + c.textContent.trim()) : 'View photograph');
     });
+  })();
+
+  // Section tracker — highlight the chapter currently in view (I–VI) in the top bar.
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.tracker a'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    var map = {};
+    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          links.forEach(function(a){ a.classList.remove('active'); a.removeAttribute('aria-current'); });
+          var a = map[e.target.id];
+          if (a){ a.classList.add('active'); a.setAttribute('aria-current', 'true'); }
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });   // active as a chapter crosses the upper-middle band
+    document.querySelectorAll('.chapter[id]').forEach(function(s){ spy.observe(s); });
   })();
 </script>
 </body>

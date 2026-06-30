@@ -298,12 +298,19 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   photo/film brief). Plan: swap only the hero + *Views*/gallery; materials, plans, credits and
   the form stay static.
 - **Gallery subpage:** a deeper photo-essay at `/gallery/` (`gallery/index.html`) —
-  self-contained, **noindex**, **not** in the main nav; reached only by understated links
-  at the end of *Views* and in the footer. Six chapters (Arrival → the ground that gathers
+  self-contained, **noindex**; now linked from the **main nav** (homepage header + overlay menu)
+  as well as the end of *Views* and the footer. Six chapters (Arrival → the ground that gathers
   → garden & terrace → western evening → the withdraw → materials) with labeled placeholder
   slots + a SHOT BRIEF; awaiting images via the pipeline (800w/1600w into `images/gallery/`).
   Buildless, so its `<style>` mirrors index.html's tokens **by hand — keep them in sync**.
-  A quiet lightbox can be added once images land.
+  **Layout vocabulary (pass 3, 2026-06):** `.plate.feature` (full-bleed 21:9), `.plates`
+  (default pair), `.offset` (asymmetric two), **`.trio`** (one large + two stacked — fixes the
+  3-image "2 + orphan" problem, used in *Ground* + *Withdraw*), **`.three`** (artifact collection
+  row, *Materials*), `.solo` (centred single). A **section tracker** (chapters I–VI) sits centred
+  in the bar, scrollspy-driven (`.tracker`; `IntersectionObserver` rootMargin -45/-50%; chapter
+  `<section>`s carry `id="ch-…"`). The **lightbox is built and testable now** — native `<dialog>`,
+  opens **any** plate (a real photo, or the stone placeholder showing "Photograph forthcoming"),
+  Esc / backdrop / ✕ / ←→, focus restore.
 - **Legal page:** a discreet `/legal/` (`legal/index.html`) — self-contained, mirrors the
   design; combines the provider/imprint, a GDPR privacy notice, and a cookie/storage
   statement. Linked from every footer (next to *Gallery*). Controller is a **company**
