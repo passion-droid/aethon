@@ -323,6 +323,22 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   The garden → The interior → Materials → Views → Register interest → Credits.
 - Floor plans and credits placement — **decided:** the *Plan* sits after *The
   architecture*; *Credits* is a colophon before the footer.
+- **Experience-design review — quick-wins shipped; rest pending (2026-06).** A reviewer reframed
+  the site as *a permanent exhibition / digital catalogue accompanying the house* — adopted as the
+  guiding lens. **Shipped:** (1) an **orientation "wall label"** after the hero — *"AETHON is the
+  portrait of one seafront residence on the Faros coast of Paphos…"* (the `.intro-line` beat);
+  (2) **chapter numbering** `01–06` on the content sections (CSS counter on `#place…#materials`;
+  Register/Credits stay un-numbered end-matter); (3) a **timeline** `2018 Built → 2026 Renewed` in
+  *The architecture* (`.timeline`); (4) **"reveal only finished things"** — *all placeholder media
+  is now hidden* via one rule `.hero-media, .plate, #gallery{ display:none }` until photography
+  lands (Plan + Materials keep their real images). **To restore the photo slots, remove that rule**
+  — the markup/scaffolding is intact. **Pending (decide together):** the gallery as the emotional
+  centre (chaptered rooms); silent full-bleed "pause" plates; Day/Afterglow as a *narrative* device
+  (image crossfades — **not** a dynamic tagline swap); curated "artifacts" (material samples —
+  **never technical blueprints**); contributor portraits (departs from the deliberate minimal,
+  no-bios credits); a bottom **"Visit" note** (access wording is an owner/privacy call); and
+  simplifying the *Tombs of the Kings* sentence in *The place*. Reviewer's "renewal"/superlative
+  hero line was **declined** (post-completion framing + no-superlatives stand).
 - **Hero — copy & spacing settled (#50, #52).** Both hero sentences run on one line on desktop
   (uncapped + `text-wrap: balance`/`pretty`; hero-line max font 2rem), balanced-wrapping on phones.
   Vertical rhythm is two proximity groups — `[descriptor + AETHON]` · gap · `[house of light +
