@@ -124,8 +124,8 @@ not web exports.
 | Gallery standard / portrait | **3:2 / 4:5** | — |
 
 **Already done — do NOT reshoot:** the **8 material macro swatches** and the **two floor-plan
-renders** are finished and wired. Materials: *marble, venetian plaster, travertine, coastal
-sandstone, olive-green leather, rosemary green, dark oak, iroko.*
+renders** are finished and wired. Materials: *marble, patiti (hand-pressed lime plaster),
+travertine, coastal sandstone, olive-green leather, rosemary green, dark oak, iroko.*
 
 ---
 
@@ -162,6 +162,32 @@ chapter is the afterglow showpiece.
   olive leaves). Will be gated behind reduced-motion and fall back to the still.
 - **Establishing film:** slow, deliberate, situating the house on the western coast at
   sunset. **Never aimless drone hovering.** A day and an evening version mirror the toggle.
+
+### Tier 4 — artifacts (curated still-lifes, the "vitrine")
+
+Treated like museum objects, not product shots: an isolated, tactile piece on a neutral
+warm-stone ground, **raking / directional light to reveal texture**, shot as a **consistent
+set** (same background, same light angle, same distance) so the series reads as one
+collection. These are the materials of the house, in the hand.
+
+| Artifact | Notes |
+|---|---|
+| Olive-green leather (Nordic Grain) | a folded swatch / a furniture corner; raking light on the grain — the signature green |
+| Rosemary-green fabric | a single draped fold of the curtain / upholstery cloth |
+| Patiti (πατητή) lime plaster | a hand-pressed sample, the wave structure caught in side light |
+| Iroko & dark oak | an end-grain or a joinery edge of the real woodwork |
+| Stones (travertine · marble · sandstone) | a *cut sample with depth / thickness*, not a flat swatch |
+| "The palette in the hand" | stone + leather + iroko arranged together in one frame |
+| Of the coast | found objects — a sprig of rosemary, an olive branch, a pale cliff pebble |
+
+These wire into the gallery's chapter VI (*Materials, close to hand*) and can also seed the
+homepage Materials section. **Never** dimensioned drawings, spec sheets, or hardware that
+reads as a "feature."
+
+**Already in hand — the concept sketch.** Cliff Tan's (Dear Modern) hand perspective of the
+ground floor that gathers is wired as the first artifact, in *The architecture* — uncropped,
+toned into the palette (`scripts/process-sketch.py`). It is the model for this tier: an
+*authored, atmospheric* artifact, never a technical drawing.
 
 ---
 

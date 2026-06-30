@@ -332,13 +332,29 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   *The architecture* (`.timeline`); (4) **"reveal only finished things"** — *all placeholder media
   is now hidden* via one rule `.hero-media, .plate, #gallery{ display:none }` until photography
   lands (Plan + Materials keep their real images). **To restore the photo slots, remove that rule**
-  — the markup/scaffolding is intact. **Pending (decide together):** the gallery as the emotional
-  centre (chaptered rooms); silent full-bleed "pause" plates; Day/Afterglow as a *narrative* device
-  (image crossfades — **not** a dynamic tagline swap); curated "artifacts" (material samples —
-  **never technical blueprints**); contributor portraits (departs from the deliberate minimal,
-  no-bios credits); a bottom **"Visit" note** (access wording is an owner/privacy call); and
-  simplifying the *Tombs of the Kings* sentence in *The place*. Reviewer's "renewal"/superlative
-  hero line was **declined** (post-completion framing + no-superlatives stand).
+  — the markup/scaffolding is intact. **Exhibition pass 2 — shipped (2026-06):** (5) **the gallery as the emotional
+  centre** — chapters restructured into `<figure>`s with **captions as wall labels** beneath, a
+  **layout vocabulary** (`.plates.offset` / `.solo`; full-bleed `.plate.feature` via
+  `width:100vw; margin-left:calc(50% - 50vw)`), chapter VI expanded to ~6 **artifact** slots, a quiet
+  **closing beat** (`.gal-close`), and a built-in **accessible lightbox** (native `<dialog>` +
+  Esc/backdrop/←→, focus restore; **dormant until a `.plate` holds a real `<img>`**); (6) **silent
+  full-bleed "pause" plates** (`.pause` / `.pause-media.shot-pair`) at two homepage scene-breaks
+  (after *The Plan*, after *The interior*) — **currently visible labelled placeholders for review;
+  add `.pause` to the reveal-only rule to hide them on the live homepage**; (7) **Day/Afterglow image
+  crossfade** confirmed **already built** (`.shot-pair` in index + gallery) — no action, just needs
+  photo pairs; (8) **curated artifacts** — **Cliff Tan's concept sketch wired as the first real
+  artifact** in *The architecture* (uncropped, toned into the palette via `scripts/process-sketch.py`
+  → `images/sketch/`; captioned + linked to Dear Modern; the raw master is removed from the tree per
+  the no-originals rule, recoverable from history), plus an **Artifacts shot list** added to
+  `docs/imagery-brief.md` (material still-lifes; never blueprints). **Copy shipped:** the *Tombs of the
+  Kings* sentence simplified (**option C** — keeps the 'axis' geography + 'never within it'); the
+  **"Visit" note merged into Register interest** ('…the house is met only by invitation … You are
+  warmly welcome to be in touch below') rather than added as a separate beat. **Declined:** contributor
+  portraits (the minimal no-bios credits stand); the reviewer's "renewal"/superlative hero line
+  (post-completion framing + no-superlatives stand). **New copy still to confirm:** the gallery
+  closing-beat line — *"The house follows the day, and keeps its evening. The rest is best seen in
+  person."* (shipped in the scaffold; flag for the owner). The **#10 "reveal only finished" rule still
+  hides** `.hero-media, .plate, #gallery`; the new pause placeholders are the one deliberate exception.
 - **Hero — copy & spacing settled (#50, #52).** Both hero sentences run on one line on desktop
   (uncapped + `text-wrap: balance`/`pretty`; hero-line max font 2rem), balanced-wrapping on phones.
   Vertical rhythm is two proximity groups — `[descriptor + AETHON]` · gap · `[house of light +

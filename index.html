@@ -589,6 +589,47 @@
     max-width: 46rem; margin: 0; font-family: var(--ff-text); font-weight: 300;
     font-size: clamp(1.15rem, 1.9vw, 1.5rem); line-height: 1.5; color: var(--ink-soft); text-wrap: balance;
   }
+
+  /* ===== Exhibition pass 2 — artifact + silent pause plates (review 2026-06) ===== */
+
+  /* (4) Artifact — Cliff Tan's concept sketch, seated like a print on the page.
+     Uncropped + toned into the palette (scripts/process-sketch.py); adapts to
+     Daylight/Afterglow via a gentle filter + shadow swap. NOT a .plate (it is real). */
+  .artifact{ max-width: 62rem; margin: clamp(2.6rem, 5vw, 4.2rem) auto 0; }
+  .artifact img{
+    display:block; width:100%; height:auto;
+    box-shadow: 0 8px 30px rgba(44,38,32,0.14);
+    transition: filter 0.7s ease, box-shadow 0.7s ease;
+  }
+  body.night .artifact img{ filter: brightness(0.82) saturate(0.92); box-shadow: 0 0 30px rgba(206,166,118,0.18); }
+  .artifact figcaption{
+    margin-top: var(--space-sm); font-family: var(--ff-display);
+    font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  .artifact figcaption a{ color: var(--accent); text-decoration: underline; text-underline-offset: 0.18em; transition: color 0.7s ease, opacity 0.2s ease; }
+  .artifact figcaption a:hover{ opacity: 0.72; }
+
+  /* Silent full-bleed "pause" plates — image-only breathing moments between sections.
+     Full viewport width; reuse .shot-pair so the toggle crossfades day/afterglow once a
+     matched pair lands. One per scene-break, never many. (docs/imagery-brief.md) */
+  .pause{ padding: 0; }
+  .pause-media{
+    position: relative; width: 100%; min-height: clamp(46svh, 56vw, 78svh);
+    display:flex; align-items:flex-end;
+    background: var(--frame-grad); overflow:hidden;
+    transition: background 0.7s ease;
+  }
+  .pause-media::after{
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(70% 90% at 80% 24%, var(--light-glow), transparent 62%);
+    mix-blend-mode: screen; pointer-events:none; opacity:0.5;
+  }
+  .pause-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .pause-label{
+    position: relative; z-index: 1; padding: clamp(1.4rem,4vw,2.6rem) var(--edge);
+    font-family: var(--ff-display); font-size: 0.7rem; letter-spacing: 0.24em;
+    text-transform: uppercase; color: var(--frame-label);
+  }
 </style>
 </head>
 
@@ -663,7 +704,7 @@
         <h2 class="section-title">Where the coast turns west.</h2>
       </div>
       <div>
-        <p>AETHON stands on the western shore of Paphos, near Faros Beach. It lies along the axis of the Tombs of the Kings, beside the archaeological landscape of Nea Paphos — never within it.</p>
+        <p>AETHON stands on the western shore of Paphos, near Faros Beach. It lies along the coast from the Tombs of the Kings and the old city of Nea Paphos — beside that history, never within it.</p>
         <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea.</p>
         <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em>Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
       </div>
@@ -691,6 +732,15 @@
       <li><span class="tl-year">2018</span><span class="tl-note">Built</span></li>
       <li><span class="tl-year">2026</span><span class="tl-note">Renewed · AETHON</span></li>
     </ol>
+    <!-- ARTIFACT — a real concept sketch (uncropped, toned into the palette): the first piece in the catalogue. -->
+    <figure class="artifact reveal">
+      <picture>
+        <source type="image/avif" srcset="images/sketch/ground-floor-sketch-800.avif 800w, images/sketch/ground-floor-sketch-1264.avif 1264w" sizes="(min-width:760px) 62rem, 92vw">
+        <source type="image/webp" srcset="images/sketch/ground-floor-sketch-800.webp 800w, images/sketch/ground-floor-sketch-1264.webp 1264w" sizes="(min-width:760px) 62rem, 92vw">
+        <img src="images/sketch/ground-floor-sketch-1264.jpg" srcset="images/sketch/ground-floor-sketch-800.jpg 800w, images/sketch/ground-floor-sketch-1264.jpg 1264w" sizes="(min-width:760px) 62rem, 92vw" width="1264" height="917" loading="lazy" decoding="async" alt="Concept sketch — a one-point perspective of the ground floor that gathers: the living room opening to the dining table, the terrace and the garden beyond">
+      </picture>
+      <figcaption>Concept sketch &mdash; the ground floor that gathers &middot; <a href="https://www.dearmodern.com/" target="_blank" rel="noopener">Cliff Tan, Dear Modern</a></figcaption>
+    </figure>
     <figure class="plate reveal">
       <div class="frame"><span class="label">The living spaces, toward the sea · forthcoming</span></div>
     </figure>
@@ -735,6 +785,16 @@
     </div>
   </section>
 
+  <!-- PAUSE — a silent full-bleed breath (Daylight ↔ Afterglow when the matched pair lands) -->
+  <section class="pause" aria-label="The house, toward the western sea">
+    <div class="pause-media shot-pair">
+      <!-- When photography lands: a matched day/evening PAIR of the west elevation —
+           <picture class="shot-day">…</picture><picture class="shot-night">…</picture>.
+           On mobile serve a single image (not the pair), per the cellular-data guardrail. -->
+      <span class="pause-label">The house, toward the western sea · forthcoming</span>
+    </div>
+  </section>
+
   <!-- THE GARDEN / LANDSCAPE -->
   <section id="garden" class="field-paper">
     <div class="two-col reveal">
@@ -768,6 +828,14 @@
     <figure class="plate reveal">
       <div class="frame"><span class="label">Lit from within, at evening · forthcoming</span></div>
     </figure>
+  </section>
+
+  <!-- PAUSE — the afterglow breath before the materials -->
+  <section class="pause" aria-label="The afterglow — lit from within">
+    <div class="pause-media shot-pair">
+      <!-- Matched day/evening PAIR — the house lit warm from within at dusk. -->
+      <span class="pause-label">The afterglow — lit from within · forthcoming</span>
+    </div>
   </section>
 
   <!-- MATERIALS -->
@@ -939,7 +1007,7 @@
         <h2 class="section-title">A short, private list.</h2>
       </div>
       <div class="interest">
-        <p class="intro">The residence is privately owned and not on the market today — this is not a listing. Should that ever change, a short and private list is kept, for those who would like to be told first. No newsletters, no marketing — only a quiet word, in time.</p>
+        <p class="intro">The residence is privately owned and not on the market today — this is not a listing, and the house is met only by invitation. Should that ever change, a short and private list is kept, for those who would like to be told first — no newsletters, no marketing, only a quiet word, in time. You are warmly welcome to be in touch below.</p>
 
         <!--
           FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.

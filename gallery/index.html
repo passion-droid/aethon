@@ -100,13 +100,31 @@
   .chap-head{ margin:0 0 clamp(1.6rem, 3vw, 2.4rem); }
   .chap-head p{ color:var(--ink-soft); }
 
-  .plates{ display:grid; grid-template-columns:1fr; gap:clamp(0.8rem, 2vw, 1.4rem); }
-  @media (min-width:680px){ .plates{ grid-template-columns:1fr 1fr; } }
-  .plate{ position:relative; display:block; width:100%; aspect-ratio:3 / 2; background:var(--frame-grad); border:1px solid var(--rule); overflow:hidden; transition:background 0.7s ease; }
-  .plate.feature{ grid-column:1 / -1; aspect-ratio:21 / 9; }
-  .plate.portrait{ aspect-ratio:4 / 5; }
-  .plate img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .plate .label{ position:absolute; inset:auto 0 0 0; padding:0.7rem 0.9rem; font-family:var(--ff-display); font-size:0.66rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--frame-label); }
+  /* plates are figures with a caption *beneath* (a wall label), not an overlay; a placeholder
+     .ph holds the slot until a <picture> lands. Layout varies per chapter for rhythm. */
+  .plates{ display:grid; grid-template-columns:1fr; gap:clamp(1rem, 2.4vw, 1.8rem); }
+  @media (min-width:680px){
+    .plates{ grid-template-columns:1fr 1fr; }
+    .plates.offset{ grid-template-columns:1.5fr 1fr; }      /* editorial asymmetry */
+    .plates.solo{ grid-template-columns:minmax(0, 58rem); justify-content:center; }  /* a quiet single */
+  }
+  .plate{ margin:0; }
+  .ph{ position:relative; width:100%; aspect-ratio:3 / 2; background:var(--frame-grad); border:1px solid var(--rule); overflow:hidden; transition:background 0.7s ease; }
+  .plate.portrait .ph{ aspect-ratio:4 / 5; }
+  .plate.feature .ph{ aspect-ratio:21 / 9; }
+  .ph::after{                                               /* a warm catch of light on the placeholder */
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(70% 90% at 80% 22%, #F2DDBE, transparent 60%);
+    mix-blend-mode:screen; opacity:0.4; pointer-events:none;
+  }
+  .plate img, .plate picture{ display:block; width:100%; height:100%; object-fit:cover; }
+  .plate:has(img){ cursor:zoom-in; }                        /* a real photo invites a closer look */
+  .cap{ margin-top:0.7rem; font-family:var(--ff-display); font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); }
+  /* a full-bleed feature — the chapter's anchor image, edge to edge; caption realigned to the text column */
+  .plate.feature{ width:100vw; margin-left:calc(50% - 50vw); margin-bottom:clamp(1rem, 2.4vw, 1.8rem); }
+  .plate.feature .ph{ border-left:0; border-right:0; }
+  .plate.feature .cap{ max-width:84rem; margin:0.7rem auto 0; padding:0 var(--edge); }
+  .plates + .plates{ margin-top:clamp(1rem, 2.4vw, 1.8rem); }   /* stacked layout blocks within a chapter */
   /* Daylight ↔ Afterglow paired imagery — drop a day + warm-evening capture of the SAME viewpoint
      into .shot-pair; the evening layer crossfades in under .night. See docs/imagery-brief.md. */
   .shot-pair{ position:relative; }
@@ -116,6 +134,27 @@
   body.night .shot-pair .shot-day{ opacity:0; }
   .shot-pair img{ display:block; width:100%; height:100%; object-fit:cover; }
   @media (prefers-reduced-motion: reduce){ .shot-pair .shot-day, .shot-pair .shot-night{ transition:none; } }
+
+  /* ---------- closing beat ---------- */
+  .gal-close{ margin-top:clamp(2.5rem, 6vw, 4.5rem); padding:clamp(3rem, 7vw, 5.5rem) 0 0; border-top:1px solid var(--rule); }
+  .gal-close-line{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.2rem, 2.2vw, 1.6rem); line-height:1.5; color:var(--ink-soft); max-width:46rem; text-wrap:balance; }
+  .gal-back{ margin-top:clamp(1.8rem, 3.5vw, 2.6rem); }
+  .back-link{ font-family:var(--ff-display); font-size:0.8rem; letter-spacing:0.18em; text-transform:uppercase; text-decoration:none; color:var(--ink-soft); border-bottom:1px solid var(--field-line); padding-bottom:4px; transition:color 0.25s ease, border-color 0.25s ease; }
+  .back-link:hover{ color:var(--ink); border-bottom-color:var(--accent); }
+
+  /* ---------- quiet lightbox (native <dialog>; wakes once plates hold real photos) ---------- */
+  .lightbox{ border:0; padding:0; margin:0; width:100vw; max-width:100vw; height:100svh; max-height:100svh; background:transparent; }
+  .lightbox::backdrop{ background:rgba(20,15,10,0.88); backdrop-filter:blur(3px); }
+  .lb-figure{ margin:0; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(0.8rem, 2vw, 1.2rem); padding:clamp(1.5rem, 5vw, 4rem); }
+  .lb-img{ max-width:min(92vw, 1400px); max-height:80svh; object-fit:contain; box-shadow:0 12px 48px rgba(0,0,0,0.5); }
+  .lb-cap{ font-family:var(--ff-display); font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(238,231,214,0.82); text-align:center; }
+  .lb-btn{ position:fixed; background:transparent; border:0; color:#EEE7D6; cursor:pointer; line-height:1; padding:0.9rem; opacity:0.8; transition:opacity 0.2s ease; }
+  .lb-btn:hover{ opacity:1; }
+  .lb-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  .lb-close{ top:0.6rem; right:0.8rem; font-size:1.8rem; }
+  .lb-prev, .lb-next{ top:50%; transform:translateY(-50%); font-size:1.5rem; }
+  .lb-prev{ left:0.4rem; } .lb-next{ right:0.4rem; }
+  @media (prefers-reduced-motion: no-preference){ .lightbox[open]{ animation:lb-fade 220ms ease; } @keyframes lb-fade{ from{ opacity:0 } to{ opacity:1 } } }
 
   /* ---------- footer (mirrors index.html) ---------- */
   footer{ margin-top:clamp(2.5rem, 6vw, 5rem); padding:clamp(3rem,7vw,5rem) var(--edge); background:var(--footer-bg); color:var(--footer-ink); transition:background-color 0.7s ease, color 0.7s ease; }
@@ -159,18 +198,25 @@
     </div>
 
     <!--
-      SHOT BRIEF / WIRING — each .plate becomes a <figure> with a <picture> once photography
-      lands. Process the raws through the images/ pipeline at 800w / 1600w (see images/README.md),
-      into images/gallery/. To wire a slot, replace its <span class="label">…</span> with, e.g.:
+      SHOT BRIEF / WIRING — each .plate is a <figure>: a placeholder .ph box + a <figcaption
+      class="cap"> wall-label beneath. When photography lands, swap the slot's
+      <div class="ph">…</div> for a <picture> (process raws through the images/ pipeline at
+      800w / 1600w, see images/README.md, into images/gallery/), keeping the <figcaption>:
 
-        <picture>
-          <source type="image/avif" srcset="/images/gallery/arrival-01-800.avif 800w, /images/gallery/arrival-01-1600.avif 1600w" sizes="(min-width:680px) 42vw, 92vw">
-          <source type="image/webp" srcset="/images/gallery/arrival-01-800.webp 800w, /images/gallery/arrival-01-1600.webp 1600w" sizes="(min-width:680px) 42vw, 92vw">
-          <img src="/images/gallery/arrival-01-1600.jpg" srcset="/images/gallery/arrival-01-800.jpg 800w, /images/gallery/arrival-01-1600.jpg 1600w" sizes="(min-width:680px) 42vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt="…">
-        </picture>
+        <figure class="plate feature">
+          <picture>
+            <source type="image/avif" srcset="/images/gallery/evening-01-800.avif 800w, /images/gallery/evening-01-1600.avif 1600w" sizes="100vw">
+            <source type="image/webp" srcset="/images/gallery/evening-01-800.webp 800w, /images/gallery/evening-01-1600.webp 1600w" sizes="100vw">
+            <img src="/images/gallery/evening-01-1600.jpg" srcset="/images/gallery/evening-01-800.jpg 800w, /images/gallery/evening-01-1600.jpg 1600w" sizes="100vw" width="1600" height="686" loading="lazy" decoding="async" alt="…">
+          </picture>
+          <figcaption class="cap">West elevation · sunset</figcaption>
+        </figure>
 
-      (feature plates are 21:9, portrait plates 4:5, the rest 3:2 — crop to match.)
-      A quiet lightbox can be added once the images are in.
+      Ratios: feature 21:9 (full-bleed), portrait 4:5, the rest 3:2 — crop to match.
+      The quiet lightbox is already wired — it wakes automatically for any .plate holding an
+      <img> (click / Enter to enlarge; Esc / backdrop / ✕ to close; ←/→ to move; focus returns
+      to the thumbnail). Day↔Afterglow pairs: wrap the two <picture>s in .shot-pair as
+      .shot-day / .shot-night (see docs/imagery-brief.md).
     -->
 
     <section class="chapter reveal" aria-labelledby="c-arrival">
@@ -179,10 +225,13 @@
         <h2 class="chap-title" id="c-arrival">The approach.</h2>
         <p class="measure">The road off the coast, the threshold, the first quiet inside. A single, soft nod to the faros that names the shore — no more than that.</p>
       </div>
+      <figure class="plate feature">
+        <div class="ph" aria-hidden="true"></div>
+        <figcaption class="cap">Approach · the western coast</figcaption>
+      </figure>
       <div class="plates">
-        <div class="plate feature"><span class="label">Approach · the western coast</span></div>
-        <div class="plate"><span class="label">The threshold</span></div>
-        <div class="plate"><span class="label">First light in the entrance</span></div>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The threshold</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">First light in the entrance</figcaption></figure>
       </div>
     </section>
 
@@ -192,11 +241,14 @@
         <h2 class="chap-title" id="c-ground">Where the house opens.</h2>
         <p class="measure">The ground level is for gathering — living and dining open to the terrace, the pool, and the sea beyond. Reduced, unhurried lines.</p>
       </div>
+      <figure class="plate feature">
+        <div class="ph" aria-hidden="true"></div>
+        <figcaption class="cap">Living, toward the sea</figcaption>
+      </figure>
       <div class="plates">
-        <div class="plate feature"><span class="label">Living, toward the sea</span></div>
-        <div class="plate"><span class="label">Dining, at the long table</span></div>
-        <div class="plate"><span class="label">The kitchen, in stone and oak</span></div>
-        <div class="plate"><span class="label">The pool, mirroring the sky</span></div>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Dining, at the long table</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The kitchen, in stone and oak</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The pool, mirroring the sky</figcaption></figure>
       </div>
     </section>
 
@@ -207,10 +259,10 @@
         <p class="measure">Garden and terrace hold the horizon — old olives and cypress verticals, warm-sand shade sails for the midday, the evening kept for the sun.</p>
       </div>
       <div class="plates">
-        <div class="plate portrait"><span class="label">Sculptural olives</span></div>
-        <div class="plate portrait"><span class="label">Cypress verticals</span></div>
-        <div class="plate"><span class="label">The terrace, under shade sails</span></div>
-        <div class="plate"><span class="label">The lit olive, after dark</span></div>
+        <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Sculptural olives</figcaption></figure>
+        <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Cypress verticals</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The terrace, under shade sails</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The lit olive, after dark</figcaption></figure>
       </div>
     </section>
 
@@ -220,10 +272,13 @@
         <h2 class="chap-title" id="c-evening">The house&rsquo;s moment.</h2>
         <p class="measure">The coast faces west. Each evening the sun lowers into the sea, and the stone holds the warmth it leaves behind.</p>
       </div>
-      <div class="plates">
-        <div class="plate feature"><span class="label">West elevation · sunset</span></div>
-        <div class="plate"><span class="label">The terrace, golden hour</span></div>
-        <div class="plate"><span class="label">Last light on the water</span></div>
+      <figure class="plate feature">
+        <div class="ph" aria-hidden="true"></div>
+        <figcaption class="cap">West elevation · sunset</figcaption>
+      </figure>
+      <div class="plates offset">
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The terrace, golden hour</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Last light on the water</figcaption></figure>
       </div>
     </section>
 
@@ -234,9 +289,11 @@
         <p class="measure">The upper floor withdraws for rest — the day&rsquo;s warmth drawn inward, the rooms quieted and dimmed.</p>
       </div>
       <div class="plates">
-        <div class="plate"><span class="label">The stair, rising</span></div>
-        <div class="plate portrait"><span class="label">A room, toward the sea</span></div>
-        <div class="plate"><span class="label">Evening, turned to a glow</span></div>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The stair, rising</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Evening, turned to a glow</figcaption></figure>
+      </div>
+      <div class="plates solo">
+        <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">A room, toward the sea</figcaption></figure>
       </div>
     </section>
 
@@ -247,11 +304,19 @@
         <p class="measure">The colours gathered from the place — the light of the sea, the cliffs, the coastal herbs, the inland woods — in the materials that carry them.</p>
       </div>
       <div class="plates">
-        <div class="plate"><span class="label">Travertine and olive leather</span></div>
-        <div class="plate"><span class="label">Iroko, close at hand</span></div>
-        <div class="plate"><span class="label">Rosemary green, in fabric</span></div>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Patiti, pressed like the sea</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Travertine and olive leather</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Iroko, close at hand</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Rosemary green, in fabric</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The palette in the hand</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Of the coast — rosemary, olive, stone</figcaption></figure>
       </div>
     </section>
+
+    <div class="gal-close reveal">
+      <p class="gal-close-line">The house follows the day, and keeps its evening. The rest is best seen in person.</p>
+      <p class="gal-back"><a class="back-link" href="/">&larr; Back to the house</a></p>
+    </div>
 
   </div>
 </main>
@@ -266,6 +331,16 @@
     </div>
   </div>
 </footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Photograph, enlarged">
+  <button class="lb-btn lb-close" type="button" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" type="button" aria-label="Previous photograph">&larr;</button>
+  <figure class="lb-figure">
+    <img class="lb-img" alt="" />
+    <figcaption class="lb-cap"></figcaption>
+  </figure>
+  <button class="lb-btn lb-next" type="button" aria-label="Next photograph">&rarr;</button>
+</dialog>
 
 <script>
   // bar turns solid after a little scroll
@@ -312,6 +387,53 @@
   } else {
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
   }
+
+  // Quiet lightbox — native <dialog>; attaches to any .plate that holds a real <img>
+  // (placeholders stay inert). Click / Enter to enlarge; Esc / backdrop / ✕ to close;
+  // ←/→ to move; focus returns to the thumbnail. No library.
+  (function(){
+    var dlg = document.getElementById('lightbox');
+    if (!dlg || typeof dlg.showModal !== 'function') return;     // graceful no-op on old engines
+    var lbImg = dlg.querySelector('.lb-img'), lbCap = dlg.querySelector('.lb-cap');
+    var main = document.querySelector('main');
+    var figs = [], idx = 0, lastFocus = null;
+    function collect(){
+      figs = Array.prototype.slice.call(main.querySelectorAll('.plate')).filter(function(f){ return f.querySelector('img'); });
+    }
+    function show(i){
+      if (!figs.length) return;
+      idx = (i + figs.length) % figs.length;
+      var f = figs[idx], im = f.querySelector('img'), c = f.querySelector('.cap');
+      lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt || '';
+      lbCap.textContent = c ? c.textContent.trim() : '';
+    }
+    function openFrom(f){ collect(); lastFocus = document.activeElement; show(figs.indexOf(f)); dlg.showModal(); }
+    main.addEventListener('click', function(e){
+      var f = e.target.closest('.plate'); if (!f || !f.querySelector('img')) return;
+      e.preventDefault(); openFrom(f);
+    });
+    main.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var f = e.target.closest('.plate'); if (!f || !f.querySelector('img')) return;
+      e.preventDefault(); openFrom(f);
+    });
+    dlg.querySelector('.lb-next').addEventListener('click', function(){ show(idx + 1); });
+    dlg.querySelector('.lb-prev').addEventListener('click', function(){ show(idx - 1); });
+    dlg.querySelector('.lb-close').addEventListener('click', function(){ dlg.close(); });
+    dlg.addEventListener('click', function(e){ if (e.target === dlg || e.target.classList.contains('lb-figure')) dlg.close(); });
+    dlg.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight'){ e.preventDefault(); show(idx + 1); }
+      else if (e.key === 'ArrowLeft'){ e.preventDefault(); show(idx - 1); }
+    });
+    dlg.addEventListener('close', function(){ if (lastFocus && lastFocus.focus) lastFocus.focus(); });
+    // make any image-bearing plates keyboard-operable (no-op while they're placeholders)
+    collect();
+    figs.forEach(function(f){
+      f.setAttribute('tabindex', '0'); f.setAttribute('role', 'button');
+      var c = f.querySelector('.cap');
+      f.setAttribute('aria-label', c ? ('View: ' + c.textContent.trim()) : 'View photograph');
+    });
+  })();
 </script>
 </body>
 </html>
