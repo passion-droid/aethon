@@ -166,7 +166,7 @@
   .lb-figure{ margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(0.8rem, 2vw, 1.2rem); padding:clamp(1.5rem, 5vw, 4rem); max-height:100%; }
   .lb-img{ max-width:min(92vw, 1400px); max-height:80svh; object-fit:contain; box-shadow:0 12px 48px rgba(0,0,0,0.5); }
   /* placeholder panel — lets the lightbox be tested before photography lands */
-  .lb-ph{ display:none; width:min(86vw, 1080px); max-height:78svh; aspect-ratio:3 / 2; position:relative; background:var(--frame-grad); border:1px solid var(--rule-strong); box-shadow:0 12px 48px rgba(0,0,0,0.5); }
+  .lb-ph{ display:none; max-width:90vw; max-height:80svh; position:relative; background:var(--frame-grad); border:1px solid var(--rule-strong); box-shadow:0 12px 48px rgba(0,0,0,0.5); }
   .lb-ph::after{ content:"Photograph forthcoming"; position:absolute; left:0; right:0; bottom:1rem; text-align:center; font-family:var(--ff-display); font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--frame-label); }
   .lb-cap{ font-family:var(--ff-display); font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(238,231,214,0.82); text-align:center; }
   .lb-btn{ position:fixed; background:transparent; border:0; color:#EEE7D6; cursor:pointer; line-height:1; padding:0.9rem; opacity:0.8; transition:opacity 0.2s ease; }
@@ -439,7 +439,9 @@
         lbImg.style.display = ''; lbPh.style.display = 'none';
       } else {
         lbImg.removeAttribute('src'); lbImg.style.display = 'none';
-        lbPh.style.aspectRatio = f.classList.contains('feature') ? '21 / 9' : (f.classList.contains('portrait') ? '4 / 5' : '3 / 2');
+        if (f.classList.contains('feature')){ lbPh.style.aspectRatio = '21 / 9'; lbPh.style.width = 'min(90vw, 1200px)'; lbPh.style.height = 'auto'; }
+        else if (f.classList.contains('portrait')){ lbPh.style.aspectRatio = '4 / 5'; lbPh.style.height = 'min(80svh, 78vh)'; lbPh.style.width = 'auto'; }
+        else { lbPh.style.aspectRatio = '3 / 2'; lbPh.style.width = 'min(86vw, 1000px)'; lbPh.style.height = 'auto'; }
         lbPh.style.display = 'block';
       }
       lbCap.textContent = c ? c.textContent.trim() : '';
