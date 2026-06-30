@@ -561,8 +561,19 @@
 
   /* ===== Exhibition quick-wins (museum-catalogue pass — review 2026-06) ===== */
   /* (10) Reveal only finished things: hide placeholder media until the photography
-     lands (docs/imagery-brief.md). Plan + Materials keep their real images. */
-  .hero-media, .plate, #gallery{ display: none; }
+     lands (docs/imagery-brief.md). Plan + Materials keep their real images.
+     PREVIEW TOGGLE: add class="preview" to <body> to reveal every slot with its
+     placeholder — the full page as it will read once photos land. Remove the class
+     (one word) to return to the finished live state. */
+  body:not(.preview) .hero-media,
+  body:not(.preview) .plate,
+  body:not(.preview) #gallery{ display: none; }
+  /* hero placeholder photo — preview only; the real hero photo replaces it later */
+  .hero-photo{ display: none; }
+  body.preview .hero-photo{ position: absolute; inset: 0; z-index: 0; display: block; background: var(--frame-grad); transition: background 0.7s ease; }
+  body.preview .hero-photo::after{ content:""; position:absolute; inset:0; background: radial-gradient(70% 90% at 80% 22%, var(--light-glow), transparent 62%); mix-blend-mode: screen; opacity: 0.5; }
+  body.preview .hero::before{ opacity: 0.22; }   /* let the placeholder photo read */
+  body.preview .hero::after{ height: 58%; }       /* deepen the scrim so the headline holds over a photo */
 
   /* (2) Quiet chapter numerals on the content sections. */
   main{ counter-reset: chapter; }
@@ -633,7 +644,7 @@
 </style>
 </head>
 
-<body>
+<body class="preview">
 <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night')document.body.classList.add('night');}catch(e){}</script>
 
 <header class="bar" id="bar">
@@ -667,6 +678,7 @@
 
   <!-- HERO — the western light -->
   <section class="hero" aria-label="Introduction">
+    <div class="hero-photo" aria-hidden="true"></div>
     <!--
       HERO MEDIA (when assets exist) — keep it the LCP element and fast on mobile:
         • Still: place an <img class="hero-photo" src="images/hero.avif"
