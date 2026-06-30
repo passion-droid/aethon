@@ -351,10 +351,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   **"Visit" note merged into Register interest** ('…the house is met only by invitation … You are
   warmly welcome to be in touch below') rather than added as a separate beat. **Declined:** contributor
   portraits (the minimal no-bios credits stand); the reviewer's "renewal"/superlative hero line
-  (post-completion framing + no-superlatives stand). **New copy still to confirm:** the gallery
-  closing-beat line — *"The house follows the day, and keeps its evening. The rest is best seen in
-  person."* (shipped in the scaffold; flag for the owner). The **#10 "reveal only finished" rule still
-  hides** `.hero-media, .plate, #gallery`; the new pause placeholders are the one deliberate exception.
+  (post-completion framing + no-superlatives stand). **Gallery closing beat — confirmed (owner,
+  option E):** *"This is the house, in the order of its day. To know the rest is to be there — by
+  invitation, in time."* (ties to the by-invitation Register line). **PREVIEW TOGGLE (live now):** the
+  #10 "reveal only finished" rule is gated behind `body:not(.preview)` (+ a hero placeholder photo);
+  the homepage `<body>` currently carries `class="preview"`, so **every slot shows its stone
+  placeholder — the QR-facing site shows placeholders while this is on.** Remove the one `preview`
+  class to restore the finished live state. The pause plates remain visible placeholders either way.
 - **Hero — copy & spacing settled (#50, #52).** Both hero sentences run on one line on desktop
   (uncapped + `text-wrap: balance`/`pretty`; hero-line max font 2rem), balanced-wrapping on phones.
   Vertical rhythm is two proximity groups — `[descriptor + AETHON]` · gap · `[house of light +
