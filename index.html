@@ -550,6 +550,37 @@
     .js .reveal{ opacity: 1; transform: none; transition: none; }
     *, *::before, *::after{ transition-duration: 0.001ms !important; }
   }
+
+  /* ===== Exhibition quick-wins (museum-catalogue pass — review 2026-06) ===== */
+  /* (10) Reveal only finished things: hide placeholder media until the photography
+     lands (docs/imagery-brief.md). Plan + Materials keep their real images. */
+  .hero-media, .plate, #gallery{ display: none; }
+
+  /* (2) Quiet chapter numerals on the content sections. */
+  main{ counter-reset: chapter; }
+  #place, #architecture, #plan, #garden, #interior, #materials{ counter-increment: chapter; }
+  #place .eyebrow::before, #architecture .eyebrow::before, #plan .eyebrow::before,
+  #garden .eyebrow::before, #interior .eyebrow::before, #materials .eyebrow::before{
+    content: counter(chapter, decimal-leading-zero) " · "; color: var(--ink-mute);
+  }
+
+  /* (8) Timeline — the house in time (2018 built → 2026 renewed). */
+  .timeline{
+    list-style: none; margin: clamp(2.6rem, 5vw, 4rem) auto 0; padding: 1rem 0 0;
+    max-width: var(--wrap); display: flex; gap: clamp(2.5rem, 12vw, 9rem); position: relative;
+  }
+  .timeline::before{ content:""; position:absolute; top: 4px; left: 5px; right: 5px; height:1px; background: var(--rule); }
+  .timeline li{ position: relative; padding-top: 1.4rem; }
+  .timeline li::before{ content:""; position:absolute; top: 0; left: 0; width: 9px; height: 9px; border-radius:50%; background: var(--accent); transition: background 0.7s ease; }
+  .tl-year{ display:block; font-family: var(--ff-display); font-size: clamp(1.5rem, 3vw, 2.1rem); letter-spacing: 0.03em; color: var(--ink); line-height: 1; }
+  .tl-note{ display:block; margin-top: 0.55rem; font-family: var(--ff-display); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); }
+
+  /* (1) Orientation beat — the QR "wall label" after the hero. */
+  .intro-beat{ padding: clamp(2.6rem, 7vw, 5.5rem) var(--edge); }
+  .intro-line{
+    max-width: 46rem; margin: 0; font-family: var(--ff-text); font-weight: 300;
+    font-size: clamp(1.15rem, 1.9vw, 1.5rem); line-height: 1.5; color: var(--ink-soft); text-wrap: balance;
+  }
 </style>
 </head>
 
@@ -611,6 +642,11 @@
     <a class="scroll-cue" href="#place"><span class="stroke"></span>Descend</a>
   </section>
 
+  <!-- ORIENTATION — one curatorial line for the QR arrival (what is this?) -->
+  <section id="intro" class="intro-beat">
+    <p class="intro-line reveal">AETHON is the record of one seafront residence on the Faros coast of Paphos — its renewal, its materials, and the western light it was built to hold.</p>
+  </section>
+
   <!-- THE PLACE -->
   <section id="place" class="field-paper">
     <div class="two-col reveal">
@@ -643,6 +679,10 @@
         <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
       </div>
     </div>
+    <ol class="timeline reveal" aria-label="The house, in time">
+      <li><span class="tl-year">2018</span><span class="tl-note">Built</span></li>
+      <li><span class="tl-year">2026</span><span class="tl-note">Renewed · AETHON</span></li>
+    </ol>
     <figure class="plate reveal">
       <div class="frame"><span class="label">The living spaces, toward the sea · forthcoming</span></div>
     </figure>
