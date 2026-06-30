@@ -82,6 +82,11 @@ impression and the mobile layout matter.
   So the loop is: edit `index.html` → commit with a short message → push to `main`.
 - The live site **403s automated fetches** (bot protection) — to confirm what's live, compare the
   repo to `origin/main` (they're identical once merged) rather than fetching `aethon.house`.
+- **The git proxy in this env can be flaky.** Pushes sometimes fail with a *spurious*
+  `non-fast-forward`/`behind` rejection, and ref-**deletions** return a 403 — both transient. Trust
+  **`git ls-remote origin main`** (authoritative remote SHA) over the possibly-stale local
+  `origin/main` ref, and just retry the push. Once, a local checkout drifted to an old commit
+  mid-session — `git fetch && git reset --hard origin/main` restores the working tree to what's live.
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
@@ -133,6 +138,18 @@ superlatives, no marketing tone. Tone references: Aman, Tadao Ando. A little hum
 is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 
 ## Known TODOs
+- **Physical brand — stone signage blueprints: done (2026-06).** `docs/signage/` holds a fabrication
+  study for the property's markers, to hand to G. Patsalides + the stone carver: an **entrance
+  travertine/marble plate** (hand-carved V-cut wordmark, **gild the dot over the O only**, inset QR)
+  and a **seaside sandstone monolith** (deep-cut, bare, no QR) — each a dimensioned SVG + print PDF.
+  Plus **`aethon-qr.svg`** — a **working QR** (links to `aethon.house`, error-correction **H**, the
+  brand **"A"** at centre; **verified scannable** by decoding it back with OpenCV). Reproducible via
+  `scripts/gen-signage-blueprint.py` (needs `segno`, `opencv-python-headless`, `Pillow`). Dimensions
+  in **mm**; a *design study* (verify on site, not for structural use); **no address** anywhere.
+- **BUG — `/icon.svg` referenced but missing.** All four pages' `<head>` carries
+  `<link rel="icon" type="image/svg+xml" href="/icon.svg">`, but **no `icon.svg` exists** in the repo
+  (only the PNG/ICO favicons + `brand/*.svg` wordmarks) → that request 404s (cosmetic — browsers fall
+  back to `favicon.ico`/PNG). Fix: add an SVG "A" favicon at `/icon.svg`, or drop those `<link>` lines.
 - **Images:** an `images/` folder + a **buildless optimisation pipeline** now exist — see
   `images/README.md` (AVIF→WebP→JPEG via `<picture>`, 400/800w, uniform 3:2, sRGB,
   metadata stripped; Pillow runs it in-session). **Materials done:** the 8 macro swatches
@@ -360,11 +377,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   portraits (the minimal no-bios credits stand); the reviewer's "renewal"/superlative hero line
   (post-completion framing + no-superlatives stand). **Gallery closing beat — confirmed (owner,
   option E):** *"This is the house, in the order of its day. To know the rest is to be there — by
-  invitation, in time."* (ties to the by-invitation Register line). **PREVIEW TOGGLE (live now):** the
-  #10 "reveal only finished" rule is gated behind `body:not(.preview)` (+ a hero placeholder photo);
-  the homepage `<body>` currently carries `class="preview"`, so **every slot shows its stone
-  placeholder — the QR-facing site shows placeholders while this is on.** Remove the one `preview`
-  class to restore the finished live state. The pause plates remain visible placeholders either way.
+  invitation, in time."* (ties to the by-invitation Register line). **PREVIEW TOGGLE:** the #10
+  "reveal only finished" rule is gated behind `body:not(.preview)` and now covers
+  `.hero-media, .plate, .pause, #gallery` (+ a `body.preview .hero-photo` hero placeholder). **Live
+  state = finished** (`<body>` has no class): only real content shows — the Cliff Tan sketch, the
+  floor plans, the materials. **To review the whole page as it will read with photography, add
+  `class="preview"` to the homepage `<body>`** (reveals the hero placeholder photo, the woven plates,
+  both pause plates and the Views grid); remove it to return to finished. All scaffolding stays in the
+  code either way — photography simply replaces the placeholders.
 - **Hero — copy & spacing settled (#50, #52).** Both hero sentences run on one line on desktop
   (uncapped + `text-wrap: balance`/`pretty`; hero-line max font 2rem), balanced-wrapping on phones.
   Vertical rhythm is two proximity groups — `[descriptor + AETHON]` · gap · `[house of light +

@@ -567,6 +567,7 @@
      (one word) to return to the finished live state. */
   body:not(.preview) .hero-media,
   body:not(.preview) .plate,
+  body:not(.preview) .pause,
   body:not(.preview) #gallery{ display: none; }
   /* hero placeholder photo — preview only; the real hero photo replaces it later */
   .hero-photo{ display: none; }
@@ -644,7 +645,7 @@
 </style>
 </head>
 
-<body class="preview">
+<body>
 <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night')document.body.classList.add('night');}catch(e){}</script>
 
 <header class="bar" id="bar">
