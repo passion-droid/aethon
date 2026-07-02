@@ -191,11 +191,40 @@
     .js .reveal{ opacity:1; transform:none; transition:none; }
     *, *::before, *::after{ transition-duration:0.001ms !important; }
   }
+
+  /* ---------- work-in-progress notice (native <dialog>; opens on every load) ----------
+     A quiet, museal card on a blurred backdrop, in the site's palette + type, adapting to
+     Daylight/Afterglow. Closed by ✕, "Look around", Esc or a click outside — then the page
+     browses normally. Shown every load by design (no localStorage gate). Kept byte-identical
+     across index / gallery / legal (hand-synced, like the token blocks). */
+  .wip{ position:fixed; inset:0; width:100%; height:100%; max-width:100vw; max-height:100vh; border:0; padding:0; margin:0; background:transparent; color:var(--ink); }
+  .wip[open]{ display:flex; align-items:center; justify-content:center; }
+  .wip::backdrop{ background:rgba(44,38,32,0.34); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
+  body.night .wip::backdrop{ background:rgba(8,5,3,0.58); }
+  .wip-card{ position:relative; width:min(30rem, 92vw); max-height:90vh; overflow-y:auto; margin:var(--edge); padding:clamp(2.2rem, 6vw, 3.2rem); background:var(--bg-soft); border:1px solid var(--rule); box-shadow:0 24px 70px rgba(20,15,10,0.30); text-align:center; transition:background 0.7s ease, color 0.7s ease, border-color 0.7s ease; }
+  .wip-mark{ display:inline-block; width:7rem; height:1.7rem; background:url(/brand/logo-dark.svg) center / contain no-repeat; text-indent:-9999px; overflow:hidden; white-space:nowrap; }
+  body.night .wip-mark{ background-image:url(/brand/logo-white.svg); }
+  .wip-body{ margin:clamp(1.4rem, 3.5vw, 1.9rem) 0 0; font-family:var(--ff-text); font-weight:300; font-size:clamp(1rem, 1.7vw, 1.12rem); line-height:1.62; color:var(--ink-soft); text-wrap:pretty; }
+  .wip-dismiss{ margin-top:clamp(1.6rem, 4vw, 2.1rem); font-family:var(--ff-display); font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--accent); background:transparent; border:1px solid var(--accent); padding:0.85rem 1.7rem; cursor:pointer; transition:color 0.2s ease, background 0.2s ease; }
+  .wip-dismiss:hover{ background:var(--accent); color:var(--bg-soft); }
+  .wip-close{ position:absolute; top:0.3rem; right:0.3rem; display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; background:transparent; border:0; cursor:pointer; font-size:1.7rem; line-height:1; color:var(--ink-mute); transition:color 0.2s ease; }
+  .wip-close:hover{ color:var(--ink); }
+  .wip-close:focus-visible, .wip-dismiss:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  @media (prefers-reduced-motion: no-preference){ .wip[open]{ animation:wip-fade 260ms ease; } @keyframes wip-fade{ from{ opacity:0 } to{ opacity:1 } } }
 </style>
 </head>
 
 <body>
 <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night')document.body.classList.add('night');}catch(e){}</script>
+
+<dialog class="wip" id="wip" aria-label="A note from AETHON" aria-describedby="wip-body">
+  <div class="wip-card">
+    <button class="wip-close" type="button" aria-label="Close this note">&times;</button>
+    <span class="wip-mark" aria-hidden="true">AETHON</span>
+    <p class="wip-body" id="wip-body">AETHON is still being finished — the photography and final touches are on their way. What you see is the shape of it; please, look around.</p>
+    <button class="wip-dismiss" type="button" autofocus>Look around</button>
+  </div>
+</dialog>
 
 <header class="bar" id="bar">
   <a class="mark" href="/">AETHON</a>
@@ -490,6 +519,18 @@
       });
     }, { rootMargin: '-45% 0px -50% 0px' });   // active as a chapter crosses the upper-middle band
     document.querySelectorAll('.chapter[id]').forEach(function(s){ spy.observe(s); });
+  })();
+
+  // Work-in-progress notice — opens on every load (no persistence, by design).
+  // Native <dialog> gives the focus trap, top-layer + inert background, and Esc-to-close for free.
+  (function(){
+    var dlg = document.getElementById('wip');
+    if (!dlg || typeof dlg.showModal !== 'function') return;   // graceful no-op on older engines
+    function close(){ if (dlg.open) dlg.close(); }
+    var x = dlg.querySelector('.wip-close'); if (x) x.addEventListener('click', close);
+    var ok = dlg.querySelector('.wip-dismiss'); if (ok) ok.addEventListener('click', close);
+    dlg.addEventListener('click', function(e){ if (e.target === dlg) close(); });  // click outside the card
+    try { dlg.showModal(); } catch (e) {}
   })();
 </script>
 </body>
