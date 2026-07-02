@@ -62,7 +62,12 @@ impression and the mobile layout matter.
   interest* puts the form in the right column, *In brief* the detail lists. Keep new sections on
   this pattern — don't reintroduce a centered single column or a `.measure`-capped title. Page
   width is `--wrap` (84rem), so the right column caps at ~56rem (relevant when sizing list/figure
-  content inside it).
+  content inside it). **Short bodies bottom-align (2026-07):** `.two-col > div:last-child{ align-self:
+  end }` at ≥880px seats a short right-column body level with the header column's lower edge (so it no
+  longer starts high and ends short of the title) — self-correcting, no effect when the body is the
+  taller column. Body `<p>`s cap at `max-width: 44rem`; *Register interest*'s form is left-aligned to
+  match (`.interest{ max-width: 44rem; margin: 0 }`, not centred). Don't revert these to top-aligned
+  or re-centre the form.
 - **Spacing encodes grouping (proximity), not vibes.** Vertical gaps follow the Gestalt law of
   proximity: related items sit closer, group breaks sit wider, on **one consistent ratio** (tight
   ≈ ½ of loose) and ideally on the 8-pt grid. **A label hugs what it labels** — an eyebrow should
@@ -87,6 +92,15 @@ impression and the mobile layout matter.
   **`git ls-remote origin main`** (authoritative remote SHA) over the possibly-stale local
   `origin/main` ref, and just retry the push. Once, a local checkout drifted to an old commit
   mid-session — `git fetch && git reset --hard origin/main` restores the working tree to what's live.
+- **Boot check — the fresh container often comes up on a stale branch** (seen repeatedly landing on
+  `claude/brand-assets` at an old HEAD, so the working tree — even `CLAUDE.md` — reads out of date).
+  **First thing each session, re-sync to live:** `git fetch origin main && git checkout -B main
+  origin/main`, then verify against `git ls-remote origin main` before trusting any file. Deploys go to
+  `main` directly (there is no PR flow for this site — GitHub Pages serves `main`); a `main`→`main` PR
+  is not a real thing to open.
+- **Stale remote branches to delete (user-side).** ~10 old `claude/*` branches linger; deleting them
+  can only be done via the GitHub *Branches* UI — the proxy 403s git ref-deletions and the GitHub MCP
+  tools have no delete-branch action. Not something this agent can clear.
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
@@ -146,10 +160,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   brand **"A"** at centre; **verified scannable** by decoding it back with OpenCV). Reproducible via
   `scripts/gen-signage-blueprint.py` (needs `segno`, `opencv-python-headless`, `Pillow`). Dimensions
   in **mm**; a *design study* (verify on site, not for structural use); **no address** anywhere.
-- **BUG — `/icon.svg` referenced but missing.** All four pages' `<head>` carries
-  `<link rel="icon" type="image/svg+xml" href="/icon.svg">`, but **no `icon.svg` exists** in the repo
-  (only the PNG/ICO favicons + `brand/*.svg` wordmarks) → that request 404s (cosmetic — browsers fall
-  back to `favicon.ico`/PNG). Fix: add an SVG "A" favicon at `/icon.svg`, or drop those `<link>` lines.
+- **`/icon.svg` favicon — DONE (2026-07).** All four pages' `<head>` links
+  `<link rel="icon" type="image/svg+xml" href="/icon.svg">`; the file had been missing (404 on every
+  page — cosmetic, browsers fell back to `favicon.ico`/PNG). Fixed by adding **`/icon.svg`**: the brand
+  low-crossbar "A" (glyph + crossbar lifted from `brand/logo-dark.svg`'s last `<g>`) in white on an
+  olive `#4C5039` rounded square (rx 16%), the A scaled to ~52% of a 512 canvas and centred via its
+  computed bbox. Served now — no more 404. (726-byte static vector; no build step.)
 - **Images:** an `images/` folder + a **buildless optimisation pipeline** now exist — see
   `images/README.md` (AVIF→WebP→JPEG via `<picture>`, 400/800w, uniform 3:2, sRGB,
   metadata stripped; Pillow runs it in-session). **Materials done:** the 8 macro swatches
@@ -377,14 +393,27 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   portraits (the minimal no-bios credits stand); the reviewer's "renewal"/superlative hero line
   (post-completion framing + no-superlatives stand). **Gallery closing beat — confirmed (owner,
   option E):** *"This is the house, in the order of its day. To know the rest is to be there — by
-  invitation, in time."* (ties to the by-invitation Register line). **PREVIEW TOGGLE:** the #10
-  "reveal only finished" rule is gated behind `body:not(.preview)` and now covers
-  `.hero-media, .plate, .pause, #gallery` (+ a `body.preview .hero-photo` hero placeholder). **Live
-  state = finished** (`<body>` has no class): only real content shows — the Cliff Tan sketch, the
-  floor plans, the materials. **To review the whole page as it will read with photography, add
-  `class="preview"` to the homepage `<body>`** (reveals the hero placeholder photo, the woven plates,
-  both pause plates and the Views grid); remove it to return to finished. All scaffolding stays in the
-  code either way — photography simply replaces the placeholders.
+  invitation, in time."* (ties to the by-invitation Register line). **PREVIEW TOGGLE — now ON by
+  default (owner, 2026-07):** the #10 "reveal only finished" rule is gated behind `body:not(.preview)`
+  and covers `.hero-media, .plate, .pause, #gallery` (+ a `body.preview .hero-photo` hero placeholder).
+  **The homepage `<body>` now carries `class="preview"` — the site runs in "full live mode"**: every
+  placeholder slot shows (hero placeholder photo, woven plates, both pause plates, the Views grid), so
+  the whole page reads as it will once photography lands — no longer the finished-only state. **To
+  return to finished** (only real content — the Cliff Tan sketch, floor plans, materials), **remove the
+  `preview` class** from `<body>`. All scaffolding stays in the code either way; photography simply
+  replaces the placeholders. (Paired with the *Work-in-progress notice* below, which tells visitors the
+  preview state is intentional.)
+- **Work-in-progress notice — shipped (2026-07).** A quiet, museal pop-up (`.wip`, a native
+  `<dialog>` opened on **every load**, no persistence by design) tells a visitor the site is still
+  being finished. Copy (owner-approved): *"AETHON is still being finished — the photography and final
+  touches are on their way. What you see is the shape of it; please, look around."* Blurred backdrop
+  (`.wip::backdrop` blur; day/night tint via `body.night .wip::backdrop`), card in the role tokens +
+  LT Museum/Spectral with the AETHON logotype; closes via **✕ / "Look around" / Esc / click-outside**,
+  then the page browses normally. Native `<dialog>` gives the focus trap + inert background for free
+  (autofocus on "Look around"); reduced-motion-safe; graceful no-op if `showModal` is unsupported. On
+  **index + gallery + legal** (not `404.html` — an error page); markup + CSS + JS are **hand-synced
+  byte-identical** across the three files, like the token blocks. To retire it when the site is
+  finished, delete the `.wip` block, the `<dialog class="wip">` markup and its IIFE from all three.
 - **Hero — copy & spacing settled (#50, #52).** Both hero sentences run on one line on desktop
   (uncapped + `text-wrap: balance`/`pretty`; hero-line max font 2rem), balanced-wrapping on phones.
   Vertical rhythm is two proximity groups — `[descriptor + AETHON]` · gap · `[house of light +
