@@ -377,6 +377,8 @@
   }
   @media (min-width: 880px){
     .two-col{ grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+    /* short bodies sit level with the header column's lower edge (self-correcting: no effect when the body is the taller column) */
+    .two-col > div:last-child{ align-self: end; }
   }
   .two-col > div:last-child > p{ max-width: 44rem; }
 
@@ -465,7 +467,7 @@
   .hero-media .play{ width: 1.9rem; height: 1.9rem; font-size: 0.56rem; padding-left: 0.14em; }
 
   /* ---------- interest form ---------- */
-  .interest{ max-width: 58rem; margin: 0 auto; }
+  .interest{ max-width: 44rem; margin: 0; }
   .interest .intro{ max-width: 66ch; }
   form.register{ margin-top: var(--space-xl); }
   .register-done{ margin-top: var(--space-xl); }
