@@ -317,9 +317,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   audit's top visitor finding). Keep it when the gallery is redesigned around real photography.
 - **Greek word renders in brand type:** `fonts/greek-aithon-lt.woff2` (5-glyph EB Garamond Italic
   subset, OFL, ~2.6KB) is declared into the Spectral stack via `unicode-range` for Αἴθων.
-- **mail@aethon.house — pending owner's Cloudflare Email Routing setup.** Once live: swap the
-  outlook.com address in legal (imprint + rights section) and consider a quiet contact line under
-  the form + in the colophon (JRN-4/C-11). Until then the outlook address stays.
+- **mail@aethon.house — LIVE (2026-07-03).** Cloudflare Email Routing forwards to the owner's
+  Outlook inbox (inbound only — replies still show the outlook address until a real mailbox on the
+  domain exists). The site now uses mail@aethon.house everywhere: legal imprint + rights section,
+  and an *Enquiries* row in the colophon
+  (resolves JRN-4/C-11). **Owner: NO address beneath the register form** — the form area stays
+  form-only. Never publish the outlook.com address again.
 - **Meta rules from the audit:** subpage titles carry the "AETHON House" lockup; `lang="en-GB"`
   on all four pages; "Faros Beach" capitalised in meta; `data-nosnippet` stays on the WIP card.
 - Still open from the audit (group C, unanswered): mid-page register pointer, Afterglow discovery
