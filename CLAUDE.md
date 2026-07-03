@@ -97,17 +97,25 @@ impression and the mobile layout matter.
   **First thing each session, re-sync to live:** `git fetch origin main && git checkout -B main
   origin/main`, then verify against `git ls-remote origin main` before trusting any file. Deploys go to
   `main` directly (there is no PR flow for this site — GitHub Pages serves `main`); a `main`→`main` PR
-  is not a real thing to open. **The reset can also strike MID-SESSION** (seen 2026-07-03: the
-  container recycled and silently re-cloned onto the stale branch between two edits — uncommitted
-  work applied after that point landed on the wrong files). After any long gap or odd tool
-  behaviour, re-verify `git rev-parse HEAD` against `git ls-remote origin main` before editing.
+  is not a real thing to open. **The reset can also strike MID-SESSION — repeatedly** (2026-07-03:
+  THREE times in one session; the container recycles during any longer pause and silently re-clones
+  onto the stale branch — uncommitted work applied after that point lands on the wrong files, and
+  the harness's file-read state resets, so Edit calls start failing with "has not been read").
+  Rules of thumb: re-verify `git rev-parse HEAD` vs `git ls-remote origin main` **before every
+  batch of edits**, not just at boot; commit+push in small increments so at most minutes of work
+  are at risk; after a recycle, prefer asserted python/script replacements over the Edit tool
+  (no read-state needed) or re-Read files first. A tell: greps suddenly return pre-audit content
+  or previously-fixed bugs "reappear".
 - **Internal docs live on the `internal` branch (2026-07-03)** — GH Pages serves everything on
   `main`, so the strategy memos were leaking onto the public domain (audit finding SEO-1). All of
   `docs/` (imagery brief, SEO playbook, styleguide memo, spacing/readability notes, signage, the
   site-audit working memo) + the Design-Source-Memo now live ONLY on `internal`. **Every `docs/…`
   path referenced in this file means the internal branch.** Read without switching branches:
   `git fetch origin internal && git show origin/internal:docs/<file>`. Commit doc updates to
-  `internal` (checkout, commit, push, return to main); never re-add them to `main`. `scripts/`
+  `internal` via a temporary worktree — safer than switching the main checkout (which a container
+  recycle can strand): `git worktree add <scratch>/internal-wt internal`, edit + commit + push
+  there, then `git worktree remove -f <scratch>/internal-wt` (leave the shell's cwd first, or pwd
+  errors). Never re-add the docs to `main`. `scripts/`
   stays on `main` (the GitHub Actions workflows need it) but is robots-disallowed.
 - **Stale remote branches to delete (user-side).** ~10 old `claude/*` branches linger; deleting them
   can only be done via the GitHub *Branches* UI — the proxy 403s git ref-deletions and the GitHub MCP
