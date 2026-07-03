@@ -37,8 +37,15 @@ worked off. Continue from here in future sessions — update the checkboxes as i
       text-over-imagery pair ≥4.5:1 in BOTH themes (day 5.08–6.71, night 6.49–9.71; tracker
       5.1/5.98; pause 7.9/13.8; frame labels 9.8/14.6); wip CSS/HTML/JS + no-flash blocks
       sha1-identical ×3)
-- [ ] Group B researched (B-4 done — see below; B-5 workflow triggered; rest owner-side)
-- [ ] Group C decided with owner
+- [x] Group B resolved (2026-07-03): B-1 no-newsletters confirmed; B-2 **no DOI — single opt-in**
+      (legal + thank-you corrected; consent = submission); PRIV-1 **Cloudflare proxying confirmed**
+      → named in legal *Hosting*; B-3 link-preview share test = owner-side (pending); B-4 logo
+      **left as-is** (warm black sanctioned on screen; guide olive = print reference); B-9 Greek
+      subset **built + shipped** (fonts/greek-aithon-lt.woff2); B-5 PSI workflow triggered.
+- [x] Group C first tranche decided + implemented (2026-07-03): C-1 gallery register link ✓;
+      C-2 thank-you completeness line ✓ (no-DOI variant); C-3 WIP rewording ✓ ("This site…");
+      C-4 docs moved to the `internal` branch + robots.txt disallows ✓; C-5 mail@ guide delivered,
+      owner infra pending; C-6 "Bedrooms — 3" ✓. Remaining C items open (7–23).
 
 **Verification discoveries (recorded for future sessions):**
 - A dialog that autofocuses at load *moves the sequential-focus start point to its DOM

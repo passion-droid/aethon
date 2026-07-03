@@ -8,8 +8,8 @@ residence on the western coast of Paphos, Cyprus. AETHON is a *quiet elevation* 
 existing seafront residence (originally part of the "Faros Beach Houses"): the
 original architect's geometry is kept and honoured, the material and spatial language
 refined. It is an evergreen brand presence, **not** a rental or an estate-agent
-listing. Its quiet purpose is to hold a small, private interest list for a possible
-future sale. The site may be reached via a QR code at the property, so the first
+listing. Its quiet purpose is to hold a small, private interest list (the fuller
+framing is in the internal docs). The site may be reached via a QR code at the property, so the first
 impression and the mobile layout matter.
 
 "Faros" is the locale (Faros / Lighthouse Beach), not the brand — the brand is **AETHON**.
@@ -97,7 +97,18 @@ impression and the mobile layout matter.
   **First thing each session, re-sync to live:** `git fetch origin main && git checkout -B main
   origin/main`, then verify against `git ls-remote origin main` before trusting any file. Deploys go to
   `main` directly (there is no PR flow for this site — GitHub Pages serves `main`); a `main`→`main` PR
-  is not a real thing to open.
+  is not a real thing to open. **The reset can also strike MID-SESSION** (seen 2026-07-03: the
+  container recycled and silently re-cloned onto the stale branch between two edits — uncommitted
+  work applied after that point landed on the wrong files). After any long gap or odd tool
+  behaviour, re-verify `git rev-parse HEAD` against `git ls-remote origin main` before editing.
+- **Internal docs live on the `internal` branch (2026-07-03)** — GH Pages serves everything on
+  `main`, so the strategy memos were leaking onto the public domain (audit finding SEO-1). All of
+  `docs/` (imagery brief, SEO playbook, styleguide memo, spacing/readability notes, signage, the
+  site-audit working memo) + the Design-Source-Memo now live ONLY on `internal`. **Every `docs/…`
+  path referenced in this file means the internal branch.** Read without switching branches:
+  `git fetch origin internal && git show origin/internal:docs/<file>`. Commit doc updates to
+  `internal` (checkout, commit, push, return to main); never re-add them to `main`. `scripts/`
+  stays on `main` (the GitHub Actions workflows need it) but is robots-disallowed.
 - **Stale remote branches to delete (user-side).** ~10 old `claude/*` branches linger; deleting them
   can only be done via the GitHub *Branches* UI — the proxy 403s git ref-deletions and the GitHub MCP
   tools have no delete-branch action. Not something this agent can clear.
@@ -290,6 +301,32 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   marketing" line (~831), and the "In brief" / "The house, plainly." colophon pairing (~878–879).
   **Never auto-apply voice changes — always present for sign-off first.**
 
+## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
+- **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the
+  thank-you states completeness ("no confirmation email will follow") and the legal notice says
+  registration completes on submission. **Never re-introduce "a confirmation email completes your
+  sign-up"** in copy, legal or code comments.
+- **Cloudflare proxying confirmed (orange-cloud)** → named beside GitHub Pages in the legal
+  *Hosting* section. If the Cloudflare Web-Analytics beacon is ever enabled, the notice's
+  "uses no analytics" line must be updated the same day.
+- **Logo letters stay warm black on screen (owner: "leave as is").** The styleguide PDF's primary
+  logotype is olive-lettered (#4C5039) — that remains the reference for print/physical; the shipped
+  warm-black `brand/logo-dark.svg` is the sanctioned on-screen variant. Don't "fix" either direction.
+- **Bedrooms are public: 3** (In brief row; matches the source memo — master + two).
+- **Gallery ends with a register path** (quiet "Register interest" link at the close — the
+  audit's top visitor finding). Keep it when the gallery is redesigned around real photography.
+- **Greek word renders in brand type:** `fonts/greek-aithon-lt.woff2` (5-glyph EB Garamond Italic
+  subset, OFL, ~2.6KB) is declared into the Spectral stack via `unicode-range` for Αἴθων.
+- **mail@aethon.house — pending owner's Cloudflare Email Routing setup.** Once live: swap the
+  outlook.com address in legal (imprint + rights section) and consider a quiet contact line under
+  the form + in the colophon (JRN-4/C-11). Until then the outlook address stays.
+- **Meta rules from the audit:** subpage titles carry the "AETHON House" lockup; `lang="en-GB"`
+  on all four pages; "Faros Beach" capitalised in meta; `data-nosnippet` stays on the WIP card.
+- Still open from the audit (group C, unanswered): mid-page register pointer, Afterglow discovery
+  line, menu "Gallery" marker, the journalist's copy-craft bundle, chapter numbering to 07, OG on
+  gallery/legal, Residence JSON-LD node, WIP once-per-visit option, press-enquiries line. See the
+  memo's checkboxes.
+
 ## Decided / planned
 - **Floor plans:** a conceptual *Plan* section after *The architecture* — atmospheric,
   low-detail only. **Done** — the two muted floor renders are wired (see *Known TODOs*).
@@ -405,8 +442,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   preview state is intentional.)
 - **Work-in-progress notice — shipped (2026-07).** A quiet, museal pop-up (`.wip`, a native
   `<dialog>` opened on **every load**, no persistence by design) tells a visitor the site is still
-  being finished. Copy (owner-approved): *"AETHON is still being finished — the photography and final
-  touches are on their way. What you see is the shape of it; please, look around."* Blurred backdrop
+  being finished. Copy (owner-approved 2026-07-03, reworded from the original after the audit —
+  "AETHON is finished; the *site* isn't"): *"This site is still being finished — the photography is
+  on its way. What you see is the shape of it; please, look around."* Blurred backdrop
   (`.wip::backdrop` blur; day/night tint via `body.night .wip::backdrop`), card in the role tokens +
   LT Museum/Spectral with the AETHON logotype; closes via **✕ / "Look around" / Esc / click-outside**,
   then the page browses normally. Native `<dialog>` gives the focus trap + inert background for free

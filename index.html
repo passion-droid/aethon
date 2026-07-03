@@ -59,6 +59,9 @@
   @font-face{ font-family:'Spectral'; font-style:italic; font-weight:300; font-display:swap; src:url(/fonts/spectral-300i-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:300; font-display:swap; src:url(/fonts/spectral-300-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:400; font-display:swap; src:url(/fonts/spectral-400-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  /* Greek micro-subset (5 glyphs, ~2.6KB) so Αἴθων renders in a matching serif italic instead of the
+     system fallback — EB Garamond Italic (SIL OFL), declared into the Spectral slot via unicode-range. */
+  @font-face{ font-family:'Spectral'; font-style:italic; font-weight:300; font-display:swap; src:url(/fonts/greek-aithon-lt.woff2) format('woff2'); unicode-range:U+0370-03FF, U+1F00-1FFF; }
   /* Metric-matched fallbacks — local() fonts scaled to the web fonts so the swap doesn't shift layout (CLS). */
   @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:116.7%; ascent-override:81.3%; descent-override:18.2%; line-gap-override:0%; }
   @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
@@ -705,7 +708,7 @@
   <div class="wip-card" data-nosnippet>
     <button class="wip-close" type="button" aria-label="Close this note">&times;</button>
     <span class="wip-mark" aria-hidden="true">AETHON</span>
-    <p class="wip-body" id="wip-body">AETHON is still being finished — the photography and final touches are on their way. What you see is the shape of it; please, look around.</p>
+    <p class="wip-body" id="wip-body">This site is still being finished — the photography is on its way. What you see is the shape of it; please, look around.</p>
     <button class="wip-dismiss" type="button" autofocus>Look around</button>
   </div>
 </dialog>
@@ -1127,7 +1130,7 @@
         <p class="form-note" id="register-error" role="alert" hidden>That didn’t go through. Please try again in a moment.</p>
         <div class="register-done" id="register-thanks" role="status" tabindex="-1" hidden>
           <p class="register-done__line">Thank you. Your interest has been noted.</p>
-          <p class="form-note">We’ll be in touch only in time, and only should the house become available.</p>
+          <p class="form-note">Your registration is complete — no confirmation email will follow, and nothing more is needed. We’ll be in touch only in time, and only should the house become available.</p>
         </div>
       </div>
     </div>
@@ -1144,6 +1147,7 @@
       <dl class="credits-list">
         <div><dt>Location</dt><dd>Faros coast, Paphos, Cyprus</dd></div>
         <div><dt>Type</dt><dd>Private residence</dd></div>
+        <div><dt>Bedrooms</dt><dd>3</dd></div>
         <div><dt>Built</dt><dd>2018</dd></div>
         <div><dt>Renewed</dt><dd>2026</dd></div>
       </dl>
@@ -1317,8 +1321,8 @@
         }
       }
       // no-cors: the cross-origin POST is delivered but the response is opaque, so treat
-      // completion as success (Brevo's confirmation email is the real receipt); only a
-      // genuine network failure rejects.
+      // completion as success (single opt-in — no confirmation email; the inline thank-you
+      // is the receipt); only a genuine network failure rejects.
       fetch(f.action, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(new FormData(f)) })
         .then(function(){ finish(true); })
         .catch(function(){ finish(false); });

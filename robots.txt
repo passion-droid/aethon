@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+# working documents are not part of the public site
+Disallow: /CLAUDE.md
+Disallow: /README.md
+Disallow: /scripts/
+Disallow: /*.md$
 
 Sitemap: https://aethon.house/sitemap.xml

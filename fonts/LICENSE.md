@@ -21,3 +21,11 @@ The `latin-ext` subset was dropped because the copy is basic-Latin only; if acce
 Western-European text is ever added, regenerate it from the Google Fonts CSS. The full OFL
 text accompanies each font at the sources above. Served locally so no visitor IP is sent to
 a third-party CDN (GDPR).
+
+## EB Garamond (Greek micro-subset)
+
+`greek-aithon-lt.woff2` — a five-glyph Greek subset (Α ἴ θ ω ν) of **EB Garamond Italic**,
+instanced at weight 400, serving the single Greek word on the homepage inside the Spectral
+stack via `unicode-range`. Copyright 2017 The EB Garamond Project Authors
+(https://github.com/octaviopardo/EBGaramond12). Licensed under the **SIL Open Font
+License 1.1** — same licence text as above.

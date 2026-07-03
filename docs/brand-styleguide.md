@@ -84,3 +84,13 @@ values are slightly deeper.)
    `site.webmanifest`, `<link>`s ×4 pages, self-hosted.
 5. **Palette:** apply per the open-decision answers; if gold becomes a UI accent, run a WCAG AA
    contrast pass on stone grounds.
+
+
+---
+
+**Owner decision (2026-07-03, audit follow-up):** the on-screen logotype keeps the shipped
+**warm-black letters** (`brand/logo-dark.svg`, #222216) — sanctioned as the screen variant.
+The guide's **olive letters (#4C5039)** remain the reference for print and physical
+reproduction (signage infill, embossing, engraving). Extracted from the PDF: the guide's two
+drawn logos both fill olive #4C4F38 + gold #C2A152; warm black appears only as label text
+and a palette swatch.
