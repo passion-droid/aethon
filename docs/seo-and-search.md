@@ -177,11 +177,14 @@ python scripts/seo-pull.py --out seo-reports --days 28
 
 ---
 
-## 5 · Current meta state (shipped)
-`<title>` "AETHON House — private seafront residence in Paphos, Cyprus" ·
-`og:title` kept poetic ("house of light") · meta/OG description lead with
-*seafront residence · Paphos, Cyprus · Faros beach* · Twitter `summary_large_image`
-card · region-level geo (`CY-05`, no coordinates) · `lang="en-GB"` · `WebSite`
-JSON-LD. **`og:image` / `twitter:image` are pre-wired but asset-blocked** — drop a
+## 5 · Current meta state (shipped — synced to the #52 dedupe, 2026-07)
+`<title>` "AETHON House — private seafront residence · Paphos, Cyprus" ·
+`og:title`/`twitter:title` "AETHON House — private seafront residence" (the lockup —
+NOT the poetic tagline; "House of Light" lives in `og:site_name` + the JSON-LD `name`,
+per #52 — don't "restore" a poetic og:title) · meta/OG description lead with
+*seafront residence · Paphos, Cyprus · Faros Beach* · Twitter `summary_large_image`
+card · region-level geo (`CY-05`, no coordinates) · `lang="en-GB"` on all four pages ·
+`WebSite` JSON-LD. Subpage titles carry the "AETHON House" lockup too (audit 2026-07).
+**`og:image` / `twitter:image`(+`:alt`) are pre-wired but asset-blocked** — drop a
 1200×630 warm/afterglow master at `/images/og.jpg` and uncomment. Gallery is
 `noindex`; legal is indexable.

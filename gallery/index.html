@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AETHON — Gallery · Paphos</title>
+<title>AETHON House — Gallery · Paphos</title>
 <!-- This subpage is intentionally NOT indexed (reachable only via the quiet links on the main page). -->
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#E9E7E0" />
@@ -34,7 +34,8 @@
     --bar-bg:rgba(233,231,224,0.82);
     --travertine:#DCCDB3; --sandstone:#C7B08C; --greige:#8C8478;
     --frame-grad:linear-gradient(135deg, var(--travertine), var(--sandstone) 60%, var(--greige));
-    --frame-label:rgba(44,38,32,0.72);
+    --frame-label:rgba(34,29,24,0.96);   /* near-solid: keeps ≥4.5:1 over the gradient's darkest stop */
+    --light-glow:#F2DDBE;
     --footer-bg:#2C2620; --footer-ink:#E9E7E0; --footer-mute:rgba(233,231,224,0.70);
     --measure:60ch; --edge:clamp(1.5rem, 6vw, 7rem);
     /* spacing scale — synced with index.html (8pt grid; proximity model) */
@@ -50,6 +51,7 @@
     --bar-bg:rgba(26,20,16,0.82);
     --frame-grad:linear-gradient(135deg, #3A312A, #2C2620 60%, #211A14);
     --frame-label:rgba(238,231,214,0.70);
+    --light-glow:#F3C886;
     --footer-bg:#140F0A; --footer-ink:#EEE7D6; --footer-mute:rgba(238,231,214,0.62);
   }
 
@@ -89,10 +91,10 @@
 
   /* section tracker — a quiet scroll position indicator (chapters I–VI), centred in the bar */
   .tracker{ position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:clamp(0.5rem, 1.4vw, 1rem); }
-  .tracker a{ font-family:var(--ff-display); font-size:0.72rem; letter-spacing:0.1em; line-height:1; color:var(--ink-mute); text-decoration:none; opacity:0.55; padding:0.45rem 0.15rem; transition:opacity 0.3s ease, color 0.3s ease; }
+  .tracker a{ font-family:var(--ff-display); font-size:0.72rem; letter-spacing:0.1em; line-height:1; color:var(--ink-mute); text-decoration:none; padding:0.45rem 0.15rem; transition:color 0.3s ease; }   /* full opacity — the old 0.55 dimming read at ~2.2:1 (WCAG 1.4.3) */
   .tracker a span{ display:inline-block; min-width:1.1em; text-align:center; }
-  .tracker a:hover{ opacity:1; color:var(--ink); }
-  .tracker a.active{ opacity:1; color:var(--accent); }
+  .tracker a:hover{ color:var(--ink); }
+  .tracker a.active{ color:var(--accent); }
   @media (max-width:600px){ .tracker{ display:none; } }   /* desktop / tablet enhancement */
 
   .toggle{ width:2.2rem; height:2.2rem; border-radius:50%; border:1px solid var(--field-line); background:transparent; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; line-height:1; flex:none; transition:border-color 250ms ease, color 250ms ease, background-color 700ms ease; }
@@ -121,17 +123,18 @@
     .plates.three{ grid-template-columns:repeat(3, 1fr); }    /* a collection row — the artifacts */
     .plates.trio{ grid-template-columns:1.6fr 1fr; }          /* one large + two stacked beside it */
     .plates.trio > .plate:first-child{ grid-row:1 / span 2; }
+    /* trio: the lead plate fills the height of the two stacked alongside (no orphaned single) —
+       scoped here so single-column phones keep the standard 3:2 plate */
+    .plates.trio > .plate:first-child{ display:flex; flex-direction:column; }
+    .plates.trio > .plate:first-child .ph{ aspect-ratio:auto; flex:1 1 auto; min-height:18rem; }
   }
-  /* trio: the lead plate fills the height of the two stacked alongside (no orphaned single) */
-  .plates.trio > .plate:first-child{ display:flex; flex-direction:column; }
-  .plates.trio > .plate:first-child .ph{ aspect-ratio:auto; flex:1 1 auto; min-height:18rem; }
   .plate{ margin:0; }
   .ph{ position:relative; width:100%; aspect-ratio:3 / 2; background:var(--frame-grad); border:1px solid var(--rule); overflow:hidden; transition:background 0.7s ease; }
   .plate.portrait .ph{ aspect-ratio:4 / 5; }
   .plate.feature .ph{ aspect-ratio:21 / 9; }
   .ph::after{                                               /* a warm catch of light on the placeholder */
     content:""; position:absolute; inset:0;
-    background:radial-gradient(70% 90% at 80% 22%, #F2DDBE, transparent 60%);
+    background:radial-gradient(70% 90% at 80% 22%, var(--light-glow), transparent 60%);
     mix-blend-mode:screen; opacity:0.4; pointer-events:none;
   }
   .plate img, .plate picture{ display:block; width:100%; height:100%; object-fit:cover; }
@@ -187,6 +190,27 @@
   .js .reveal{ opacity:0; transform:translateY(18px); transition:opacity 900ms ease, transform 900ms ease; }
   .reveal.in{ opacity:1; transform:none; }
   :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  footer :focus-visible{ outline-color: var(--footer-ink); }   /* day olive is invisible on the dark footer (2.1:1) */
+
+  /* skip link — clipped (not offscreen: fixed elements parked outside the viewport drop out
+     of Chrome's tab order) until keyboard-focused (WCAG 2.4.1) */
+  .skip-link{
+    position:fixed; top:0.6rem; left:var(--edge); z-index:60;
+    clip-path:inset(50%); overflow:hidden; white-space:nowrap;
+    font-family:var(--ff-display); font-size:0.74rem; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--accent); background:var(--bg-soft); border:1px solid var(--rule-strong);
+    padding:0.9rem 1.3rem; text-decoration:none; transition:none;
+  }
+  .skip-link:focus{ clip-path:none; }
+
+  /* keep keyboard-focused elements clear of the fixed bar (sections already have scroll-margin) */
+  a, button, input, textarea{ scroll-margin-block: 6rem 2rem; }
+
+  /* comfortable touch targets on phones — mirrors index.html's mobile padding rule */
+  @media (max-width:640px){
+    .foot-meta a, .back-link, nav.links a{ display:inline-block; padding-top:0.3rem; padding-bottom:0.3rem; }
+  }
+
   @media (prefers-reduced-motion: reduce){
     .js .reveal{ opacity:1; transform:none; transition:none; }
     *, *::before, *::after{ transition-duration:0.001ms !important; }
@@ -215,10 +239,11 @@
 </head>
 
 <body>
-<script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night')document.body.classList.add('night');}catch(e){}</script>
+<script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night'){document.body.classList.add('night');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#1A1410');}}catch(e){}</script>
+
 
 <dialog class="wip" id="wip" aria-label="A note from AETHON" aria-describedby="wip-body">
-  <div class="wip-card">
+  <div class="wip-card" data-nosnippet>
     <button class="wip-close" type="button" aria-label="Close this note">&times;</button>
     <span class="wip-mark" aria-hidden="true">AETHON</span>
     <p class="wip-body" id="wip-body">AETHON is still being finished — the photography and final touches are on their way. What you see is the shape of it; please, look around.</p>
@@ -226,27 +251,29 @@
   </div>
 </dialog>
 
+<a class="skip-link" href="#main">Skip to content</a>
+
 <header class="bar" id="bar">
   <a class="mark" href="/">AETHON</a>
   <nav class="tracker" id="tracker" aria-label="Chapters">
-    <a href="#ch-arrival" title="Arrival"><span>I</span></a>
-    <a href="#ch-ground" title="The ground that gathers"><span>II</span></a>
-    <a href="#ch-garden" title="The garden and terrace"><span>III</span></a>
-    <a href="#ch-evening" title="The western evening"><span>IV</span></a>
-    <a href="#ch-withdraw" title="The withdraw"><span>V</span></a>
-    <a href="#ch-materials" title="Materials, close to hand"><span>VI</span></a>
+    <a href="#ch-arrival" title="Arrival" aria-label="Chapter I — Arrival"><span>I</span></a>
+    <a href="#ch-ground" title="The ground that gathers" aria-label="Chapter II — The ground that gathers"><span>II</span></a>
+    <a href="#ch-garden" title="The garden and terrace" aria-label="Chapter III — The garden and terrace"><span>III</span></a>
+    <a href="#ch-evening" title="The western evening" aria-label="Chapter IV — The western evening"><span>IV</span></a>
+    <a href="#ch-withdraw" title="The withdraw" aria-label="Chapter V — The withdraw"><span>V</span></a>
+    <a href="#ch-materials" title="Materials, close to hand" aria-label="Chapter VI — Materials, close to hand"><span>VI</span></a>
   </nav>
   <div class="bar-right">
     <nav class="links" aria-label="Back to the house">
       <a href="/">&larr; The house</a>
     </nav>
-    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to the afterglow (evening) view">
+    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Afterglow (evening) view">
       <span class="toggle-icon" aria-hidden="true">&#9790;</span>
     </button>
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="wrap">
 
     <div class="gal-intro reveal">
@@ -265,7 +292,9 @@
           <picture>
             <source type="image/avif" srcset="/images/gallery/evening-01-800.avif 800w, /images/gallery/evening-01-1600.avif 1600w" sizes="100vw">
             <source type="image/webp" srcset="/images/gallery/evening-01-800.webp 800w, /images/gallery/evening-01-1600.webp 1600w" sizes="100vw">
-            <img src="/images/gallery/evening-01-1600.jpg" srcset="/images/gallery/evening-01-800.jpg 800w, /images/gallery/evening-01-1600.jpg 1600w" sizes="100vw" width="1600" height="686" loading="lazy" decoding="async" alt="…">
+            <img src="/images/gallery/evening-01-1600.jpg" srcset="/images/gallery/evening-01-800.jpg 800w, /images/gallery/evening-01-1600.jpg 1600w" sizes="100vw" width="1600" height="686" loading="lazy" decoding="async"
+                 alt="AETHON House at sunset — the west elevation over the pool, Paphos">
+            (the alt is a draft — adjust per delivered frame; entity first, then the view, museal register)
           </picture>
           <figcaption class="cap">West elevation · sunset</figcaption>
         </figure>
@@ -396,7 +425,7 @@
   <figure class="lb-figure">
     <img class="lb-img" alt="" />
     <div class="lb-ph" aria-hidden="true"></div>
-    <figcaption class="lb-cap"></figcaption>
+    <figcaption class="lb-cap" aria-live="polite"></figcaption>
   </figure>
   <button class="lb-btn lb-next" type="button" aria-label="Next photograph">&rarr;</button>
 </dialog>
@@ -421,8 +450,7 @@
     function apply(theme){
       var night = theme === 'night';
       body.classList.toggle('night', night);
-      btn.setAttribute('aria-pressed', night ? 'true' : 'false');
-      btn.setAttribute('aria-label', night ? 'Switch to the daylight view' : 'Switch to the afterglow (evening) view');
+      btn.setAttribute('aria-pressed', night ? 'true' : 'false');   // fixed label + pressed-state: no contradiction for screen readers
       icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
       if (themeMeta) themeMeta.setAttribute('content', night ? '#1A1410' : '#E9E7E0');
     }
@@ -475,7 +503,11 @@
       }
       lbCap.textContent = c ? c.textContent.trim() : '';
     }
-    function openFrom(f){ collect(); lastFocus = document.activeElement; show(figs.indexOf(f)); dlg.showModal(); }
+    // scroll-lock while the lightbox is open (same iOS-safe fixed-body pattern as the WIP notice)
+    var lbBody = document.body, lbSy = 0;
+    function lbLock(){ lbSy = window.scrollY || 0; lbBody.style.position = 'fixed'; lbBody.style.top = (-lbSy) + 'px'; lbBody.style.left = '0'; lbBody.style.right = '0'; lbBody.style.width = '100%'; }
+    function lbUnlock(){ lbBody.style.position = ''; lbBody.style.top = ''; lbBody.style.left = ''; lbBody.style.right = ''; lbBody.style.width = ''; window.scrollTo({ top: lbSy, left: 0, behavior: 'instant' }); }
+    function openFrom(f){ collect(); lastFocus = document.activeElement; show(figs.indexOf(f)); lbLock(); dlg.showModal(); }
     main.addEventListener('click', function(e){
       var f = e.target.closest('.plate'); if (!f) return;
       e.preventDefault(); openFrom(f);
@@ -493,7 +525,7 @@
       if (e.key === 'ArrowRight'){ e.preventDefault(); show(idx + 1); }
       else if (e.key === 'ArrowLeft'){ e.preventDefault(); show(idx - 1); }
     });
-    dlg.addEventListener('close', function(){ if (lastFocus && lastFocus.focus) lastFocus.focus(); });
+    dlg.addEventListener('close', function(){ lbUnlock(); if (lastFocus && lastFocus.focus) lastFocus.focus(); });
     // make any image-bearing plates keyboard-operable (no-op while they're placeholders)
     collect();
     figs.forEach(function(f){
@@ -523,14 +555,19 @@
 
   // Work-in-progress notice — opens on every load (no persistence, by design).
   // Native <dialog> gives the focus trap, top-layer + inert background, and Esc-to-close for free.
+  // The page is scroll-locked while it is open (same iOS-safe fixed-body pattern as the menu).
   (function(){
     var dlg = document.getElementById('wip');
     if (!dlg || typeof dlg.showModal !== 'function') return;   // graceful no-op on older engines
+    var body = document.body, sy = 0;
+    function lock(){ sy = window.scrollY || 0; body.style.position = 'fixed'; body.style.top = (-sy) + 'px'; body.style.left = '0'; body.style.right = '0'; body.style.width = '100%'; }
+    function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); }
     function close(){ if (dlg.open) dlg.close(); }
+    dlg.addEventListener('close', unlock);                     // fires for ✕, button, backdrop AND Esc
     var x = dlg.querySelector('.wip-close'); if (x) x.addEventListener('click', close);
     var ok = dlg.querySelector('.wip-dismiss'); if (ok) ok.addEventListener('click', close);
     dlg.addEventListener('click', function(e){ if (e.target === dlg) close(); });  // click outside the card
-    try { dlg.showModal(); } catch (e) {}
+    try { lock(); dlg.showModal(); } catch (e) { unlock(); }
   })();
 </script>
 </body>

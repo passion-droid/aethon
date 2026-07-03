@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>AETHON House — private seafront residence · Paphos, Cyprus</title>
-<meta name="description" content="A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros beach." />
+<meta name="description" content="A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros Beach." />
 <link rel="canonical" href="https://aethon.house/" />
 <meta name="theme-color" content="#E9E7E0" />
 <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -20,7 +20,7 @@
 
 <!-- Open Graph (how the link looks when shared) -->
 <meta property="og:title" content="AETHON House — private seafront residence" />
-<meta property="og:description" content="A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros beach." />
+<meta property="og:description" content="A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros Beach." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://aethon.house/" />
 <meta property="og:site_name" content="AETHON · House of Light" />
@@ -35,6 +35,7 @@
 <meta name="twitter:title" content="AETHON House — private seafront residence" />
 <meta name="twitter:description" content="A private seafront residence on the western coast of Paphos, Cyprus." />
 <!-- <meta name="twitter:image" content="https://aethon.house/images/og.jpg" /> -->
+<!-- <meta name="twitter:image:alt" content="AETHON — a private seafront residence on the western coast of Paphos, in the warm light after sunset." /> -->
 
 <!-- Structured data: minimal and non-private (no address) -->
 <script type="application/ld+json">
@@ -44,7 +45,7 @@
   "name": "AETHON · House of Light",
   "alternateName": "AETHON House · Paphos",
   "url": "https://aethon.house/",
-  "description": "A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros beach.",
+  "description": "A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros Beach.",
   "inLanguage": "en-GB"
 }
 </script>
@@ -84,14 +85,15 @@
     --rule-strong: rgba(44,38,32,0.28);
     --field-line:  rgba(44,38,32,0.55);  /* form/control borders — meets WCAG 1.4.11 non-text 3:1 */
     --bar-bg:      rgba(233,231,224,0.82);
-    --hero-band:   rgba(140,132,120,0.16);
+    --hero-band:   rgba(236,233,226,0.68);   /* light marble wash — floors the dark hero text over imagery (WCAG F83) */
+    --hero-wash:   rgba(233,231,224,0.68);   /* soft backing behind the hero text block, same purpose */
 
     --light-glow:    #F2DDBE;
     --light-warm:    #E9C79B;
     --light-opacity: 0.9;
 
     --frame-grad: linear-gradient(135deg, var(--travertine), var(--sandstone) 60%, var(--greige));
-    --frame-label: rgba(44,38,32,0.72);
+    --frame-label: rgba(34,29,24,0.96);   /* near-solid: keeps ≥4.5:1 over the gradient's darkest stop */
 
     --footer-bg:   #2C2620;
     --footer-ink:  #E9E7E0;
@@ -134,7 +136,8 @@
     --rule-strong: rgba(238,231,214,0.30);
     --field-line:  rgba(238,231,214,0.40);  /* form/control borders — meets WCAG 1.4.11 non-text 3:1 */
     --bar-bg:      rgba(26,20,16,0.82);
-    --hero-band:   rgba(18,11,5,0.34);
+    --hero-band:   rgba(18,11,5,0.55);
+    --hero-wash:   rgba(20,14,9,0.62);
 
     --light-glow:    #F3C886;
     --light-warm:    #E9AC63;
@@ -266,9 +269,9 @@
     position: fixed; inset: 0; z-index: 40; background: var(--bg);
     display: flex; align-items: center; justify-content: center;
     opacity: 0; visibility: hidden;
-    transition: opacity 450ms ease, visibility 450ms ease, background-color 0.7s ease;
+    transition: opacity 450ms ease, visibility 0s 450ms, background-color 0.7s ease;   /* visibility flips instantly on open, after the fade on close — so focus() works the moment the menu opens */
   }
-  body.menu-open .menu{ opacity: 1; visibility: visible; }
+  body.menu-open .menu{ opacity: 1; visibility: visible; transition: opacity 450ms ease, visibility 0s, background-color 0.7s ease; }
   .menu-list{ list-style: none; margin: 0; padding: 0 var(--edge); display: flex; flex-direction: column; gap: clamp(1.3rem, 4.5vh, 2.4rem); text-align: center; }
   .menu-list a{
     font-family: var(--ff-display); font-weight: 300;
@@ -280,9 +283,9 @@
   .menu-list .menu-cta{ color: var(--accent); }
   @media (min-width: 641px){ .menu{ display: none; } }     /* desktop never shows the overlay */
   @media (max-width: 640px){
-    .menu-btn{ display: inline-block; }
+    .js .menu-btn{ display: inline-block; }   /* JS-gated: without JS the button would render but do nothing */
     .hero .hero-media{ display: none; }  /* hero is a still on mobile — .hero scope beats the later base rule */
-    .hero::before{ animation: none; }    /* quiet the light-drift on phones (battery) */
+    section.hero::before{ animation: none; }    /* quiet the light-drift on phones (battery) — extra specificity so the later base rule can't win the cascade */
     .more-link, .foot-meta a, .credits-list dd a{ display: inline-block; padding-top: 0.3rem; padding-bottom: 0.3rem; }
   }
 
@@ -313,8 +316,9 @@
     z-index:0; pointer-events:none;
   }
   @keyframes drift{
-    from{ transform: translate3d(4%, 2%, 0) scale(1.04); opacity: calc(var(--light-opacity) * 0.85); }
-    to  { transform: translate3d(-3%, -2%, 0) scale(1.0); opacity: var(--light-opacity); }
+    /* transform only — animating opacity here would override the preview damping below */
+    from{ transform: translate3d(4%, 2%, 0) scale(1.04); }
+    to  { transform: translate3d(-3%, -2%, 0) scale(1.0); }
   }
   @media (prefers-reduced-motion: reduce){
     .hero::before{ animation: none; transform:none; }
@@ -362,12 +366,12 @@
     font-family: var(--ff-display); font-size: 0.66rem; letter-spacing: 0.28em;
     text-transform: uppercase; color: var(--ink-mute); text-decoration:none;
     display:inline-flex; align-items:center; gap:0.7rem;
+    padding: 0.85rem 0.6rem; margin: -0.85rem -0.6rem;   /* invisible hit-area: ~44px target without moving the type */
   }
   .scroll-cue .stroke{ width: 2.4rem; height:1px; background: var(--ink-mute); display:inline-block; }
 
   /* ---------- generic section ---------- */
   section{ padding: var(--section-y) var(--edge); position: relative; scroll-margin-top: 5rem; }
-  @media (max-width: 360px){ .wordmark{ letter-spacing: 0.2em; } .bar .mark{ font-size: 0.82rem; letter-spacing: 0.24em; } }
   .field-paper{ background: var(--bg-soft); transition: background-color 0.7s ease; }
 
   .two-col{
@@ -487,7 +491,7 @@
     padding: 0.6rem 0.1rem; border-radius: 0;
     transition: border-color 250ms ease, color 0.7s ease;
   }
-  input:focus, textarea:focus{ outline: none; border-bottom-color: var(--accent); }
+  input:focus, textarea:focus{ border-bottom-color: var(--accent); }   /* the global :focus-visible ring stays — keyboard users keep their place (WCAG 2.4.7) */
   textarea{ resize: vertical; min-height: 4.5rem; }
   .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 
@@ -556,6 +560,21 @@
   .reveal.in{ opacity: 1; transform: none; }
 
   :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+  footer :focus-visible{ outline-color: var(--footer-ink); }   /* day olive is invisible on the dark footer (2.1:1) */
+
+  /* skip link — clipped (not offscreen: fixed elements parked outside the viewport drop out
+     of Chrome's tab order) until keyboard-focused (WCAG 2.4.1) */
+  .skip-link{
+    position: fixed; top: 0.6rem; left: var(--edge); z-index: 60;
+    clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+    font-family: var(--ff-display); font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); background: var(--bg-soft); border: 1px solid var(--rule-strong);
+    padding: 0.9rem 1.3rem; text-decoration: none; transition: none;
+  }
+  .skip-link:focus{ clip-path: none; }
+
+  /* keep keyboard-focused elements clear of the fixed bar (sections already have scroll-margin) */
+  a, button, input, textarea{ scroll-margin-block: 6rem 2rem; }
 
   @media (prefers-reduced-motion: reduce){
     .js .reveal{ opacity: 1; transform: none; transition: none; }
@@ -576,8 +595,18 @@
   .hero-photo{ display: none; }
   body.preview .hero-photo{ position: absolute; inset: 0; z-index: 0; display: block; background: var(--frame-grad); transition: background 0.7s ease; }
   body.preview .hero-photo::after{ content:""; position:absolute; inset:0; background: radial-gradient(70% 90% at 80% 22%, var(--light-glow), transparent 62%); mix-blend-mode: screen; opacity: 0.5; }
-  body.preview .hero::before{ opacity: 0.22; }   /* let the placeholder photo read */
+  body.preview .hero::before{ opacity: 0.22; z-index: 1; }   /* let the placeholder photo read — and lift the drift above it (it paints below .hero-inner, which is a later sibling at the same z) */
   body.preview .hero::after{ height: 58%; }       /* deepen the scrim so the headline holds over a photo */
+  /* text-zone wash — guarantees the hero type keeps contrast independent of the photo (WCAG F83) */
+  body.preview .hero-inner::before{
+    content:""; position:absolute; inset: -30% -20%; z-index: -1; pointer-events:none;
+    background: radial-gradient(78% 82% at 38% 52%, var(--hero-wash) 30%, transparent 78%);
+    transition: background 0.7s ease;
+  }
+  /* over imagery the muted hero smalls step one role up (ink-soft) to hold 4.5:1 — no effect on the finished plain-ground state */
+  body.preview .descriptor, body.preview .hero-orient,
+  body.preview .scroll-cue, body.preview .hero-media{ color: var(--ink-soft); }
+  body.preview .scroll-cue .stroke{ background: currentColor; }
 
   /* (2) Quiet chapter numerals on the content sections. */
   main{ counter-reset: chapter; }
@@ -669,16 +698,19 @@
 </head>
 
 <body class="preview">
-<script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night')document.body.classList.add('night');}catch(e){}</script>
+<script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night'){document.body.classList.add('night');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#1A1410');}}catch(e){}</script>
+
 
 <dialog class="wip" id="wip" aria-label="A note from AETHON" aria-describedby="wip-body">
-  <div class="wip-card">
+  <div class="wip-card" data-nosnippet>
     <button class="wip-close" type="button" aria-label="Close this note">&times;</button>
     <span class="wip-mark" aria-hidden="true">AETHON</span>
     <p class="wip-body" id="wip-body">AETHON is still being finished — the photography and final touches are on their way. What you see is the shape of it; please, look around.</p>
     <button class="wip-dismiss" type="button" autofocus>Look around</button>
   </div>
 </dialog>
+
+<a class="skip-link" href="#top">Skip to content</a>
 
 <header class="bar" id="bar">
   <a class="mark" href="#top">AETHON</a>
@@ -691,7 +723,7 @@
       <a href="/gallery/">Gallery</a>
       <a href="#interest">Register interest</a>
     </nav>
-    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Switch to the afterglow (evening) view">
+    <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Afterglow (evening) view">
       <span class="toggle-icon" aria-hidden="true">&#9790;</span>
     </button>
     <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
@@ -717,7 +749,9 @@
     <!--
       HERO MEDIA (when assets exist) — keep it the LCP element and fast on mobile:
         • Still: place an <img class="hero-photo" src="images/hero.avif"
-          width="1600" height="1000" alt="…" fetchpriority="high" decoding="async">
+          width="1600" height="1000" fetchpriority="high" decoding="async"
+          alt="AETHON House at dusk — the west elevation open to the pool and garden, toward the sea">
+          (the alt is a draft — adjust to the delivered frame; entity first, then the view, museal register)
           as the FIRST child (never loading="lazy").
         • Motion (optional, on-brand): a SHORT, muted, looping ambient clip / cinemagraph
           (sea light; stirring olive leaves) — <video muted loop playsinline autoplay
@@ -753,7 +787,7 @@
       <div>
         <p>AETHON stands on the western shore of Paphos, near Faros Beach. It lies along the coast from the Tombs of the Kings and the old city of Nea Paphos — beside that history, never within it.</p>
         <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea.</p>
-        <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em>Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
+        <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em lang="el">Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
       </div>
     </div>
     <figure class="plate reveal">
@@ -910,7 +944,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/marble-400.avif 400w, images/materials/marble-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/marble-400.webp 400w, images/materials/marble-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/marble-800.jpg" srcset="images/materials/marble-400.jpg 400w, images/materials/marble-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Marble — the cool ground, underfoot" style="background:#E9E7E0">
+                <img class="mat-chip" src="images/materials/marble-800.jpg" srcset="images/materials/marble-400.jpg 400w, images/materials/marble-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Honed marble in close view — soft grey veining on a pale ground" style="background:#E9E7E0">
               </picture>
               <figcaption><span class="mat-name">Marble</span><span class="mat-note">The cool ground, underfoot.</span></figcaption>
             </figure>
@@ -918,7 +952,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/patiti-400.avif 400w, images/materials/patiti-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/patiti-400.webp 400w, images/materials/patiti-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/patiti-800.jpg" srcset="images/materials/patiti-400.jpg 400w, images/materials/patiti-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Patiti — a traditional Mediterranean hand-pressed lime plaster, its surface the structure of waves" style="background:#C5B292">
+                <img class="mat-chip" src="images/materials/patiti-800.jpg" srcset="images/materials/patiti-400.jpg 400w, images/materials/patiti-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Hand-pressed lime plaster in close view — the surface worked into waves" style="background:#C5B292">
               </picture>
               <figcaption><span class="mat-name">Patiti</span><span class="mat-note">A Mediterranean lime, pressed like the sea.</span></figcaption>
             </figure>
@@ -935,7 +969,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/travertine-400.avif 400w, images/materials/travertine-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/travertine-400.webp 400w, images/materials/travertine-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/travertine-800.jpg" srcset="images/materials/travertine-400.jpg 400w, images/materials/travertine-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Travertine — warm stone that holds the afternoon" style="background:#DCCDB3">
+                <img class="mat-chip" src="images/materials/travertine-800.jpg" srcset="images/materials/travertine-400.jpg 400w, images/materials/travertine-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Travertine in close view — warm, open-pored stone" style="background:#DCCDB3">
               </picture>
               <figcaption><span class="mat-name">Travertine</span><span class="mat-note">Warm stone that holds the afternoon.</span></figcaption>
             </figure>
@@ -943,7 +977,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/coastal-sandstone-400.avif 400w, images/materials/coastal-sandstone-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/coastal-sandstone-400.webp 400w, images/materials/coastal-sandstone-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/coastal-sandstone-800.jpg" srcset="images/materials/coastal-sandstone-400.jpg 400w, images/materials/coastal-sandstone-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Coastal sandstone — the colour of the shore" style="background:#C7B08C">
+                <img class="mat-chip" src="images/materials/coastal-sandstone-800.jpg" srcset="images/materials/coastal-sandstone-400.jpg 400w, images/materials/coastal-sandstone-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Coastal sandstone in close view — layered, sand-toned grain" style="background:#C7B08C">
               </picture>
               <figcaption><span class="mat-name">Coastal sandstone</span><span class="mat-note">The colour of the shore.</span></figcaption>
             </figure>
@@ -960,7 +994,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/olive-leather-400.avif 400w, images/materials/olive-leather-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/olive-leather-400.webp 400w, images/materials/olive-leather-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/olive-leather-800.jpg" srcset="images/materials/olive-leather-400.jpg 400w, images/materials/olive-leather-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Olive-green leather — the garden's olive, brought in" style="background:#565B3B">
+                <img class="mat-chip" src="images/materials/olive-leather-800.jpg" srcset="images/materials/olive-leather-400.jpg 400w, images/materials/olive-leather-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Olive-green leather in close view — a deep, grained green" style="background:#565B3B">
               </picture>
               <figcaption><span class="mat-name">Olive-green leather</span><span class="mat-note">The deep green; the garden&rsquo;s olive, brought in.</span></figcaption>
             </figure>
@@ -968,7 +1002,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/rosemary-green-400.avif 400w, images/materials/rosemary-green-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/rosemary-green-400.webp 400w, images/materials/rosemary-green-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/rosemary-green-800.jpg" srcset="images/materials/rosemary-green-400.jpg 400w, images/materials/rosemary-green-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Rosemary green — a softer green, in fabric" style="background:#7C8569">
+                <img class="mat-chip" src="images/materials/rosemary-green-800.jpg" srcset="images/materials/rosemary-green-400.jpg 400w, images/materials/rosemary-green-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Rosemary-green fabric in close view — a soft, muted weave" style="background:#7C8569">
               </picture>
               <figcaption><span class="mat-name">Rosemary green</span><span class="mat-note">A softer green, in fabric — curtains and chairs.</span></figcaption>
             </figure>
@@ -985,7 +1019,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/dark-oak-400.avif 400w, images/materials/dark-oak-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/dark-oak-400.webp 400w, images/materials/dark-oak-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/dark-oak-800.jpg" srcset="images/materials/dark-oak-400.jpg 400w, images/materials/dark-oak-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Dark oak — the warm ink of the house" style="background:#2C2620">
+                <img class="mat-chip" src="images/materials/dark-oak-800.jpg" srcset="images/materials/dark-oak-400.jpg 400w, images/materials/dark-oak-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Dark oak in close view — deep, near-black grain" style="background:#2C2620">
               </picture>
               <figcaption><span class="mat-name">Dark oak</span><span class="mat-note">The warm ink of the house.</span></figcaption>
             </figure>
@@ -993,7 +1027,7 @@
               <picture>
                 <source type="image/avif" srcset="images/materials/iroko-400.avif 400w, images/materials/iroko-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <source type="image/webp" srcset="images/materials/iroko-400.webp 400w, images/materials/iroko-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/iroko-800.jpg" srcset="images/materials/iroko-400.jpg 400w, images/materials/iroko-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Iroko — warm hardwood, close at hand" style="background:#9C6A3E">
+                <img class="mat-chip" src="images/materials/iroko-800.jpg" srcset="images/materials/iroko-400.jpg 400w, images/materials/iroko-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Iroko in close view — warm amber hardwood grain" style="background:#9C6A3E">
               </picture>
               <figcaption><span class="mat-name">Iroko</span><span class="mat-note">Warm hardwood, close at hand.</span></figcaption>
             </figure>
@@ -1072,7 +1106,7 @@
             </div>
             <div class="field">
               <label for="email">Email</label>
-              <input id="email" name="EMAIL" type="email" autocomplete="email" required />
+              <input id="email" name="EMAIL" type="email" autocomplete="email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]{2,}" title="name@example.com" />
             </div>
             <div class="field full">
               <label for="message">A note (optional)</label>
@@ -1090,8 +1124,8 @@
           <button class="submit" type="submit">Register interest</button>
         </form>
         <p class="form-note" id="register-note">Your details are used only to contact you about the house, and are shared only with the service that delivers this form. See our <a href="/legal/">privacy notice</a>.</p>
-        <p class="form-note" id="register-error" hidden>That didn’t go through. Please try again in a moment.</p>
-        <div class="register-done" id="register-thanks" hidden>
+        <p class="form-note" id="register-error" role="alert" hidden>That didn’t go through. Please try again in a moment.</p>
+        <div class="register-done" id="register-thanks" role="status" tabindex="-1" hidden>
           <p class="register-done__line">Thank you. Your interest has been noted.</p>
           <p class="form-note">We’ll be in touch only in time, and only should the house become available.</p>
         </div>
@@ -1184,8 +1218,7 @@
     function apply(theme){
       var night = theme === 'night';
       body.classList.toggle('night', night);
-      btn.setAttribute('aria-pressed', night ? 'true' : 'false');
-      btn.setAttribute('aria-label', night ? 'Switch to the daylight view' : 'Switch to the afterglow (evening) view');
+      btn.setAttribute('aria-pressed', night ? 'true' : 'false');   // fixed label + pressed-state: no contradiction for screen readers
       icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
       if (themeMeta) themeMeta.setAttribute('content', night ? '#1A1410' : '#E9E7E0');
     }
@@ -1223,10 +1256,11 @@
         scrollY = window.scrollY || window.pageYOffset || 0;
         body.style.position = 'fixed'; body.style.top = (-scrollY) + 'px';
         body.style.left = '0'; body.style.right = '0'; body.style.width = '100%';
-        var a = menu.querySelector('a'); if (a) a.focus();
+        // focus after the menu's visibility transition has begun, or it silently fails
+        var a = menu.querySelector('a'); if (a) requestAnimationFrame(function(){ a.focus(); });
       } else {
         body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = '';
-        window.scrollTo(0, scrollY);
+        window.scrollTo({ top: scrollY, left: 0, behavior: 'instant' });   // not smooth — restoring, not navigating
       }
     }
     btn.addEventListener('click', function(){ setOpen(!body.classList.contains('menu-open')); });
@@ -1275,9 +1309,10 @@
         if (ok){
           f.hidden = true;
           var note = document.getElementById('register-note'); if (note) note.hidden = true;
-          var thanks = document.getElementById('register-thanks'); if (thanks) thanks.hidden = false;
+          var thanks = document.getElementById('register-thanks');
+          if (thanks){ thanks.hidden = false; thanks.focus(); }   // move focus so the outcome is announced (WCAG 4.1.3)
         } else {
-          if (btn){ btn.disabled = false; btn.textContent = label; }
+          if (btn){ btn.disabled = false; btn.textContent = label; btn.focus(); }
           if (err) err.hidden = false;
         }
       }
@@ -1292,14 +1327,19 @@
 
   // Work-in-progress notice — opens on every load (no persistence, by design).
   // Native <dialog> gives the focus trap, top-layer + inert background, and Esc-to-close for free.
+  // The page is scroll-locked while it is open (same iOS-safe fixed-body pattern as the menu).
   (function(){
     var dlg = document.getElementById('wip');
     if (!dlg || typeof dlg.showModal !== 'function') return;   // graceful no-op on older engines
+    var body = document.body, sy = 0;
+    function lock(){ sy = window.scrollY || 0; body.style.position = 'fixed'; body.style.top = (-sy) + 'px'; body.style.left = '0'; body.style.right = '0'; body.style.width = '100%'; }
+    function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); }
     function close(){ if (dlg.open) dlg.close(); }
+    dlg.addEventListener('close', unlock);                     // fires for ✕, button, backdrop AND Esc
     var x = dlg.querySelector('.wip-close'); if (x) x.addEventListener('click', close);
     var ok = dlg.querySelector('.wip-dismiss'); if (ok) ok.addEventListener('click', close);
     dlg.addEventListener('click', function(e){ if (e.target === dlg) close(); });  // click outside the card
-    try { dlg.showModal(); } catch (e) {}
+    try { lock(); dlg.showModal(); } catch (e) { unlock(); }
   })();
 </script>
 </body>
