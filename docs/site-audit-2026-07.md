@@ -44,8 +44,10 @@ worked off. Continue from here in future sessions — update the checkboxes as i
       subset **built + shipped** (fonts/greek-aithon-lt.woff2); B-5 PSI workflow triggered.
 - [x] Group C first tranche decided + implemented (2026-07-03): C-1 gallery register link ✓;
       C-2 thank-you completeness line ✓ (no-DOI variant); C-3 WIP rewording ✓ ("This site…");
-      C-4 docs moved to the `internal` branch + robots.txt disallows ✓; C-5 mail@ guide delivered,
-      owner infra pending; C-6 "Bedrooms — 3" ✓. Remaining C items open (7–23).
+      C-4 docs moved to the `internal` branch + robots.txt disallows ✓; C-5 **mail@aethon.house LIVE**
+      (Cloudflare Email Routing → owner inbox; legal imprint + rights swapped, colophon gained an
+      *Enquiries* row = JRN-4/C-11 resolved; owner: NO address beneath the register form — form
+      stays form-only); C-6 "Bedrooms — 3" ✓. Remaining C items open (7–10, 12–23).
 
 **Verification discoveries (recorded for future sessions):**
 - A dialog that autofocuses at load *moves the sequential-focus start point to its DOM
