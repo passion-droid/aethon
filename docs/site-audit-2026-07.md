@@ -61,7 +61,7 @@ worked off. Continue from here in future sessions — update the checkboxes as i
       checklist (C-22) only. **Post-audit follow-ups shipped 2026-07-04:** Cliff Tan sketch
       moved to *The interior* (caption "the rooms, from within"); a dedicated MOBILE audit
       (5 viewports, both themes) found the width-gating blind spot — touch rules are now
-      capability-based (), landscape phones get the overlay menu, and the
+      capability-based (`pointer: coarse`), landscape phones get the overlay menu, and the
       last sub-24px inline links were fixed (details: CLAUDE.md mobile bullet, main@71fadb6). Signage REV B also shipped 2026-07-04 (monochrome print set;
       plate 600×400×20 marble; monolith + URL + QR; QR centre-logo positioning bug fixed in
       scripts/gen-signage-blueprint.py).
