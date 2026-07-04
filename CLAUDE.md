@@ -114,8 +114,11 @@ impression and the mobile layout matter.
   `git fetch origin internal && git show origin/internal:docs/<file>`. Commit doc updates to
   `internal` via a temporary worktree — safer than switching the main checkout (which a container
   recycle can strand): `git worktree add <scratch>/internal-wt internal`, edit + commit + push
-  there, then `git worktree remove -f <scratch>/internal-wt` (leave the shell's cwd first, or pwd
-  errors). Never re-add the docs to `main`. `scripts/`
+  there, then remove it. **Two traps that have bitten:** (a) after `git worktree remove`, every
+  later command in the SAME Bash call dies on a dead cwd — end the call there; the next Bash call
+  resets cwd to the repo. (b) A push-verify loop comparing `git rev-parse HEAD` to ls-remote
+  **false-positives when both evaluate empty** (dead cwd → "" == "") — always require the remote
+  SHA to be non-empty before declaring a push confirmed. Never re-add the docs to `main`. `scripts/`
   stays on `main` (the GitHub Actions workflows need it) but is robots-disallowed.
 - **Stale remote branches to delete (user-side).** ~10 old `claude/*` branches linger; deleting them
   can only be done via the GitHub *Branches* UI — the proxy 403s git ref-deletions and the GitHub MCP
@@ -353,10 +356,25 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   form-only. Never publish the outlook.com address again.
 - **Meta rules from the audit:** subpage titles carry the "AETHON House" lockup; `lang="en-GB"`
   on all four pages; "Faros Beach" capitalised in meta; `data-nosnippet` stays on the WIP card.
-- Still open from the audit (group C, unanswered): mid-page register pointer, Afterglow discovery
-  line, menu "Gallery" marker, the journalist's copy-craft bundle, chapter numbering to 07, OG on
-  gallery/legal, Residence JSON-LD node, WIP once-per-visit option, press-enquiries line. See the
-  memo's checkboxes.
+- **Signage = REV B (2026-07-04, owner-requested):** the print set is **monochrome** (B&W;
+  greys for annotation; gilded elements grey + labelled); the entrance plate is a **honed marble
+  tile 600 × 400 × 20** with a **cap-height dim (69 mm** at the 420 wordmark — flat caps measured
+  from the brand vector; recomputes if the wordmark width changes); the **monolith now carries the
+  engraved URL + a 132 inset QR plate** (flush enamel/316 in the dressed panel — never carved into
+  rough stone). Generator: `scripts/gen-signage-blueprint.py` on main (a QR centre-logo y-position
+  bug was fixed there); assets on `internal:docs/signage/`; PDFs printed from the SVGs at
+  1320×980 via headless Chromium.
+- **First search/traffic traction (baseline, 2026-07-03 pull):** GSC — homepage 1 click /
+  14 impressions / avg position **6.1** (was pos 27 a week earlier); Cloudflare Web Analytics —
+  ~60 visits / 90 views per 28 days, CY + US. Owner's WhatsApp share test passed (link previews
+  render — preview scrapers are not bot-blocked).
+- **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
+  run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
+- ~~Still open from the audit~~ **The audit is fully closed (2026-07-04):** every group-B and
+  group-C item is decided and shipped (see the walkthrough block above + the memo's checkboxes).
+  The only audit artefact still live is the **photography-day launch checklist** (strip
+  "forthcoming" labels in the image commit; re-sample text-over-photo contrast per frame; retire
+  the WIP notice; re-check the toggle border over the real hero).
 
 ## Decided / planned
 - **Floor plans:** a conceptual *Plan* section after *The architecture* — atmospheric,
