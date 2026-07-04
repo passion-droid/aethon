@@ -43,8 +43,14 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "AETHON · House of Light",
-  "alternateName": "AETHON House · Paphos",
+  "alternateName": ["AETHON House", "AETHON House · Paphos"],
   "url": "https://aethon.house/",
+  "about": {
+    "@type": "Residence",
+    "name": "AETHON House",
+    "alternateName": "AETHON",
+    "address": { "@type": "PostalAddress", "addressLocality": "Paphos", "addressCountry": "CY" }
+  },
   "description": "A private seafront residence on the western coast of Paphos, Cyprus — a sanctuary built around sunsets, silence, and the western sea, above Faros Beach.",
   "inLanguage": "en-GB"
 }
@@ -550,7 +556,7 @@
   }
   .foot-mark{
     display: inline-block; width: 9rem; aspect-ratio: 366.78 / 85.09;
-    background: url(/brand/logo-whiteout.svg) left center / contain no-repeat;
+    background: url(/brand/logo-white.svg) left center / contain no-repeat;
     text-indent: -9999px; overflow: hidden; white-space: nowrap;
   }
   .foot-meta{
@@ -613,9 +619,9 @@
 
   /* (2) Quiet chapter numerals on the content sections. */
   main{ counter-reset: chapter; }
-  #place, #architecture, #plan, #garden, #interior, #materials{ counter-increment: chapter; }
+  #place, #architecture, #plan, #garden, #interior, #materials, #gallery{ counter-increment: chapter; }
   #place .eyebrow::before, #architecture .eyebrow::before, #plan .eyebrow::before,
-  #garden .eyebrow::before, #interior .eyebrow::before, #materials .eyebrow::before{
+  #garden .eyebrow::before, #interior .eyebrow::before, #materials .eyebrow::before, #gallery .eyebrow::before{
     content: counter(chapter, decimal-leading-zero) " · "; color: var(--ink-mute);
   }
 
@@ -636,6 +642,19 @@
     max-width: 46rem; margin: 0; font-family: var(--ff-text); font-weight: 300;
     font-size: clamp(1.15rem, 1.9vw, 1.5rem); line-height: 1.5; color: var(--ink-soft); text-wrap: balance;
   }
+
+  /* the interior's closing line doubles as an Afterglow invitation — a text button that sets the evening view */
+  .evening-line{
+    font-family: var(--ff-text); font-style: italic; font-weight: 300; font-size: inherit; line-height: inherit;
+    color: var(--ink-mute); background: transparent; border: 0; padding: 0; margin: 0; cursor: pointer;
+    text-align: left; text-decoration: underline; text-decoration-style: dotted; text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em; transition: color 0.25s ease;
+  }
+  .evening-line:hover{ color: var(--accent); }
+  body.night .evening-line{ text-decoration: none; cursor: default; }   /* at night it reads as a statement, not a control */
+
+  /* quiet page-leaving cue on the Gallery links (the one nav item that exits the one-pager) */
+  .ext{ font-size: 0.72em; vertical-align: 0.2em; padding-left: 0.28em; }
 
   /* ===== Exhibition pass 2 — artifact + silent pause plates (review 2026-06) ===== */
 
@@ -723,7 +742,7 @@
       <a href="#architecture">Architecture</a>
       <a href="#garden">Garden</a>
       <a href="#interior">Interior</a>
-      <a href="/gallery/">Gallery</a>
+      <a href="/gallery/">Gallery<span class="ext" aria-hidden="true">&nearr;</span></a>
       <a href="#interest">Register interest</a>
     </nav>
     <button id="theme-toggle" class="toggle" type="button" aria-pressed="false" aria-label="Afterglow (evening) view">
@@ -739,7 +758,7 @@
     <li><a href="#architecture">Architecture</a></li>
     <li><a href="#garden">Garden</a></li>
     <li><a href="#interior">Interior</a></li>
-    <li><a href="/gallery/">Gallery</a></li>
+    <li><a href="/gallery/">Gallery<span class="ext" aria-hidden="true">&nearr;</span></a></li>
     <li><a href="#interest" class="menu-cta">Register interest</a></li>
   </ul>
 </nav>
@@ -777,7 +796,7 @@
 
   <!-- ORIENTATION — one curatorial line for the QR arrival (what is this?) -->
   <section id="intro" class="intro-beat">
-    <p class="intro-line reveal">AETHON is the portrait of one seafront residence on the Faros coast of Paphos — its renewal, its materials, and the western light it was built to hold.</p>
+    <p class="intro-line reveal">This is the portrait of AETHON — one seafront residence on the Faros coast of Paphos: its renewal, its materials, and the western light it was built to hold.</p>
   </section>
 
   <!-- THE PLACE -->
@@ -788,9 +807,9 @@
         <h2 class="section-title">Where the coast turns west.</h2>
       </div>
       <div>
-        <p>AETHON stands on the western shore of Paphos, near Faros Beach. It lies along the coast from the Tombs of the Kings and the old city of Nea Paphos — beside that history, never within it.</p>
+        <p>AETHON stands on the western shore of Paphos, near Faros Beach. It lies just along the coast from the Tombs of the Kings and the old city of Nea Paphos — beside that history, never within it.</p>
         <p>Because the coast here faces west, the defining hour is the evening. The light arrives low and long across the water and settles into the stone; garden and terrace are laid out to hold that hour, framing the horizon where the sun meets the sea.</p>
-        <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em lang="el">Αἴθων</em>, &ldquo;the shining one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
+        <p>The shore is named for its old lighthouse — the <em>faros</em>. AETHON — <em lang="el">Αἴθων</em>, &ldquo;the blazing one&rdquo; — answers it: not the beacon itself, but the last warm light of the western day. The house lives on that light, too — sustained by the western sun, and quietly self-sufficient.</p>
       </div>
     </div>
     <figure class="plate reveal">
@@ -808,7 +827,7 @@
       <div>
         <p>AETHON is a quiet elevation of an existing seafront residence — once one of the Faros Beach Houses — not a reinvention. The original geometry is kept and honoured; the material and spatial language is refined toward stillness. Completed in 2026, it is the same house, quietly raised.</p>
         <p>The emptiness of Japandi and the warmth of Mediterranean light — held in proportion rather than ornament. Light here is treated as a material in its own right: warm, indirect, and dimmed low as the day turns, so the house changes character with the hour. Warmth, air and shade are tuned quietly and out of sight; comfort here is felt rather than managed.</p>
-        <p>The plan was shaped from the outset by Feng Shui, so its calm is structural rather than styled. The ground opens to gather — and opens completely: the glazed walls slide back until the living and entertaining rooms, the pool, the garden and the sea become a single space. The garden answers in kind, drawn into the heart of the plan as a planted courtyard — running through the house as much as around it. Above, the rooms grow still. Surfaces stay few and honest — chosen to age with the coast rather than to decorate.</p>
+        <p>The plan was shaped from the outset by Feng Shui, so its calm is structural rather than styled. The ground opens to gather — and opens completely: the glazed walls slide back until the living and entertaining rooms, the pool, the garden and the sea become a single space. The garden answers in kind, drawn into the heart of the plan as a planted courtyard — running through the house as much as around it. Above, the rooms grow still. Surfaces stay few and honest — chosen to age with the coast.</p>
         <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
       </div>
     </div>
@@ -840,7 +859,7 @@
         </div>
         <div>
           <p>Two conceptual views — kept soft, for atmosphere rather than measurement.</p>
-          <p>Below, the house gathers: living, dining, kitchen and a room kept for the evening open in a single line to the terrace, the pool and the garden, and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller as the house rises.</p>
+          <p>Below, the house gathers: living, dining, kitchen, and a room kept for the evening open in a single line to the terrace, the pool, and the garden — and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller as the house rises.</p>
         </div>
       </div>
       <!-- Muted, low-detail floor renders (no dimensions); processed via images/README.md into images/plan/. -->
@@ -850,7 +869,7 @@
             <picture>
               <source type="image/avif" srcset="images/plan/ground-floor-800.avif 800w, images/plan/ground-floor-1600.avif 1600w" sizes="(min-width:760px) 40vw, 92vw">
               <source type="image/webp" srcset="images/plan/ground-floor-800.webp 800w, images/plan/ground-floor-1600.webp 1600w" sizes="(min-width:760px) 40vw, 92vw">
-              <img class="shot" src="images/plan/ground-floor-1600.jpg" srcset="images/plan/ground-floor-800.jpg 800w, images/plan/ground-floor-1600.jpg 1600w" sizes="(min-width:760px) 40vw, 92vw" width="1600" height="1132" loading="lazy" decoding="async" alt="Ground floor — living, dining and kitchen opening to the terrace, the pool and the garden">
+              <img class="shot" src="images/plan/ground-floor-1600.jpg" srcset="images/plan/ground-floor-800.jpg 800w, images/plan/ground-floor-1600.jpg 1600w" sizes="(min-width:760px) 40vw, 92vw" width="1600" height="1132" loading="lazy" decoding="async" alt="Ground floor — living, dining, and kitchen opening to the terrace, the pool, and the garden">
             </picture>
           </div>
           <figcaption>Ground floor &middot; gather</figcaption>
@@ -866,6 +885,7 @@
           <figcaption>First floor &middot; withdraw</figcaption>
         </figure>
       </div>
+      <p class="more"><a class="more-link" href="#interest">A short, private list is kept &mdash; register interest<span class="arrow" aria-hidden="true">&rarr;</span></a></p>
     </div>
   </section>
 
@@ -887,8 +907,8 @@
         <h2 class="section-title">A dry garden, turned to the sea.</h2>
       </div>
       <div>
-        <p>The grounds are a Mediterranean dry garden built around ancient olive trees, brought in fully grown — slim cypress totems, grasses that move with the wind, and aromatic rosemary, lentisc and santolina, set among natural rock and sea-worn pebble.</p>
-        <p>A dry riverbed runs through it and a fire-pit gathers the evening; between house and garden lies the pool — a sheet of water some ten metres long, laid against the house and mirroring the western sky, with a shallow sun-shelf at one end in a sheltered, greener pocket of the garden. Shade sails and quiet retractable awnings temper the midday sun, so the terraces live through the whole day and fold open to the evening. Everything is chosen to ask for little and to age well, kept quiet and turned toward the sea.</p>
+        <p>The grounds are a Mediterranean dry garden built around ancient olive trees, brought in fully grown — slim cypress totems, grasses that move with the wind, and aromatic rosemary, lentisc, and santolina, set among natural rock and sea-worn pebble.</p>
+        <p>A dry riverbed runs through it and a fire-pit holds the evening; between house and garden lies the pool — a sheet of water some ten metres long, laid against the house and mirroring the western sky, with a shallow sun-shelf at one end in a sheltered, greener pocket of the garden. Shade sails and retractable awnings temper the midday sun, so the terraces live through the whole day and fold open to the evening. Everything is chosen to ask for little and to age well, kept quiet, facing the horizon.</p>
         <p>After dark the composition keeps its light — a single old olive lit from below, the pool glowing softly at its edges — the same warm hour the house is built around.</p>
       </div>
     </div>
@@ -905,8 +925,9 @@
         <h2 class="section-title">Above, the house withdraws.</h2>
       </div>
       <div>
-        <p>Where the ground opens to gather, the floor above withdraws. The rooms grow quieter as the house rises — kept for rest and retreat, and for the slow end of the day. They are made for restoration rather than display: calm, low-lit, and finished in materials that live easily by the sea.</p>
+        <p>The rooms grow quieter as the house rises — kept for rest and retreat, and for the slow end of the day. They are made for restoration rather than display: calm, low-lit, and finished in materials that live easily by the sea.</p>
         <p>When the light finally goes, warmth takes its place — a low fire, the slow heat of water, the rooms turned down to a glow. Lit softly from within, the house keeps its own evening: warm, unhurried, still.</p>
+        <p><button class="evening-line" type="button">See the house in its evening &mdash; the small moon, above.</button></p>
       </div>
     </div>
     <figure class="plate reveal">
@@ -931,7 +952,7 @@
           <h2 class="section-title">The palette is drawn from this coast.</h2>
         </div>
         <div>
-          <p>Nothing is chosen for its own sake. The colours are gathered from the place — the light of the sea, the sandstone of the cliffs, the green of the coastal herbs, the brown of the inland woods. The house answers each in material.</p>
+          <p>Nothing is chosen for its own sake. The colours are drawn from the place — the light of the sea, the sandstone of the cliffs, the green of the coastal herbs, the brown of the inland woods. The house answers each in material.</p>
         </div>
       </div>
 
@@ -957,7 +978,7 @@
                 <source type="image/webp" srcset="images/materials/patiti-400.webp 400w, images/materials/patiti-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
                 <img class="mat-chip" src="images/materials/patiti-800.jpg" srcset="images/materials/patiti-400.jpg 400w, images/materials/patiti-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Hand-pressed lime plaster in close view — the surface worked into waves" style="background:#C5B292">
               </picture>
-              <figcaption><span class="mat-name">Patiti</span><span class="mat-note">A Mediterranean lime, pressed like the sea.</span></figcaption>
+              <figcaption><span class="mat-name">Patiti</span><span class="mat-note">A Mediterranean lime, pressed into waves.</span></figcaption>
             </figure>
           </div>
         </div>
@@ -1091,7 +1112,7 @@
         <h2 class="section-title">A short, private list.</h2>
       </div>
       <div class="interest">
-        <p class="intro">The residence is privately owned and not on the market today — this is not a listing, and the house is met only by invitation. Should that ever change, a short and private list is kept, for those who would like to be told first — no newsletters, no marketing, only a quiet word, in time. You are warmly welcome to be in touch below.</p>
+        <p class="intro">The residence is privately owned and not on the market today — this is not a listing, and the house is met only by invitation. Should that ever change, a short and private list is kept, for those who would like to be told first — no newsletters, no marketing, only a quiet word, in time. You are welcome to leave a note below.</p>
 
         <!--
           FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.
@@ -1237,6 +1258,14 @@
     });
   })();
 
+  // The interior's closing line sets the Afterglow view (no-op if already evening)
+  (function(){
+    var line = document.querySelector('.evening-line');
+    var btn = document.getElementById('theme-toggle');
+    if (!line || !btn) return;
+    line.addEventListener('click', function(){ if (!document.body.classList.contains('night')) btn.click(); });
+  })();
+
   // Mobile menu (overlay)
   (function(){
     var btn = document.getElementById('menu-btn');
@@ -1330,12 +1359,14 @@
     });
   })();
 
-  // Work-in-progress notice — opens on every load (no persistence, by design).
-  // Native <dialog> gives the focus trap, top-layer + inert background, and Esc-to-close for free.
-  // The page is scroll-locked while it is open (same iOS-safe fixed-body pattern as the menu).
+  // Work-in-progress notice — opens once per visit (session-gated; a new tab or a return
+  // visit shows it again). Native <dialog> gives the focus trap, top-layer + inert background,
+  // and Esc-to-close for free. The page is scroll-locked while it is open (same iOS-safe
+  // fixed-body pattern as the menu).
   (function(){
     var dlg = document.getElementById('wip');
     if (!dlg || typeof dlg.showModal !== 'function') return;   // graceful no-op on older engines
+    try { if (sessionStorage.getItem('aethon-wip') === '1') return; } catch (e) {}
     var body = document.body, sy = 0;
     function lock(){ sy = window.scrollY || 0; body.style.position = 'fixed'; body.style.top = (-sy) + 'px'; body.style.left = '0'; body.style.right = '0'; body.style.width = '100%'; }
     function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); }
@@ -1344,7 +1375,7 @@
     var x = dlg.querySelector('.wip-close'); if (x) x.addEventListener('click', close);
     var ok = dlg.querySelector('.wip-dismiss'); if (ok) ok.addEventListener('click', close);
     dlg.addEventListener('click', function(e){ if (e.target === dlg) close(); });  // click outside the card
-    try { lock(); dlg.showModal(); } catch (e) { unlock(); }
+    try { lock(); dlg.showModal(); try { sessionStorage.setItem('aethon-wip', '1'); } catch (e) {} } catch (e) { unlock(); }
   })();
 </script>
 </body>

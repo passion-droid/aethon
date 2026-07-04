@@ -325,6 +325,24 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Bedrooms are public: 3** (In brief row; matches the source memo — master + two).
 - **Gallery ends with a register path** (quiet "Register interest" link at the close — the
   audit's top visitor finding). Keep it when the gallery is redesigned around real photography.
+- **C-item walkthrough decided + shipped (2026-07-04):** mid-page register pointer at the end of
+  *The plan* (.more-link style); the interior's closing line "See the house in its evening — the
+  small moon, above." is a text **button that sets Afterglow** (no-op/undotted at night); Gallery
+  links carry a small ↗ (`.ext`) in nav + overlay menu; the orientation line is now "This is the
+  portrait of AETHON — …"; the journalist's 11-edit copy bundle shipped (incl. **"the blazing
+  one"** as the public gloss of Αἴθων — was "shining"; Oxford commas are house style; "pressed
+  into waves"); chapter numbering runs to **07 · Views** (Register/In brief stay unnumbered);
+  gallery + legal carry minimal **OG blocks** (text previews); JSON-LD gained the locality-only
+  **`about: Residence`** node + alternateName array; **gold formally closed as logo-only**; the
+  footer mark is now **logo-white (gold dot)** — rule: *on screen the dot is always gold*,
+  whiteout is for one-colour physical repro; the **WIP notice is session-gated** (once per visit,
+  sessionStorage `aethon-wip`; legal's storage section discloses it); counsel-batch wording is
+  pre-drafted in place (SIGNGUARD relation clause, form metadata/IP, bounded retention, "no
+  cookies at all") — lawyer reviews the finished page. **Kept against reviewers:** "The withdraw"
+  chapter noun, the "Register interest" button label, "ancient olive trees" (owner-verified),
+  the bar mark stays always-visible (C-20 parked), sunset-default Afterglow waits for photography
+  (C-21). **Renewal design = owner-directed** (internal fact for press enquiries; public credits
+  unchanged by choice — offer a visible credit row only if the owner asks).
 - **Greek word renders in brand type:** `fonts/greek-aithon-lt.woff2` (5-glyph EB Garamond Italic
   subset, OFL, ~2.6KB) is declared into the Spectral stack via `unicode-range` for Αἴθων.
 - **mail@aethon.house — LIVE (2026-07-03).** Cloudflare Email Routing forwards to the owner's

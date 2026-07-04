@@ -6,6 +6,7 @@
 <title>AETHON House — Gallery · Paphos</title>
 <!-- This subpage is intentionally NOT indexed (reachable only via the quiet links on the main page). -->
 <meta name="robots" content="noindex, nofollow" />
+<meta name="description" content="A longer look at AETHON House — the residence in the order of its day, from arrival to the western evening." />
 <meta name="theme-color" content="#E9E7E0" />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" type="image/svg+xml" href="/icon.svg" />
@@ -14,6 +15,13 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 
+<!-- Open Graph — shared-link preview only (the page stays noindex; previews are unaffected by robots) -->
+<meta property="og:title" content="AETHON House — Gallery" />
+<meta property="og:description" content="A longer look at AETHON House — the residence in the order of its day, from arrival to the western evening." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://aethon.house/gallery/" />
+<meta property="og:site_name" content="AETHON · House of Light" />
+<meta property="og:locale" content="en_GB" />
 
 <style>
   /* Self-hosted fonts (LT Museum + Spectral, SIL OFL) — no third-party CDN; no visitor IP sent to Google. */
@@ -183,7 +191,7 @@
   /* ---------- footer (mirrors index.html) ---------- */
   footer{ margin-top:clamp(2.5rem, 6vw, 5rem); padding:clamp(3rem,7vw,5rem) var(--edge); background:var(--footer-bg); color:var(--footer-ink); transition:background-color 0.7s ease, color 0.7s ease; }
   .foot-inner{ max-width:84rem; margin:0 auto; display:flex; flex-wrap:wrap; gap:var(--space-md) var(--space-2xl); align-items:flex-end; justify-content:space-between; }
-  .foot-mark{ display:inline-block; width:9rem; aspect-ratio:366.78 / 85.09; background:url(/brand/logo-whiteout.svg) left center / contain no-repeat; text-indent:-9999px; overflow:hidden; white-space:nowrap; text-decoration:none; }
+  .foot-mark{ display:inline-block; width:9rem; aspect-ratio:366.78 / 85.09; background:url(/brand/logo-white.svg) left center / contain no-repeat; text-indent:-9999px; overflow:hidden; white-space:nowrap; text-decoration:none; }
   .foot-meta{ font-family:var(--ff-display); font-size:0.74rem; letter-spacing:0.14em; color:var(--footer-mute); line-height:1.9; text-transform:uppercase; }
   .foot-meta a{ color:var(--footer-ink); text-decoration:underline; text-underline-offset:0.18em; }
 
@@ -391,7 +399,7 @@
         <p class="measure">The colours gathered from the place — the light of the sea, the cliffs, the coastal herbs, the inland woods — in the materials that carry them.</p>
       </div>
       <div class="plates three">
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Patiti, pressed like the sea</figcaption></figure>
+        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Patiti, pressed into waves</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Travertine and olive leather</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Iroko, close at hand</figcaption></figure>
         <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Rosemary green, in fabric</figcaption></figure>
@@ -553,12 +561,14 @@
     document.querySelectorAll('.chapter[id]').forEach(function(s){ spy.observe(s); });
   })();
 
-  // Work-in-progress notice — opens on every load (no persistence, by design).
-  // Native <dialog> gives the focus trap, top-layer + inert background, and Esc-to-close for free.
-  // The page is scroll-locked while it is open (same iOS-safe fixed-body pattern as the menu).
+  // Work-in-progress notice — opens once per visit (session-gated; a new tab or a return
+  // visit shows it again). Native <dialog> gives the focus trap, top-layer + inert background,
+  // and Esc-to-close for free. The page is scroll-locked while it is open (same iOS-safe
+  // fixed-body pattern as the menu).
   (function(){
     var dlg = document.getElementById('wip');
     if (!dlg || typeof dlg.showModal !== 'function') return;   // graceful no-op on older engines
+    try { if (sessionStorage.getItem('aethon-wip') === '1') return; } catch (e) {}
     var body = document.body, sy = 0;
     function lock(){ sy = window.scrollY || 0; body.style.position = 'fixed'; body.style.top = (-sy) + 'px'; body.style.left = '0'; body.style.right = '0'; body.style.width = '100%'; }
     function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); }
@@ -567,7 +577,7 @@
     var x = dlg.querySelector('.wip-close'); if (x) x.addEventListener('click', close);
     var ok = dlg.querySelector('.wip-dismiss'); if (ok) ok.addEventListener('click', close);
     dlg.addEventListener('click', function(e){ if (e.target === dlg) close(); });  // click outside the card
-    try { lock(); dlg.showModal(); } catch (e) { unlock(); }
+    try { lock(); dlg.showModal(); try { sessionStorage.setItem('aethon-wip', '1'); } catch (e) {} } catch (e) { unlock(); }
   })();
 </script>
 </body>
