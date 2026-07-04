@@ -47,7 +47,17 @@ worked off. Continue from here in future sessions — update the checkboxes as i
       C-4 docs moved to the `internal` branch + robots.txt disallows ✓; C-5 **mail@aethon.house LIVE**
       (Cloudflare Email Routing → owner inbox; legal imprint + rights swapped, colophon gained an
       *Enquiries* row = JRN-4/C-11 resolved; owner: NO address beneath the register form — form
-      stays form-only); C-6 "Bedrooms — 3" ✓. Remaining C items open (7–10, 12–23).
+      stays form-only); C-6 "Bedrooms — 3" ✓. **Walkthrough 2026-07-04 — ALL remaining items
+      decided + shipped (main@60ba6a8):** C-7 pointer after The plan ✓; C-8 evening line = Afterglow
+      button ✓; C-9 ↗ on Gallery links ✓; C-10 portrait rewrite ✓; C-12 all 11 edits shipped, "The
+      withdraw" + button label kept ✓; C-13 numbering → 07·Views ✓; C-14 OG on gallery+legal ✓;
+      C-15 about:Residence node + alternateName array ✓; C-16 gold CLOSED logo-only ✓; C-17 footer
+      dot (logo-white ×3) ✓; C-18 WIP session-gated + storage disclosed ✓; C-19 counsel drafts
+      shipped in place (lawyer reviews the finished page) ✓; C-20/21/23 parked/accepted confirmed ✓;
+      PRIV-3 analytics disclosed (2026-07-04) ✓; B-6 renewal = owner-directed (internal fact,
+      credits unchanged) ✓; B-8 "ancient" owner-verified ✓; B-9 Greek subset shipped ✓.
+      **Still open: B-3 only** (owner shares aethon.house into WhatsApp/iMessage to confirm
+      link previews aren't bot-blocked) + the photography-day checklist (C-22).
 
 **Verification discoveries (recorded for future sessions):**
 - A dialog that autofocuses at load *moves the sequential-focus start point to its DOM
