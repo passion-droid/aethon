@@ -216,6 +216,10 @@ def build_sheet1():
     b.append(f'<rect x="{px+cs}" y="{py+cs}" width="{pw-2*cs}" height="{ph-2*cs}" fill="none" stroke="{OLIVE}" stroke-width="0.7" stroke-dasharray="4 4"/>')
     ww=420; wx=px+(pw-ww)/2; wy=py+50
     g,gw,gh=wordmark(wx,wy,ww); b.append(g)
+    # cap-height dim — flat caps E/T/H/N span y 23.35–83.66 in the 366.78-wide brand vector
+    # (the O overshoots; measured via getBBox) -> 60.31 units = 69 mm at the 420 wordmark
+    _s=ww/WORD_W; capT=wy+23.35*_s; capB=wy+83.66*_s
+    b.append(dim_v(capT,capB,wx+ww+26,f"cap {round(60.31*_s)}",ext_to=wx+ww,side="right"))
     uy=wy+gh+44
     b.append(txt(px+pw/2,uy,"aethon.house",24,INK,"middle",weight="500",ff="Georgia,'Times New Roman',serif",ls="1"))
     tile=132; tx=px+(pw-tile)/2; ty=py+ph-32-tile
@@ -273,7 +277,7 @@ def build_sheet1():
 
     # ---- keynotes legend (right column, below spec) ----
     b.append(keylegend(sx, qy+qsz+40, [
-        (1,"Carved wordmark","LT Museum (brand vector) · V-cut · bare letters"),
+        (1,"Carved wordmark","LT Museum (brand vector) · V-cut · bare · cap height 69"),
         (2,"Gild this dot only","23.5ct gold leaf — the single gold accent"),
         (3,"Engraved URL","'aethon.house' — permanent (a link never ages)"),
         (4,"Inset QR plate","see panel 3 · matte · replaceable"),
