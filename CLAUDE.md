@@ -315,8 +315,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   registration completes on submission. **Never re-introduce "a confirmation email completes your
   sign-up"** in copy, legal or code comments.
 - **Cloudflare proxying confirmed (orange-cloud)** → named beside GitHub Pages in the legal
-  *Hosting* section. If the Cloudflare Web-Analytics beacon is ever enabled, the notice's
-  "uses no analytics" line must be updated the same day.
+  *Hosting* section. **Cloudflare Web Analytics is ACTIVE** (auto-injected at the edge — no code
+  in the repo; first data 2026-06: ~60 visits/28d) and the notice discloses it since 2026-07-04
+  ("cookieless, aggregate visit statistics — no cookies, no cross-site tracking, no personal
+  profiles"). Keep notice and reality in sync if analytics ever change.
 - **Logo letters stay warm black on screen (owner: "leave as is").** The styleguide PDF's primary
   logotype is olive-lettered (#4C5039) — that remains the reference for print/physical; the shipped
   warm-black `brand/logo-dark.svg` is the sanctioned on-screen variant. Don't "fix" either direction.
