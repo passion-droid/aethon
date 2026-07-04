@@ -56,8 +56,11 @@ worked off. Continue from here in future sessions — update the checkboxes as i
       shipped in place (lawyer reviews the finished page) ✓; C-20/21/23 parked/accepted confirmed ✓;
       PRIV-3 analytics disclosed (2026-07-04) ✓; B-6 renewal = owner-directed (internal fact,
       credits unchanged) ✓; B-8 "ancient" owner-verified ✓; B-9 Greek subset shipped ✓.
-      **Still open: B-3 only** (owner shares aethon.house into WhatsApp/iMessage to confirm
-      link previews aren't bot-blocked) + the photography-day checklist (C-22).
+      **B-3 DONE (2026-07-04): owner tested WhatsApp — titled preview renders; link-preview
+      scrapers are NOT bot-blocked.** All audit items closed. Remaining: the photography-day
+      checklist (C-22) only. Signage REV B also shipped 2026-07-04 (monochrome print set;
+      plate 600×400×20 marble; monolith + URL + QR; QR centre-logo positioning bug fixed in
+      scripts/gen-signage-blueprint.py).
 
 **Verification discoveries (recorded for future sessions):**
 - A dialog that autofocuses at load *moves the sequential-focus start point to its DOM
