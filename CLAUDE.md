@@ -386,6 +386,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **The interior (withdraw):** a quiet evening/retreat beat after *The garden* — the
   upper floor withdraws; the evening-warmth line (“a low fire, the slow heat of water,
   the rooms turned down to a glow”) lives here. Mood only, never rooms or amenities.
+  **Cliff Tan's concept sketch lives HERE (owner, 2026-07-04** — moved from *The
+  architecture*): text → artifact → plate rhythm, the sketch as the section's exhibit
+  before the future photograph. Caption kept verbatim ("the ground floor that gathers");
+  *The architecture* keeps text → timeline → plate only.
 - **Accessibility / SEO:** canonical + Open Graph (`og:url` / `site_name` / `locale`) +
   `theme-color` + a minimal, non-private `WebSite` JSON-LD; mobile toggle tap target
   enlarged. **Readability pass** (standards memo: `docs/readability-and-visual-quality.md`;
