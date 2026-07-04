@@ -385,7 +385,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   first, wait, then assert; after a container recycle, one-off "impossible" states (e.g. a
   scroll-lock that won't release) may be transients — re-run the exact sequence before
   diagnosing code; and screenshots taken mid-transition (menu fade 450ms, theme 700ms) look
-  like bugs that aren't — wait the transition out.
+  like bugs that aren't — wait the transition out. And in Bash heredocs: an UNQUOTED
+  delimiter (needed for $VAR expansion) lets backticks run as command substitution and
+  silently eat content — pass values via environment (`WT="$WT" python3 - <<'EOF'`) and keep
+  the delimiter quoted.
 - **Owner-side micro-todo:** glance at the landscape overlay menu once on a real iPhone
   (Chromium emulation is green; real iOS Safari unverified).
 - ~~Still open from the audit~~ **The audit is fully closed (2026-07-04):** every group-B and
