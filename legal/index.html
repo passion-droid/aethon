@@ -69,7 +69,7 @@
   .toggle{ width:2.2rem; height:2.2rem; border-radius:50%; border:1px solid var(--field-line); background:transparent; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; line-height:1; flex:none; transition:border-color 250ms ease, color 250ms ease, background-color 700ms ease; }
   .toggle:hover{ border-color:var(--accent); color:var(--accent); }
   .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
-  @media (max-width:640px){ .toggle{ width:2.75rem; height:2.75rem; } }
+  @media (max-width:640px), (pointer: coarse){ .toggle{ width:2.75rem; height:2.75rem; } }
 
   .legal{ max-width:66rem; margin:0 auto; padding:clamp(5.5rem, 13vh, 8.5rem) var(--edge) clamp(3rem, 7vw, 5rem); }
   .measure{ max-width:92ch; }   /* wider reading measure on legal — fewer line breaks, less scrolling */
@@ -112,8 +112,9 @@
   a, button, input, textarea{ scroll-margin-block: 6rem 2rem; }
 
   /* comfortable touch targets on phones — mirrors index.html's mobile padding rule */
-  @media (max-width:640px){
-    .foot-meta a, nav.links a{ display:inline-block; padding-top:0.3rem; padding-bottom:0.3rem; }
+  @media (max-width:640px), (pointer: coarse){
+    .foot-meta a, .legal a.link{ display:inline-block; padding-top:0.3rem; padding-bottom:0.3rem; }
+    nav.links a{ display:inline-block; padding-top:0.45rem; padding-bottom:0.45rem; }
   }
 
   @media (prefers-reduced-motion: reduce){ *, *::before, *::after{ transition-duration:0.001ms !important; } }

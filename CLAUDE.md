@@ -48,7 +48,16 @@ impression and the mobile layout matter.
   headings + prose). LT Museum replaced **Jost** with Oli's brand assets; each face has a
   metric-matched `local()` fallback to hold CLS. (Brand mark + favicon also shipped — see *Known TODOs*.)
 - **Mobile is the primary (QR) audience — mobile-first.** Fluid `clamp()` type, `100svh` hero,
-  ~44px touch targets, 16px inputs (no iOS zoom), single-column stacking. Desktop shows the
+  ~44px touch targets, 16px inputs (no iOS zoom), single-column stacking. **Touch affordances are
+  capability-based (2026-07 mobile audit):** the 44px toggle, the quiet-link touch padding
+  (incl. `.artifact figcaption a`, `.form-note a`, legal `a.link`), the hero-still/battery rule
+  (drift off) and the hidden hero chip are gated `@media (max-width:640px), (pointer:coarse)` —
+  so tablets and LANDSCAPE phones get touch sizing too, and a mouse desktop is untouched.
+  **Landscape phones** (`(pointer:coarse) and (max-height:500px)`) additionally get the overlay
+  menu instead of the wrapped desktop nav (menu top-aligned + scrollable there — centered flex
+  clips overflowing lists; list padding clears the fixed bar), a JS resize guard so mobile
+  URL-bar resizes don't close an open menu, and a touch more hero bottom padding. iPads keep the
+  desktop nav (coarse but tall). Don't regress these to width-only queries. Desktop shows the
   inline nav links; **below 640px they are replaced by a quiet full-screen overlay menu**
   (`#menu` + `#menu-btn` → "Menu"/"Close"; Esc to close, scroll-lock, background set `inert`,
   closes on link tap). The hero is a **still on mobile** (ambient motion/video reserved for

@@ -108,7 +108,7 @@
   .toggle{ width:2.2rem; height:2.2rem; border-radius:50%; border:1px solid var(--field-line); background:transparent; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; line-height:1; flex:none; transition:border-color 250ms ease, color 250ms ease, background-color 700ms ease; }
   .toggle:hover{ border-color:var(--accent); color:var(--accent); }
   .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
-  @media (max-width:640px){ .toggle{ width:2.75rem; height:2.75rem; } }
+  @media (max-width:640px), (pointer: coarse){ .toggle{ width:2.75rem; height:2.75rem; } }
 
   /* ---------- gallery layout ---------- */
   main{ padding-top:clamp(5rem, 12vh, 8rem); }
@@ -215,8 +215,9 @@
   a, button, input, textarea{ scroll-margin-block: 6rem 2rem; }
 
   /* comfortable touch targets on phones — mirrors index.html's mobile padding rule */
-  @media (max-width:640px){
-    .foot-meta a, .back-link, nav.links a{ display:inline-block; padding-top:0.3rem; padding-bottom:0.3rem; }
+  @media (max-width:640px), (pointer: coarse){
+    .foot-meta a{ display:inline-block; padding-top:0.3rem; padding-bottom:0.3rem; }
+    .back-link, nav.links a{ display:inline-block; padding-top:0.45rem; padding-bottom:0.45rem; }
   }
 
   @media (prefers-reduced-motion: reduce){

@@ -248,7 +248,7 @@
   }
   nav.links a:hover,
   nav.links a.active{ border-bottom-color: var(--accent); color: var(--ink); }
-  @media (max-width: 640px){ nav.links{ display:none; } }
+  @media (max-width: 640px), ((pointer: coarse) and (max-height: 500px)){ nav.links{ display:none; } }
 
   /* day / night toggle */
   .toggle{
@@ -262,7 +262,7 @@
   .toggle:hover{ border-color: var(--accent); color: var(--accent); }
   .toggle:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
   /* comfortable touch target on phones (QR arrival) */
-  @media (max-width: 640px){ .toggle{ width: 2.75rem; height: 2.75rem; } }
+  @media (max-width: 640px), (pointer: coarse){ .toggle{ width: 2.75rem; height: 2.75rem; } }
 
   /* mobile overlay menu — replaces the nav links that are hidden < 640px */
   .menu-btn{
@@ -290,12 +290,22 @@
   }
   .menu-list a:hover{ color: var(--accent); }
   .menu-list .menu-cta{ color: var(--accent); }
-  @media (min-width: 641px){ .menu{ display: none; } }     /* desktop never shows the overlay */
-  @media (max-width: 640px){
+  @media (min-width: 641px) and (pointer: fine){ .menu{ display: none; } }                            /* mouse desktop never shows the overlay */
+  @media (min-width: 641px) and (pointer: coarse) and (min-height: 501px){ .menu{ display: none; } }  /* tablets keep the desktop nav; landscape PHONES (coarse + short) keep the overlay */
+  @media (max-width: 640px), ((pointer: coarse) and (max-height: 500px)){
     .js .menu-btn{ display: inline-block; }   /* JS-gated: without JS the button would render but do nothing */
-    .hero .hero-media{ display: none; }  /* hero is a still on mobile — .hero scope beats the later base rule */
-    section.hero::before{ animation: none; }    /* quiet the light-drift on phones (battery) — extra specificity so the later base rule can't win the cascade */
-    .more-link, .foot-meta a, .credits-list dd a{ display: inline-block; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+  }
+  /* any TOUCH device, any width/orientation: touch-size the quiet links; keep the hero still (battery) */
+  @media (max-width: 640px), (pointer: coarse){
+    .hero .hero-media{ display: none; }  /* hero is a still on touch — .hero scope beats the later base rule */
+    section.hero::before{ animation: none; }    /* quiet the light-drift on touch (battery) — extra specificity so the later base rule can't win the cascade */
+    .more-link, .foot-meta a, .credits-list dd a, .artifact figcaption a, .form-note a{ display: inline-block; padding-top: 0.4rem; padding-bottom: 0.4rem; }
+  }
+  /* landscape phones: give the overlay and the hero's lower edge room */
+  @media (pointer: coarse) and (max-height: 500px){
+    .menu{ overflow-y: auto; align-items: flex-start; }   /* centered flex clips overflowing lists — top-align so every item can scroll into reach */
+    .menu-list{ gap: clamp(0.7rem, 2.5vh, 1.2rem); padding-top: 4.5rem; padding-bottom: 1.5rem; }   /* clear the fixed bar */
+    .hero{ padding-bottom: clamp(5rem, 14vh, 6.5rem); }
   }
 
   /* ---------- hero: light is the subject ---------- */
@@ -1309,7 +1319,10 @@
         else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
       }
     });
-    window.addEventListener('resize', function(){ if (window.innerWidth > 640 && body.classList.contains('menu-open')) setOpen(false); }, { passive: true });
+    window.addEventListener('resize', function(){
+      var phoneMenu = window.innerWidth <= 640 || window.matchMedia('(pointer: coarse) and (max-height: 500px)').matches;
+      if (!phoneMenu && body.classList.contains('menu-open')) setOpen(false);   // don't let a mobile URL-bar resize close the open menu
+    }, { passive: true });
   })();
 
   // Scroll reveal
