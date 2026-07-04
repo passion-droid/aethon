@@ -379,6 +379,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   render — preview scrapers are not bot-blocked).
 - **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
   run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
+- **Playwright-testing gotchas (learned the hard way):** plain `window.scrollTo(x,y)` obeys the
+  page's `scroll-behavior:smooth` — sample positions only after settling, or pass
+  `{behavior:'instant'}`; lazy images report `complete:false` until scrolled near, so scroll
+  first, wait, then assert; after a container recycle, one-off "impossible" states (e.g. a
+  scroll-lock that won't release) may be transients — re-run the exact sequence before
+  diagnosing code; and screenshots taken mid-transition (menu fade 450ms, theme 700ms) look
+  like bugs that aren't — wait the transition out.
+- **Owner-side micro-todo:** glance at the landscape overlay menu once on a real iPhone
+  (Chromium emulation is green; real iOS Safari unverified).
 - ~~Still open from the audit~~ **The audit is fully closed (2026-07-04):** every group-B and
   group-C item is decided and shipped (see the walkthrough block above + the memo's checkboxes).
   The only audit artefact still live is the **photography-day launch checklist** (strip
@@ -397,7 +406,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   the rooms turned down to a glow”) lives here. Mood only, never rooms or amenities.
   **Cliff Tan's concept sketch lives HERE (owner, 2026-07-04** — moved from *The
   architecture*): text → artifact → plate rhythm, the sketch as the section's exhibit
-  before the future photograph. Caption kept verbatim ("the ground floor that gathers");
+  before the future photograph. Caption owner-approved same day: **"Concept sketch — the
+  rooms, from within"** (was "the ground floor that gathers" — dissolved the
+  gather/withdraw tension); the alt text still names the ground floor, factually.
   *The architecture* keeps text → timeline → plate only.
 - **Accessibility / SEO:** canonical + Open Graph (`og:url` / `site_name` / `locale`) +
   `theme-color` + a minimal, non-private `WebSite` JSON-LD; mobile toggle tap target
