@@ -362,8 +362,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   pre-drafted in place (SIGNGUARD relation clause, form metadata/IP, bounded retention, "no
   cookies at all") — lawyer reviews the finished page. **Kept against reviewers:** "The withdraw"
   chapter noun, the "Register interest" button label, "ancient olive trees" (owner-verified),
-  the bar mark stays always-visible (C-20 parked), sunset-default Afterglow waits for photography
-  (C-21). **Renewal design = owner-directed** (internal fact for press enquiries; public credits
+  the bar mark stays always-visible (C-20 parked); C-21 (sunset-default Afterglow) **has since
+  shipped early, owner-directed (2026-07-05)** — see the *Day / Night* interactive layer.
+  **Renewal design = owner-directed** (internal fact for press enquiries; public credits
   unchanged by choice — offer a visible credit row only if the owner asks).
 - **Greek word renders in brand type:** `fonts/greek-aithon-lt.woff2` (5-glyph EB Garamond Italic
   subset, OFL, ~2.6KB) is declared into the Spectral stack via `unicode-range` for Αἴθων.
@@ -453,6 +454,42 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   `.night`) for when paired photography lands — see **`docs/imagery-brief.md`** (the full
   photo/film brief). Plan: swap only the hero + *Views*/gallery; materials, plans, credits and
   the form stay static.
+  **Interactive layer — R1–R4 shipped (2026-07-05, owner: "implement all", placeholders until
+  photography):**
+  (R1) **Dusk sweep** — the toggle runs a feathered mask sweep on the **View Transitions API**
+  (Baseline 2025): night draws in from the left, day returns from the right (1600ms,
+  `html[data-sweep]` picks the direction); reduced-motion / no-support falls back to the token
+  crossfade untouched; `html.vt-live` suspends all CSS transitions during a sweep so the page
+  beneath snaps atomically. **Keep the VT mask rules UNPREFIXED** — adding `-webkit-mask-*`
+  aliases beside them silently kills the keyframe interpolation in Chromium (cost a debug ladder;
+  comment in the CSS). Sweep CSS/JS hand-synced across index + gallery + legal.
+  (R2) **Hold-to-preview** — `[data-hold]` paired views (currently the two pause plates) show the
+  *opposite* hour while pressed: touch still-hold (200ms, >10px movement = scroll → cancels),
+  mouse-hold, or holding Space/Enter (focusable, role=button). Placeholders flip their frame
+  tokens locally (`.shot-pair.held` — values hand-synced with `:root`/`body.night`); the `.held`
+  image rules for real pairs are already in place. **Cursor = the other hour's glyph** on fine
+  pointers (moon in a dark disc by day, sun in a marble disc by night; data-URI SVGs). The pause
+  labels carry a `· hold for the evening/daylight` affordance (`.hold-hint` CSS content);
+  aria-labels re-name the hour via a body-class MutationObserver.
+  (R3) **Second toggle + discoverability** — the hero chip (`.hero-media`) is now a working
+  toggle `<button>`: moon/sun icon + "Daylight / Afterglow" with the inactive hour dimmed
+  ("· forthcoming" dropped from it); still hidden on touch/small screens. A **one-time hint**
+  ("Afterglow — the warm hour after sunset", `role=status`, localStorage **`aethon-hint`**)
+  appears under the bar on a visitor's first switch to evening. *Views* gained an in-copy
+  evening door — "Every view here keeps two hours — see the evening." (`.evening-line`, same
+  no-op-at-night pattern as the interior's; **new copy — revisit if the owner wants different
+  wording**). The evening-line binder now wires ALL `.evening-line` instances.
+  (R4) **The site keeps the house's hours** (C-21, shipped early by owner instruction): a first
+  visit with **no saved theme** arriving after sunset at the house opens in Afterglow — a
+  mid-month Paphos sun table + Cyprus wall-clock via `Intl` (`Asia/Nicosia`, DST handled), **no
+  geolocation**, and the automatic evening is **never persisted** (only explicit toggle choices
+  are). Lives in the **no-flash init** of all three pages (hand-synced); the main theme IIFE now
+  seeds from `body.night` — don't regress it to a hard `'day'` default. Legal's storage sentence
+  discloses the hint flag (two functional local-storage notes + the session note; counsel batch
+  re-checks wording). Verified by a **42-check Playwright matrix** (sweep both directions +
+  cleanup + fallback; hold engage/quick-tap/keyboard/scroll-cancel; cursor + aria swaps; chip
+  sync, hint show/retire/once; clock cases summer/winter/DST + saved-pref precedence; gallery +
+  legal parity; zero page errors).
 - **Gallery subpage:** a deeper photo-essay at `/gallery/` (`gallery/index.html`) —
   self-contained, **noindex**; now linked from the **main nav** (homepage header + overlay menu)
   as well as the end of *Views* and the footer. Six chapters (Arrival → the ground that gathers
