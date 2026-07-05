@@ -94,8 +94,22 @@ impression and the mobile layout matter.
 - Hosted free on **GitHub Pages**, served from the **`main`** branch, root folder.
 - A change goes live ~1–2 minutes after it is committed and pushed to `main`.
   So the loop is: edit `index.html` → commit with a short message → push to `main`.
+- **A push is NOT a deploy — verify the Pages run before reporting "live" (2026-07-05).** GitHub
+  Pages builds+deploys via the `pages build and deployment` workflow; the **deploy job can fail
+  even when the push and the build succeed** (seen 2026-07-05: build green, deploy died with the
+  generic `Deployment failed, try again later` — the site silently kept serving the previous SHA).
+  After every push: check the run for the pushed SHA via the GitHub MCP
+  (`actions_list list_workflow_runs`, match `head_sha`; logs via `get_job_logs failed_only`) and
+  only call it deployed on `conclusion: success`.
+- **One push per deploy — never stack pushes ~1–2 min apart.** Batch ALL commits of a working
+  session step (site files + CLAUDE.md + docs) into a **single push**: back-to-back pushes put two
+  Pages deployments in flight and they can BOTH fail with the generic error above (exactly what
+  happened 2026-07-05, two pushes ~70 s apart). If that error appears with a green build job, the
+  content is fine — **do not debug the HTML**; retrigger with one fresh commit+push (empty commit
+  ok) and verify the new run.
 - The live site **403s automated fetches** (bot protection) — to confirm what's live, compare the
-  repo to `origin/main` (they're identical once merged) rather than fetching `aethon.house`.
+  repo to `origin/main` (they're identical once merged) rather than fetching `aethon.house` — and
+  since 2026-07-05, "compare the repo" is not enough: confirm the **Pages run succeeded** too.
 - **The git proxy in this env can be flaky.** Pushes sometimes fail with a *spurious*
   `non-fast-forward`/`behind` rejection, and ref-**deletions** return a 403 — both transient. Trust
   **`git ls-remote origin main`** (authoritative remote SHA) over the possibly-stale local
