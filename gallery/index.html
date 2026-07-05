@@ -108,6 +108,26 @@
   .toggle{ width:2.2rem; height:2.2rem; border-radius:50%; border:1px solid var(--field-line); background:transparent; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; line-height:1; flex:none; transition:border-color 250ms ease, color 250ms ease, background-color 700ms ease; }
   .toggle:hover{ border-color:var(--accent); color:var(--accent); }
   .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* ---------- dusk sweep — the theme change crosses the page like the evening arriving.
+     View Transitions API (Baseline 2025); progressive enhancement — without support or with
+     reduced motion, the toggle falls back to the token transitions. Hand-synced with
+     index.html. NOTE: keep the mask rules UNPREFIXED — -webkit-mask-* aliases alongside
+     them invalidate the keyframe interpolation in Chromium. */
+  @media (prefers-reduced-motion: no-preference){
+    ::view-transition-old(root){ animation: none; mix-blend-mode: normal; }
+    ::view-transition-new(root){
+      animation: dusk-sweep 1600ms cubic-bezier(0.4, 0.1, 0.4, 0.9) both;
+      mix-blend-mode: normal;
+      mask-image: linear-gradient(105deg, #000 0%, #000 45%, transparent 55%, transparent 100%);
+      mask-size: 220% 100%; mask-repeat: no-repeat;
+    }
+    html[data-sweep="day"]::view-transition-new(root){
+      mask-image: linear-gradient(-105deg, #000 0%, #000 45%, transparent 55%, transparent 100%);
+    }
+    @keyframes dusk-sweep{ from{ mask-position: 100% 0; } to{ mask-position: 0% 0; } }
+  }
+  html.vt-live *, html.vt-live *::before, html.vt-live *::after{ transition: none !important; }
   @media (max-width:640px), (pointer: coarse){ .toggle{ width:2.75rem; height:2.75rem; } }
 
   /* ---------- gallery layout ---------- */
@@ -248,7 +268,14 @@
 </head>
 
 <body>
-<script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night'){document.body.classList.add('night');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#1A1410');}}catch(e){}</script>
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('aethon-theme');
+/* R4 — the site keeps the house's hours: a first visit (no saved choice) after sunset at the
+   house arrives in Afterglow. Paphos-region sun table, mid-month local times (approximate by
+   design — the afterglow window is soft); Intl supplies Cyprus wall-clock incl. DST. The
+   automatic evening is NOT persisted — only an explicit toggle choice is. No geolocation.
+   Hand-synced with index.html. */
+if(!t){var P=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Nicosia',hour:'numeric',minute:'numeric',month:'numeric',hour12:false}).formatToParts(new Date()),G=function(k){for(var i=0;i<P.length;i++)if(P[i].type===k)return+P[i].value;return 0},MO=G('month'),H=G('hour')+G('minute')/60,SS=[17.2,17.7,18.1,19.5,19.9,20.2,20.3,19.8,19.1,18.3,16.9,16.7],SR=[6.9,6.7,6.1,6.3,5.8,5.6,5.7,6.1,6.5,6.9,6.4,6.8];if(H>=SS[MO-1]||H<SR[MO-1])t='night';}
+if(t==='night'){document.body.classList.add('night');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#1A1410');}}catch(e){}</script>
 
 
 <dialog class="wip" id="wip" aria-label="A note from AETHON" aria-describedby="wip-body">
@@ -453,9 +480,11 @@
   (function(){
     var KEY = 'aethon-theme';
     var body = document.body;
+    var root = document.documentElement;
     var btn = document.getElementById('theme-toggle');
     var icon = btn.querySelector('.toggle-icon');
     var themeMeta = document.querySelector('meta[name="theme-color"]');
+    var motionOK = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: no-preference)') : null;
     function apply(theme){
       var night = theme === 'night';
       body.classList.toggle('night', night);
@@ -463,12 +492,22 @@
       icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
       if (themeMeta) themeMeta.setAttribute('content', night ? '#1A1410' : '#E9E7E0');
     }
-    var saved = 'day';
+    function swap(next){
+      if (document.startViewTransition && motionOK && motionOK.matches){
+        root.setAttribute('data-sweep', next === 'night' ? 'night' : 'day');
+        root.classList.add('vt-live');
+        var vt = document.startViewTransition(function(){ apply(next); });
+        vt.finished.finally(function(){ root.classList.remove('vt-live'); root.removeAttribute('data-sweep'); });
+      } else {
+        apply(next);
+      }
+    }
+    var saved = body.classList.contains('night') ? 'night' : 'day';   // keep the init script's choice (saved pref or the house's hours)
     try { var s = localStorage.getItem(KEY); if (s) saved = s; } catch (e) {}
     apply(saved);
     btn.addEventListener('click', function(){
       var next = body.classList.contains('night') ? 'day' : 'night';
-      apply(next);
+      swap(next);
       try { localStorage.setItem(KEY, next); } catch (e) {}
     });
   })();

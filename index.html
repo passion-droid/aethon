@@ -264,6 +264,41 @@
   /* comfortable touch target on phones (QR arrival) */
   @media (max-width: 640px), (pointer: coarse){ .toggle{ width: 2.75rem; height: 2.75rem; } }
 
+  /* ---------- dusk sweep — the theme change crosses the page like the evening arriving.
+     View Transitions API (Baseline 2025); pure progressive enhancement — without support or
+     with reduced motion, the toggle falls back to the token transitions below. The UA's
+     plus-lighter blend + default fades are replaced by one feathered mask that draws the
+     new state across: night enters from the left, day returns from the right.
+     NOTE (hard-won): keep these mask rules UNPREFIXED — adding -webkit-mask-* aliases
+     alongside them invalidates the keyframe interpolation in Chromium. */
+  @media (prefers-reduced-motion: no-preference){
+    ::view-transition-old(root){ animation: none; mix-blend-mode: normal; }
+    ::view-transition-new(root){
+      animation: dusk-sweep 1600ms cubic-bezier(0.4, 0.1, 0.4, 0.9) both;
+      mix-blend-mode: normal;
+      mask-image: linear-gradient(105deg, #000 0%, #000 45%, transparent 55%, transparent 100%);
+      mask-size: 220% 100%; mask-repeat: no-repeat;
+    }
+    html[data-sweep="day"]::view-transition-new(root){
+      mask-image: linear-gradient(-105deg, #000 0%, #000 45%, transparent 55%, transparent 100%);
+    }
+    @keyframes dusk-sweep{ from{ mask-position: 100% 0; } to{ mask-position: 0% 0; } }
+  }
+  /* during a sweep the underlying page must jump to its final state at once —
+     the crossfade is the view transition's job, not the tokens' */
+  html.vt-live *, html.vt-live *::before, html.vt-live *::after{ transition: none !important; }
+
+  /* one-time hint after the first switch to Afterglow (role=status; JS-gated) */
+  .toggle-hint{
+    position: absolute; top: calc(100% + 0.55rem); right: var(--edge);
+    font-family: var(--ff-display); font-size: 0.62rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink-mute);
+    background: var(--bar-bg); border: 1px solid var(--rule); border-radius: 2px;
+    padding: 0.55em 0.9em; pointer-events: none;
+    opacity: 0; transition: opacity 450ms ease, background-color 700ms ease;
+  }
+  .toggle-hint.show{ opacity: 1; }
+
   /* mobile overlay menu — replaces the nav links that are hidden < 640px */
   .menu-btn{
     display: none;
@@ -451,6 +486,39 @@
   body.night .shot-pair .shot-day{ opacity:0; }
   .shot-pair img{ display:block; width:100%; height:100%; object-fit:cover; }
   @media (prefers-reduced-motion: reduce){ .shot-pair .shot-day, .shot-pair .shot-night{ transition:none; } }
+
+  /* ---------- hold to preview the other hour ----------
+     Press-and-hold (touch), mouse-hold, or hold Space (keyboard) on a paired view previews
+     it in the opposite light — whole, no seam — and releases back. Opt-in via data-hold.
+     Works today on the placeholder frames by flipping their tokens locally (values
+     hand-synced with :root / body.night above); once real pairs land, the same .held
+     class crossfades the actual images via the rules below. */
+  [data-hold]{ user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  [data-hold]:focus-visible{ outline: 2px solid var(--accent); outline-offset: 4px; }
+  /* placeholder preview — the frame borrows the other hour's tokens while held */
+  .shot-pair.held{
+    --frame-grad: linear-gradient(135deg, #3A312A, #2C2620 60%, #211A14);
+    --frame-label: rgba(238,231,214,0.70);
+    --light-glow: #F3C886; --light-warm: #E9AC63;
+  }
+  body.night .shot-pair.held{
+    --frame-grad: linear-gradient(135deg, var(--travertine), var(--sandstone) 60%, var(--greige));
+    --frame-label: rgba(34,29,24,0.96);
+    --light-glow: #F2DDBE; --light-warm: #EACA9C;
+  }
+  /* real pairs, once photography lands: held shows the opposite layer */
+  .shot-pair.held .shot-night{ opacity: 1; }
+  .shot-pair.held .shot-day{ opacity: 0; }
+  body.night .shot-pair.held .shot-night{ opacity: 0; }
+  body.night .shot-pair.held .shot-day{ opacity: 1; }
+  /* the cursor announces the other hour on mouse devices: a moon by day, a sun by night */
+  @media (pointer: fine){
+    [data-hold]{ cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='12.5' fill='%232C2620' fill-opacity='0.92' stroke='%23E9E7E0' stroke-opacity='0.85'/%3E%3Cpath d='M17.8 8.6a7 7 0 1 0 0 10.8 5.6 5.6 0 0 1 0-10.8z' fill='%23E9E7E0'/%3E%3C/svg%3E") 14 14, pointer; }
+    body.night [data-hold]{ cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='12.5' fill='%23E9E7E0' fill-opacity='0.94' stroke='%232C2620' stroke-opacity='0.7'/%3E%3Ccircle cx='14' cy='14' r='3.4' fill='%232C2620'/%3E%3Cg stroke='%232C2620' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M14 5.4v2.4M14 20.2v2.4M5.4 14h2.4M20.2 14h2.4M7.9 7.9l1.7 1.7M18.4 18.4l1.7 1.7M20.1 7.9l-1.7 1.7M9.6 18.4l-1.7 1.7'/%3E%3C/g%3E%3C/svg%3E") 14 14, pointer; }
+  }
+  /* quiet affordance in the pause label — reads the action for the current hour */
+  .hold-hint::before{ content: " · hold for the evening"; }
+  body.night .hold-hint::before{ content: " · hold for the daylight"; }
   .frame{
     position: relative; aspect-ratio: 16 / 10; overflow: hidden;
     background: var(--frame-grad);
@@ -487,8 +555,18 @@
     display:inline-flex; align-items:center; gap: 0.7rem; white-space: nowrap;
     font-family: var(--ff-display); font-size: 0.66rem; letter-spacing: 0.22em;
     text-transform: uppercase; color: var(--ink-mute);
+    /* now a working second toggle (R3) — button resets + quiet affordance */
+    background: transparent; border: 0; padding: 0.4rem 0; cursor: pointer;
+    transition: color 250ms ease;
   }
-  .hero-media .play{ width: 1.9rem; height: 1.9rem; font-size: 0.56rem; padding-left: 0.14em; }
+  .hero-media:hover{ color: var(--ink-soft); }
+  .hero-media:focus-visible{ outline: 2px solid var(--accent); outline-offset: 4px; }
+  .hero-media .play{ width: 1.9rem; height: 1.9rem; font-size: 0.8rem; padding-left: 0; }
+  /* the word for the hour we are NOT in steps back */
+  .hero-media .hm-night{ opacity: 0.55; }
+  body.night .hero-media .hm-day{ opacity: 0.55; }
+  body.night .hero-media .hm-night{ opacity: 1; }
+  .hero-media .hm-day, .hero-media .hm-night{ transition: opacity 700ms ease; }
 
   /* ---------- interest form ---------- */
   .interest{ max-width: 44rem; margin: 0; }
@@ -730,7 +808,13 @@
 </head>
 
 <body class="preview">
-<script>document.documentElement.classList.add('js');try{if(localStorage.getItem('aethon-theme')==='night'){document.body.classList.add('night');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#1A1410');}}catch(e){}</script>
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('aethon-theme');
+/* R4 — the site keeps the house's hours: a first visit (no saved choice) after sunset at the
+   house arrives in Afterglow. Paphos-region sun table, mid-month local times (approximate by
+   design — the afterglow window is soft); Intl supplies Cyprus wall-clock incl. DST. The
+   automatic evening is NOT persisted — only an explicit toggle choice is. No geolocation. */
+if(!t){var P=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Nicosia',hour:'numeric',minute:'numeric',month:'numeric',hour12:false}).formatToParts(new Date()),G=function(k){for(var i=0;i<P.length;i++)if(P[i].type===k)return+P[i].value;return 0},MO=G('month'),H=G('hour')+G('minute')/60,SS=[17.2,17.7,18.1,19.5,19.9,20.2,20.3,19.8,19.1,18.3,16.9,16.7],SR=[6.9,6.7,6.1,6.3,5.8,5.6,5.7,6.1,6.5,6.9,6.4,6.8];if(H>=SS[MO-1]||H<SR[MO-1])t='night';}
+if(t==='night'){document.body.classList.add('night');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#1A1410');}}catch(e){}</script>
 
 
 <dialog class="wip" id="wip" aria-label="A note from AETHON" aria-describedby="wip-body">
@@ -760,6 +844,7 @@
     </button>
     <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
+  <span class="toggle-hint" role="status"></span>
 </header>
 
 <nav id="menu" class="menu" aria-label="Menu" aria-hidden="true">
@@ -800,7 +885,7 @@
       <p class="hero-line">A sanctuary built around sunsets, silence, and the western sea.</p>
       <p class="hero-orient">A private seafront residence on the western coast of Paphos.</p>
     </div>
-    <div class="hero-media"><span class="play" aria-hidden="true">&#9654;</span>Daylight / Afterglow · forthcoming</div>
+    <button class="hero-media" type="button" aria-pressed="false" aria-label="Afterglow (evening) view"><span class="play toggle-icon" aria-hidden="true">&#9790;</span><span class="hm-day">Daylight</span>&nbsp;/&nbsp;<span class="hm-night">Afterglow</span></button>
     <a class="scroll-cue" href="#place"><span class="stroke"></span>Descend</a>
   </section>
 
@@ -892,11 +977,11 @@
 
   <!-- PAUSE — a silent full-bleed breath (Daylight ↔ Afterglow when the matched pair lands) -->
   <section class="pause" aria-label="The house, toward the western sea">
-    <div class="pause-media shot-pair">
+    <div class="pause-media shot-pair" data-hold role="button" tabindex="0" aria-label="Hold to preview the evening view">
       <!-- When photography lands: a matched day/evening PAIR of the west elevation —
            <picture class="shot-day">…</picture><picture class="shot-night">…</picture>.
            On mobile serve a single image (not the pair), per the cellular-data guardrail. -->
-      <span class="pause-label">The house, toward the western sea · forthcoming</span>
+      <span class="pause-label">The house, toward the western sea · forthcoming<span class="hold-hint"></span></span>
     </div>
   </section>
 
@@ -947,9 +1032,9 @@
 
   <!-- PAUSE — the afterglow breath before the materials -->
   <section class="pause" aria-label="The afterglow — lit from within">
-    <div class="pause-media shot-pair">
+    <div class="pause-media shot-pair" data-hold role="button" tabindex="0" aria-label="Hold to preview the evening view">
       <!-- Matched day/evening PAIR — the house lit warm from within at dusk. -->
-      <span class="pause-label">The afterglow — lit from within · forthcoming</span>
+      <span class="pause-label">The afterglow — lit from within · forthcoming<span class="hold-hint"></span></span>
     </div>
   </section>
 
@@ -1082,6 +1167,7 @@
         </div>
         <div>
           <p>A curated selection, forthcoming — sized and sequenced as the photography will sit.</p>
+          <p><button class="evening-line" type="button">Every view here keeps two hours &mdash; see the evening.</button></p>
         </div>
       </div>
       <!--
@@ -1244,36 +1330,109 @@
   // Year
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Day / Night
+  // Day / Night — the header toggle and the hero chip drive the same switch; when the
+  // browser supports View Transitions (and motion is welcome) the change arrives as the
+  // dusk sweep; otherwise it falls back to the token transitions, exactly as before.
   (function(){
     var KEY = 'aethon-theme';
     var body = document.body;
-    var btn = document.getElementById('theme-toggle');
-    var icon = btn.querySelector('.toggle-icon');
+    var root = document.documentElement;
+    var btns = [document.getElementById('theme-toggle'), document.querySelector('.hero-media')].filter(Boolean);
     var themeMeta = document.querySelector('meta[name="theme-color"]');
+    var motionOK = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: no-preference)') : null;
     function apply(theme){
       var night = theme === 'night';
       body.classList.toggle('night', night);
-      btn.setAttribute('aria-pressed', night ? 'true' : 'false');   // fixed label + pressed-state: no contradiction for screen readers
-      icon.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
+      btns.forEach(function(b){
+        b.setAttribute('aria-pressed', night ? 'true' : 'false');   // fixed label + pressed-state: no contradiction for screen readers
+        var i = b.querySelector('.toggle-icon'); if (i) i.innerHTML = night ? '&#9728;' : '&#9790;'; // sun : moon
+      });
       if (themeMeta) themeMeta.setAttribute('content', night ? '#1A1410' : '#E9E7E0');
     }
-    var saved = 'day';
+    function swap(next){
+      if (document.startViewTransition && motionOK && motionOK.matches){
+        root.setAttribute('data-sweep', next === 'night' ? 'night' : 'day');
+        root.classList.add('vt-live');
+        var vt = document.startViewTransition(function(){ apply(next); });
+        vt.finished.finally(function(){ root.classList.remove('vt-live'); root.removeAttribute('data-sweep'); });
+      } else {
+        apply(next);
+      }
+    }
+    // one-time hint, the first time a visitor finds the evening
+    function hint(next){
+      if (next !== 'night') return;
+      var el = document.querySelector('.toggle-hint');
+      if (!el) return;
+      try {
+        if (localStorage.getItem('aethon-hint')) return;
+        localStorage.setItem('aethon-hint', '1');
+      } catch (e) { return; }
+      el.textContent = 'Afterglow — the warm hour after sunset';
+      el.classList.add('show');
+      setTimeout(function(){ el.classList.remove('show'); }, 4200);
+    }
+    var saved = body.classList.contains('night') ? 'night' : 'day';   // keep the init script's choice (saved pref or the house's hours)
     try { var s = localStorage.getItem(KEY); if (s) saved = s; } catch (e) {}
     apply(saved);
-    btn.addEventListener('click', function(){
-      var next = body.classList.contains('night') ? 'day' : 'night';
-      apply(next);
-      try { localStorage.setItem(KEY, next); } catch (e) {}
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        var next = body.classList.contains('night') ? 'day' : 'night';
+        hint(next);
+        swap(next);
+        try { localStorage.setItem(KEY, next); } catch (e) {}
+      });
     });
   })();
 
-  // The interior's closing line sets the Afterglow view (no-op if already evening)
+  // In-copy lines that set the Afterglow view (no-op if already evening)
   (function(){
-    var line = document.querySelector('.evening-line');
     var btn = document.getElementById('theme-toggle');
-    if (!line || !btn) return;
-    line.addEventListener('click', function(){ if (!document.body.classList.contains('night')) btn.click(); });
+    if (!btn) return;
+    document.querySelectorAll('.evening-line').forEach(function(line){
+      line.addEventListener('click', function(){ if (!document.body.classList.contains('night')) btn.click(); });
+    });
+  })();
+
+  // Hold to preview the other hour — press-and-hold (touch/mouse) or hold Space/Enter on a
+  // paired view to see it in the opposite light; release returns. A short still-hold
+  // threshold keeps page scrolling clean on touch.
+  (function(){
+    var DELAY = 200, TOL = 10;
+    document.querySelectorAll('[data-hold]').forEach(function(el){
+      var timer = null, held = false, x0 = 0, y0 = 0;
+      function engage(){ held = true; el.classList.add('held'); }
+      function release(){
+        if (timer){ clearTimeout(timer); timer = null; }
+        if (held){ held = false; el.classList.remove('held'); }
+      }
+      el.addEventListener('pointerdown', function(e){
+        if (e.button !== undefined && e.button !== 0) return;
+        x0 = e.clientX; y0 = e.clientY;
+        timer = setTimeout(engage, DELAY);
+      });
+      el.addEventListener('pointermove', function(e){
+        if (!timer || held) return;
+        if (Math.abs(e.clientX - x0) > TOL || Math.abs(e.clientY - y0) > TOL) release();   // a scroll, not a hold
+      });
+      ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(t){ el.addEventListener(t, release); });
+      el.addEventListener('contextmenu', function(e){ if (held) e.preventDefault(); });
+      el.addEventListener('keydown', function(e){
+        if (e.repeat) return;
+        if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); engage(); }
+      });
+      el.addEventListener('keyup', function(e){ if (e.key === ' ' || e.key === 'Enter') release(); });
+      el.addEventListener('blur', release);
+    });
+    // the action names the hour it reveals — keep labels honest when the theme flips
+    var relabel = function(){
+      var night = document.body.classList.contains('night');
+      document.querySelectorAll('[data-hold]').forEach(function(el){
+        el.setAttribute('aria-label', night ? 'Hold to preview the daylight view' : 'Hold to preview the evening view');
+      });
+    };
+    relabel();
+    new MutationObserver(relabel).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   })();
 
   // Mobile menu (overlay)
