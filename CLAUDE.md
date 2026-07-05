@@ -209,8 +209,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   on the `internal` branch — Rev B (2026-07-05), synced to the live slots and shared with the
   owner's photographer contact** (external-ready render: `internal:docs/imagery-brief.pdf`, brand
   type, no address / no sale framing / contact mail@aethon.house; Appendix A maps all 15 front-page
-  frames + 23 gallery captions; adds the og/social 1200×630 master as a deliverable). If slots or
-  captions change on the site, re-sync the brief + regenerate the PDF before re-sharing. Key
+  frames + 23 gallery captions; adds the og/social 1200×630 master as a deliverable). A
+  **personalized German edition for Fynn Daubner (Envisory — the owner's photographer/videographer
+  contact, Cyprus-based)** is `internal:docs/imagery-brief-fynn-de.{md,pdf}` — Du-Form, neutral from
+  AETHON (not owner-signed), **photo + film co-equal** (§8 "Der Film" is a full chapter — hero loop,
+  establishing film), purely creative (no logistics/terms) — all owner decisions 2026-07-05; live
+  captions stay English (the site's labels). If slots or
+  captions change on the site, re-sync BOTH briefs + regenerate the PDFs before re-sharing. Key
   viewpoints must be shot as **matched Daylight +
   warm-evening pairs (same locked-off viewpoint)** for the `.shot-pair` crossfade — warm afterglow,
   **never blue**; strip GPS/EXIF; deliver masters (the pipeline makes the web assets).
