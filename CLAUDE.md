@@ -228,7 +228,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   contact, Cyprus-based)** is `internal:docs/imagery-brief-fynn-de.{md,pdf}` — Du-Form, neutral from
   AETHON (not owner-signed), **photo + film co-equal** (§8 "Der Film" is a full chapter — hero loop,
   establishing film), purely creative (no logistics/terms) — all owner decisions 2026-07-05; live
-  captions stay English (the site's labels). If slots or
+  captions stay English (the site's labels). **Reworked same day after owner feedback ("liest sich
+  wie Wort-für-Wort-Übersetzung — no-go"): full German NEUSCHRIEB** — idiomatic, brand-register (no
+  calques; the list is a "Wunschliste — Ausgangspunkt, nicht Grenze"; A/B/C/D instead of Tier
+  jargon), plus a **creative-latitude layer** (owner: he's strong in Konzeption, don't make it read
+  as a strict spec) — new §9 "Dein Blick" (Landkarte, kein Drehbuch; better ideas explicitly
+  welcome) + §8 closes with "dein Terrain"; **PDF links are clickable** (6 URI annotations
+  verified: aethon.house ×2, /gallery/ ×2, Dear Modern, mailto). Rule for German docs: write
+  natively in German, never translate the English line by line; verify „…“ quote pairs + link
+  annotations before shipping. If slots or
   captions change on the site, re-sync BOTH briefs + regenerate the PDFs before re-sharing. Key
   viewpoints must be shot as **matched Daylight +
   warm-evening pairs (same locked-off viewpoint)** for the `.shot-pair` crossfade — warm afterglow,
