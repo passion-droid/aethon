@@ -84,9 +84,14 @@
       mask-size: 220% 100%; mask-repeat: no-repeat;
     }
     html[data-sweep="day"]::view-transition-new(root){
+      animation-name: dusk-sweep-back;
       mask-image: linear-gradient(-105deg, #000 0%, #000 45%, transparent 55%, transparent 100%);
     }
+    /* the mirrored gradient carries its black head at the mask's other end, so the day
+       direction must traverse the positions the other way too — one shared keyframe set
+       plays the wipe BACKWARDS (day flashes in, night re-covers it, hard pop at the end) */
     @keyframes dusk-sweep{ from{ mask-position: 100% 0; } to{ mask-position: 0% 0; } }
+    @keyframes dusk-sweep-back{ from{ mask-position: 0% 0; } to{ mask-position: 100% 0; } }
   }
   html.vt-live *, html.vt-live *::before, html.vt-live *::after{ transition: none !important; }
   @media (max-width:640px), (pointer: coarse){ .toggle{ width:2.75rem; height:2.75rem; } }

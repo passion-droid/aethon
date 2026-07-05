@@ -476,7 +476,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   crossfade untouched; `html.vt-live` suspends all CSS transitions during a sweep so the page
   beneath snaps atomically. **Keep the VT mask rules UNPREFIXED** — adding `-webkit-mask-*`
   aliases beside them silently kills the keyframe interpolation in Chromium (cost a debug ladder;
-  comment in the CSS). Sweep CSS/JS hand-synced across index + gallery + legal.
+  comment in the CSS). **The day direction runs its OWN reversed keyframes (`dusk-sweep-back`,
+  0%→100%)**: the mirrored `-105deg` gradient carries its black head at the mask's other end, so
+  sharing the night keyframes plays the wipe BACKWARDS — day flashes in at t=0, night re-covers
+  it, hard pop at the end (shipped broken 2026-07-05, user-caught). **Testing rule: a single
+  mid-sweep screenshot cannot catch a reversed wipe** (the still looks identical either way) —
+  verify direction with a frame BURST + left/right luminance strips and assert monotonic
+  progression (probe pattern in the session notes). Sweep CSS/JS hand-synced across index +
+  gallery + legal.
   (R2) **Hold-to-preview** — `[data-hold]` paired views (currently the two pause plates) show the
   *opposite* hour while pressed: touch still-hold (200ms, >10px movement = scroll → cancels),
   mouse-hold, or holding Space/Enter (focusable, role=button). Placeholders flip their frame
