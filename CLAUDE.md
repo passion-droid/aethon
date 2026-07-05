@@ -392,10 +392,11 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   subset, OFL, ~2.6KB) is declared into the Spectral stack via `unicode-range` for Αἴθων.
 - **mail@aethon.house — LIVE (2026-07-03).** Cloudflare Email Routing forwards to the owner's
   Outlook inbox (inbound only — replies still show the outlook address until a real mailbox on the
-  domain exists). The site now uses mail@aethon.house everywhere: legal imprint + rights section,
-  and an *Enquiries* row in the colophon
-  (resolves JRN-4/C-11). **Owner: NO address beneath the register form** — the form area stays
-  form-only. Never publish the outlook.com address again.
+  domain exists). The address lives ONLY on `/legal/`
+  (imprint + rights) — the *Enquiries* row in the In-brief colophon (once added for JRN-4/C-11)
+  was **removed by the owner 2026-07-05**: the homepage is address-free by choice; don't re-add
+  the email anywhere on the homepage unprompted. **Owner: NO address beneath the register form**
+  — the form area stays form-only. Never publish the outlook.com address again.
 - **Meta rules from the audit:** subpage titles carry the "AETHON House" lockup; `lang="en-GB"`
   on all four pages; "Faros Beach" capitalised in meta; `data-nosnippet` stays on the WIP card.
 - **Signage = REV B (2026-07-04, owner-requested):** the print set is **monochrome** (B&W;
@@ -421,9 +422,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   like bugs that aren't — wait the transition out. And in Bash heredocs: an UNQUOTED
   delimiter (needed for $VAR expansion) lets backticks run as command substitution and
   silently eat content — pass values via environment (`WT="$WT" python3 - <<'EOF'`) and keep
-  the delimiter quoted.
-- **Owner-side micro-todo:** glance at the landscape overlay menu once on a real iPhone
-  (Chromium emulation is green; real iOS Safari unverified).
+  the delimiter quoted. And the container's system `cryptography` package is broken (cffi
+  backend panic), which kills `pypdf` on import — verify PDF link annotations by scanning the
+  raw bytes for `/URI (…)` (or via pypdfium2), not with pypdf.
+- **Owner-side micro-todo:** on a real iPhone, glance at (a) the landscape overlay menu and
+  (b) the new dusk sweep + hold-to-preview (Chromium emulation is green everywhere; real iOS
+  Safari unverified — Safari 18+ should run the sweep, older falls back to the plain crossfade).
 - ~~Still open from the audit~~ **The audit is fully closed (2026-07-04):** every group-B and
   group-C item is decided and shipped (see the walkthrough block above + the memo's checkboxes).
   The only audit artefact still live is the **photography-day launch checklist** (strip
