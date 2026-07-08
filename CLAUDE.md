@@ -399,18 +399,22 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   — the form area stays form-only. Never publish the outlook.com address again.
 - **Meta rules from the audit:** subpage titles carry the "AETHON House" lockup; `lang="en-GB"`
   on all four pages; "Faros Beach" capitalised in meta; `data-nosnippet` stays on the WIP card.
-- **Signage = REV C (2026-07-06, owner-requested):** the entrance plate is now a **PORTRAIT honed
-  marble tile 450 × 600 × 20** (was 600 × 400 landscape in REV B) — wordmark stays 70% of plate
-  width (315 → **cap 52 mm**, auto-recomputed from the brand-vector flat caps), URL scaled with it,
-  the 132 QR keeps its readability size and sits low (setting-out: tile top ≈ 1630–1650 AFL →
-  wordmark centre ≈ 1480–1500, QR centre ≈ 1140–1160). **Artwork rule now explicit on the sheet
-  (owner):** the carved wordmark comes **from the logotype FILE (brand vector) — never typeset in
-  the LT Museum font** (keynote 1 + a GENERAL NOTES line say so; the drawing always embedded the
-  logo SVG verbatim — the old callout merely *named* the font, which misleads a mason). REV B
-  keeps: **monochrome print set** (B&W; gilded elements grey + labelled); the **monolith carries
-  the engraved URL + a 132 inset QR plate** (flush enamel/316 — never carved into rough stone).
-  Generator: `scripts/gen-signage-blueprint.py` on main; assets on `internal:docs/signage/`;
-  PDFs printed from the SVGs at 1320×980 via headless Chromium.
+- **Signage = REV D (2026-07-08, owner-requested):** the entrance plate is a **LANDSCAPE honed
+  marble tile 600 × 450 × 20** (REV C's brief portrait 450 × 600 was corrected by the owner the
+  same week — the plate is landscape). **All dims are plain mm for the stonemason — no typographic
+  jargon:** the wordmark carries width + height dims (**420 × 97**; keynote adds "letters 69
+  high" — the word "cap" is banned from the sheets), the monolith's wordmark is dimensioned
+  **400 × 93** (letters 66 — REV C had inherited a WRONG "cap height 180" callout), and **both QR
+  plates grew to 150 × 150** (spec: ≈118 code in a 150 tile, quiet zone ≥ 4 modules). The
+  monolith's section panel now shows **both cuts: the V-incision AND the routed QR pocket**
+  (plate flush, ≈6 recess). Setting-out (entrance): tile top ≈ 1600–1620 AFL → wordmark centre
+  ≈ 1480–1500, QR centre ≈ 1260–1280. **Artwork rule stays explicit on the sheet:** the carved
+  wordmark comes **from the logotype FILE (brand vector) — never typeset in the LT Museum font**.
+  REV B keeps: **monochrome print set**; monolith carries the engraved URL + inset QR (flush
+  enamel/316 — never carved into rough stone). Generator: `scripts/gen-signage-blueprint.py` on
+  main; assets on `internal:docs/signage/`; PDFs printed from the SVGs at 1320×980 via headless
+  Chromium. **Learned: leader/caption collisions only show in the RENDER — always rasterize both
+  sheets and look before shipping** (two text overlaps caught this way in REV D).
 - **First search/traffic traction (baseline, 2026-07-03 pull):** GSC — homepage 1 click /
   14 impressions / avg position **6.1** (was pos 27 a week earlier); Cloudflare Web Analytics —
   ~60 visits / 90 views per 28 days, CY + US. Owner's WhatsApp share test passed (link previews

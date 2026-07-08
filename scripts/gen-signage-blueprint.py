@@ -169,7 +169,7 @@ def titleblock(x,y,w, sheet, title, legend, h=152):
     s+=txt(rx,y+82,"STATUS — design study",10,INK,weight="700",ls="0.3")
     s+=txt(rx,y+95,"for fabrication · verify on site",9.5,MUTE)
     s+=txt(rx,y+118,"DATE 2026-07",10,INK,weight="600")
-    s+=txt(rx,y+131,"REV C · entrance plate 450 × 600 portrait · monochrome · not for structural use",9.5,MUTE)
+    s+=txt(rx,y+131,"REV D · plate 600 × 450 · QR 150 · dims in mm · not for structural use",9.5,MUTE)
     return s
 
 def note_block(x,y,title,lines):
@@ -205,32 +205,31 @@ def build_sheet1():
     W,H=1320,980; b=[]
     b.append(rect(22,22,W-44,H-44,"none",RULE,1.4)); b.append(rect(28,28,W-56,H-56,"none",MUTE,0.6))
     b.append(txt(54,66,"ENTRANCE THRESHOLD MARKER",25,INK,weight="700",ls="0.8"))
-    b.append(txt(54,90,"Honed marble tile 450 × 600 × 20 (portrait) · carved wordmark · gilded dot · inset QR",12.5,MUTE,ls="0.3"))
+    b.append(txt(54,90,"Honed marble tile 600 × 450 × 20 · carved wordmark · gilded dot · inset QR plate 150",12.5,MUTE,ls="0.3"))
     b.append(line(54,104,W-54,104,RULE,0.8))
 
     # ---- 1 · FRONT ELEVATION (1:1) ----
-    # 45 × 60 cm portrait tile (owner 2026-07): wordmark 70% of width (as before → 315),
-    # everything scaled with it; QR keeps its readability size (132) and sits low for scan height.
-    px,py,pw,ph=120,150,450,600
+    # 60 × 45 cm landscape tile (owner 2026-07-08); all dims plain mm for the mason.
+    px,py,pw,ph=120,170,600,450
     b.append(txt(px,py-16,"1 — FRONT ELEVATION   (1:1)",12,OLIVE,weight="700",ls="1"))
     b.append(rect(px,py,pw,ph,TRAV,RULE,1.5))
     cs=26
     b.append(f'<rect x="{px+cs}" y="{py+cs}" width="{pw-2*cs}" height="{ph-2*cs}" fill="none" stroke="{OLIVE}" stroke-width="0.7" stroke-dasharray="4 4"/>')
-    ww=315; wx=px+(pw-ww)/2; wy=py+110
+    ww=420; wx=px+(pw-ww)/2; wy=py+60
     g,gw,gh=wordmark(wx,wy,ww); b.append(g)
-    # cap-height dim — flat caps E/T/H/N span y 23.35–83.66 in the 366.78-wide brand vector
-    # (the O overshoots; measured via getBBox) -> 60.31 units = 52 mm at the 315 wordmark
-    _s=ww/WORD_W; capT=wy+23.35*_s; capB=wy+83.66*_s
-    b.append(dim_v(capT,capB,wx+ww+26,f"cap {round(60.31*_s)}",ext_to=wx+ww,side="right"))
+    # wordmark measured in plain mm: overall artwork 420 wide × 97 high (the letter band
+    # itself is 69 high — flat caps measured from the brand vector; the dot sits above)
+    b.append(dim_h(wx,wx+ww,wy-14,"420",ext_to=wy))
+    b.append(dim_v(wy,wy+gh,wx+ww+26,f"{round(gh)}",ext_to=wx+ww,side="right"))
     uy=wy+gh+44
-    b.append(txt(px+pw/2,uy,"aethon.house",18,INK,"middle",weight="500",ff="Georgia,'Times New Roman',serif",ls="0.8"))
-    tile=132; tx=px+(pw-tile)/2; ty=py+ph-40-tile
+    b.append(txt(px+pw/2,uy,"aethon.house",24,INK,"middle",weight="500",ff="Georgia,'Times New Roman',serif",ls="1"))
+    tile=150; tx=px+(pw-tile)/2; ty=py+ph-36-tile
     b.append(rect(tx,ty,tile,tile,"#FFFFFF",ENAMEL,1.2))
     qs,_=qr_svg_modules(tx,ty,tile*N/(N+8),dark=INK,light="#FFFFFF",logo=True); b.append(qs)
     # dims
-    b.append(dim_h(px,px+pw,py+ph+46,"450",ext_to=py+ph))
-    b.append(dim_v(py,py+ph,px-46,"600",ext_to=px))
-    b.append(dim_h(tx,tx+tile,ty-12,"132",ext_to=ty))
+    b.append(dim_h(px,px+pw,py+ph+46,"600",ext_to=py+ph))
+    b.append(dim_v(py,py+ph,px-46,"450",ext_to=px))
+    b.append(dim_h(tx,tx+tile,ty-12,"150",ext_to=ty))
     # keynote bubbles on the drawing (legend lower-right)
     dotx=wx+ww*0.749; doty=wy+gh*0.076
     b.append(line(dotx,doty,dotx,py+12,GOLD,0.9)); b.append(keynote(dotx,py+4,2))
@@ -259,7 +258,7 @@ def build_sheet1():
     b.append(rect(pcx-pw2/2,byy,pw2,pd,PAPER,INK,1.2)); b.append(rect(pcx-pw2/2,byy,pw2,7,ENAMEL,INK,1.0))
     b.append(line(bx,byy,bx+bw,byy,INK,1.6))
     b.append(dim_v(byy,byy+pd,bx-12,"~6",ext_to=pcx-pw2/2,side="left"))
-    b.append(txt(bx,byy+bh+20,"(b) QR plate flush in routed pocket · sealed · swappable",10.6,INK,ls="0.05"))
+    b.append(txt(bx,byy+bh+20,"(b) QR plate 150 flush in routed pocket · sealed",10.6,INK,ls="0.05"))
 
     # ---- 3 · QR SPECIFICATION ----
     qy=382
@@ -269,7 +268,7 @@ def build_sheet1():
     specs=[("Links to","aethon.house · verified scannable"),
            ("Error corr.","Level H (30%) — survives weather / grime"),
            ("Centre","AETHON 'A' · ≤ 20% of area"),
-           ("Code / tile","≥ 90 code · 132 tile · quiet zone ≥ 4 modules"),
+           ("Code / tile","150 tile · ≈ 118 code · quiet zone ≥ 4 modules"),
            ("Finish","matte, dark-on-pale, anti-glare — never gloss"),
            ("Execution","porcelain-enamel OR etched 316 stainless, flush")]
     ly=qy+30
@@ -279,25 +278,25 @@ def build_sheet1():
 
     # ---- keynotes legend (right column, below spec) ----
     b.append(keylegend(sx, qy+qsz+40, [
-        (1,"Carved wordmark","from the logotype FILE (brand vector) — never typeset · V-cut · bare · cap 52"),
+        (1,"Carved wordmark","from the logotype FILE (brand vector) — never typeset · V-cut · bare · letters 69 high"),
         (2,"Gild this dot only","23.5ct gold leaf — the single gold accent"),
         (3,"Engraved URL","'aethon.house' — permanent (a link never ages)"),
         (4,"Inset QR plate","see panel 3 · matte · replaceable"),
-        (5,"Honed marble tile","450 × 600 × 20 portrait · matte · sealed · shelter from spray"),
+        (5,"Honed marble tile","600 × 450 × 20 · matte · sealed · shelter from spray"),
         (6,"Clear space","≥ 2X around the lock-up (1X = gold-dot diameter)")]))
 
     # ---- general notes (lower-left) ----
-    b.append(note_block(120,822,"GENERAL NOTES",[
+    b.append(note_block(120,700,"GENERAL NOTES",[
         "Artwork: carve from the supplied logotype vector (the logo file) — never re-set in the font.",
         "Lettering: hand-carved V-incision preferred (CNC acceptable); letters left bare.",
         "Lighting: warm 2700–3000K grazing from one side; a tight glint on the dot. Never cool / blue.",
         "Fixing: full-bed adhesive + concealed 316 pins sized to the 20 thick tile; verify substrate.",
-        "Setting-out: tile top ≈ 1630–1650 AFL → wordmark centre ≈ 1480–1500; QR centre ≈ 1140–1160.",
+        "Setting-out: tile top ≈ 1600–1620 AFL → wordmark centre ≈ 1480–1500; QR centre ≈ 1260–1280.",
         "Sign-off: cut a stone sample (two letters + gilded dot) and scan-test the QR in sun and dusk."]))
 
     b.append(titleblock(740,H-180,540,"Sheet 1 of 2  ·  ENTRANCE THRESHOLD MARKER",
         "AETHON · ENTRANCE PLATE",
-        [(TRAV,"Honed marble — tile 450 × 600 × 20"),(GOLD,"23.5ct gold leaf — dot only"),
+        [(TRAV,"Honed marble — tile 600 × 450 × 20"),(GOLD,"23.5ct gold leaf — dot only"),
          (ENAMEL,"Enamel / etched 316 stainless — QR tile"),(INK,"V-cut incision — bare letters")]))
     return svg_doc(W,H,"".join(b))
 
@@ -320,18 +319,18 @@ def build_sheet2():
     # dressed inscription panel
     panW=mw*0.78; panH=mh*0.42; panx=gx-panW/2; pany=my+mh*0.20
     b.append(rect(panx,pany,panW,panH,"#F7F7F7",RULE,1))
-    gw_=panW*0.86; gx0=gx-gw_/2; gy0=pany+panH*0.12
+    gw_=400*s; gx0=gx-gw_/2; gy0=pany+panH*0.12   # wordmark 400 mm wide on the stone
     gmark,gww,ghh=wordmark(gx0,gy0,gw_,fill=INK,dot=INK)   # mono: bare deep-cut, dot bare too on the monolith
     b.append(gmark)
     # engraved URL beneath the wordmark (a link never ages)
     uy2=gy0+ghh+26
     b.append(txt(gx,uy2,"aethon.house",15,INK,"middle",weight="500",ff="Georgia,'Times New Roman',serif",ls="0.8"))
     # inset QR plate (matte enamel / etched 316, flush) — spec as Sheet 1, panel 3
-    qtile=132*s; qtx=gx-qtile/2; qty=pany+panH-16-qtile
+    qtile=150*s; qtx=gx-qtile/2; qty=pany+panH-16-qtile
     b.append(rect(qtx,qty,qtile,qtile,"#FFFFFF",ENAMEL,1.1))
     qmods,_=qr_svg_modules(qtx,qty,qtile*N/(N+8),dark=INK,light="#FFFFFF",logo=True)
     b.append(qmods)
-    b.append(dim_h(qtx,qtx+qtile,qty-8,"132",ext_to=qty))
+    b.append(dim_h(qtx,qtx+qtile,qty-8,"150",ext_to=qty))
     # ground + foundation
     b.append(line(mx-90,grdY,gx+mw,grdY,INK,1.8))
     for i in range(int((mw+180)//12)):
@@ -348,25 +347,31 @@ def build_sheet2():
     b.append(dim_v(my,grdY,mx-70,"1100",ext_to=mx))
     b.append(dim_v(grdY,grdY+emb,mx-70,"300",ext_to=mx-18,side="left"))
     b.append(dim_h(mx,mx+mw,grdY+emb+44,"600",ext_to=grdY+emb))
-    b.append(dim_v(gy0,gy0+ghh,gx+mw/2+20,"180",ext_to=gx0+gw_,side="right"))
-    b.append(leader(gx,gy0+ghh*0.5,gx+mw/2+150,my+120,"AETHON deep-cut",["cap height 180 · depth 15","bare — reads by shadow only"]))
+    b.append(dim_h(gx0,gx0+gw_,gy0-10,"400",ext_to=gy0))
+    b.append(dim_v(gy0,gy0+ghh,gx+mw/2+20,"93",ext_to=gx0+gw_,side="right"))
+    b.append(leader(gx,gy0+ghh*0.5,gx+mw/2+150,my+120,"AETHON deep-cut",["letters 66 high · cut 15 deep","bare — reads by shadow only"]))
     b.append(leader(panx+panW,pany+panH*0.5,gx+mw/2+150,my+210,"Dressed inscription panel",["honed face within a","split / rock-face surround"]))
     b.append(leader(mx+mw*0.5,my+30,gx+mw/2+150,my+30,"Natural riven top",["sandstone, left rough"]))
-    b.append(leader(gx+22,uy2-5,gx+mw/2+150,my+300,"Engraved URL",["'aethon.house' · V-cut ~35 cap","bare — permanent"]))
-    b.append(leader(qtx+qtile,qty+qtile*0.5,gx+mw/2+150,my+382,"Inset QR plate 132",["matte enamel / etched 316, flush","spec + centre 'A': Sheet 1, panel 3"]))
+    b.append(leader(gx+22,uy2-5,gx+mw/2+150,my+300,"Engraved URL",["'aethon.house' · letters ~35 high · V-cut","bare — permanent"]))
+    b.append(leader(qtx+qtile,qty+qtile*0.5,gx+mw/2+150,my+382,"Inset QR plate 150",["matte enamel / etched 316, flush","spec + centre 'A': Sheet 1, panel 3"]))
 
     # ---- 2 · SECTION (2:1) ----
     sx=W-540; sy=200
-    b.append(txt(sx,sy-14,"2 — LETTER SECTION   (2:1)",12,OLIVE,weight="700",ls="1"))
+    b.append(txt(sx,sy-14,"2 — SECTIONS   (2:1)",12,OLIVE,weight="700",ls="1"))
     ax,ay,aw,ah=sx,sy,300,150
     b.append(rect(ax,ay,aw,ah,SAND,RULE,1.3))
     b.append(f'<rect x="{ax}" y="{ay}" width="{aw}" height="{ah}" fill="url(#hatchS)"/>')
     b.append(line(ax,ay,ax+aw,ay,INK,1.6))
-    vcx=ax+150; vw=44; vd=30
+    vcx=ax+90; vw=44; vd=30
     b.append(f'<path d="M{vcx-vw/2},{ay} L{vcx},{ay+vd} L{vcx+vw/2},{ay} Z" fill="{PAPER}" stroke="{INK}" stroke-width="1.4"/>')
     b.append(dim_v(ay,ay+vd,ax-14,"15",ext_to=vcx-vw/2,side="left"))
-    b.append(txt(ax,ay+ah+24,"Deep V-incision 60° · 15 deep · NO infill.",11.5,INK,ls="0.2"))
-    b.append(txt(ax,ay+ah+40,"Soft stone: cut deep; edges round gracefully with the coast.",11,MUTE,ls="0.2"))
+    # (b) the QR pocket in the same dressed face: routed recess, plate sits flush
+    pkx=ax+178; pkw=94; pkd=12
+    b.append(rect(pkx,ay,pkw,pkd,PAPER,INK,1.2))
+    b.append(rect(pkx,ay,pkw,7,ENAMEL,INK,1.0))
+    b.append(dim_v(ay,ay+pkd,ax+aw+14,"~6",ext_to=pkx+pkw,side="right"))
+    b.append(txt(ax,ay+ah+24,"(a) deep V-cut 60° · 15 deep · bare (no infill) — edges round gracefully with the coast.",10.8,INK,ls="0.05"))
+    b.append(txt(ax,ay+ah+40,"(b) QR pocket: routed ≈ 6 · 150 plate flush (enamel / etched 316) · sealed · swappable.",10.8,INK,ls="0.05"))
 
     # ---- notes ----
     b.append(note_block(W-540,430,"GENERAL NOTES",[
