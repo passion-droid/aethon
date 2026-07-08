@@ -399,14 +399,18 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   — the form area stays form-only. Never publish the outlook.com address again.
 - **Meta rules from the audit:** subpage titles carry the "AETHON House" lockup; `lang="en-GB"`
   on all four pages; "Faros Beach" capitalised in meta; `data-nosnippet` stays on the WIP card.
-- **Signage = REV B (2026-07-04, owner-requested):** the print set is **monochrome** (B&W;
-  greys for annotation; gilded elements grey + labelled); the entrance plate is a **honed marble
-  tile 600 × 400 × 20** with a **cap-height dim (69 mm** at the 420 wordmark — flat caps measured
-  from the brand vector; recomputes if the wordmark width changes); the **monolith now carries the
-  engraved URL + a 132 inset QR plate** (flush enamel/316 in the dressed panel — never carved into
-  rough stone). Generator: `scripts/gen-signage-blueprint.py` on main (a QR centre-logo y-position
-  bug was fixed there); assets on `internal:docs/signage/`; PDFs printed from the SVGs at
-  1320×980 via headless Chromium.
+- **Signage = REV C (2026-07-06, owner-requested):** the entrance plate is now a **PORTRAIT honed
+  marble tile 450 × 600 × 20** (was 600 × 400 landscape in REV B) — wordmark stays 70% of plate
+  width (315 → **cap 52 mm**, auto-recomputed from the brand-vector flat caps), URL scaled with it,
+  the 132 QR keeps its readability size and sits low (setting-out: tile top ≈ 1630–1650 AFL →
+  wordmark centre ≈ 1480–1500, QR centre ≈ 1140–1160). **Artwork rule now explicit on the sheet
+  (owner):** the carved wordmark comes **from the logotype FILE (brand vector) — never typeset in
+  the LT Museum font** (keynote 1 + a GENERAL NOTES line say so; the drawing always embedded the
+  logo SVG verbatim — the old callout merely *named* the font, which misleads a mason). REV B
+  keeps: **monochrome print set** (B&W; gilded elements grey + labelled); the **monolith carries
+  the engraved URL + a 132 inset QR plate** (flush enamel/316 — never carved into rough stone).
+  Generator: `scripts/gen-signage-blueprint.py` on main; assets on `internal:docs/signage/`;
+  PDFs printed from the SVGs at 1320×980 via headless Chromium.
 - **First search/traffic traction (baseline, 2026-07-03 pull):** GSC — homepage 1 click /
   14 impressions / avg position **6.1** (was pos 27 a week earlier); Cloudflare Web Analytics —
   ~60 visits / 90 views per 28 days, CY + US. Owner's WhatsApp share test passed (link previews

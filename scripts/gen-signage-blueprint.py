@@ -169,7 +169,7 @@ def titleblock(x,y,w, sheet, title, legend, h=152):
     s+=txt(rx,y+82,"STATUS — design study",10,INK,weight="700",ls="0.3")
     s+=txt(rx,y+95,"for fabrication · verify on site",9.5,MUTE)
     s+=txt(rx,y+118,"DATE 2026-07",10,INK,weight="600")
-    s+=txt(rx,y+131,"REV B · monochrome print set · not for structural use",9.5,MUTE)
+    s+=txt(rx,y+131,"REV C · entrance plate 450 × 600 portrait · monochrome · not for structural use",9.5,MUTE)
     return s
 
 def note_block(x,y,title,lines):
@@ -205,29 +205,31 @@ def build_sheet1():
     W,H=1320,980; b=[]
     b.append(rect(22,22,W-44,H-44,"none",RULE,1.4)); b.append(rect(28,28,W-56,H-56,"none",MUTE,0.6))
     b.append(txt(54,66,"ENTRANCE THRESHOLD MARKER",25,INK,weight="700",ls="0.8"))
-    b.append(txt(54,90,"Honed marble tile 600 × 400 × 20 · carved wordmark · gilded dot · inset QR",12.5,MUTE,ls="0.3"))
+    b.append(txt(54,90,"Honed marble tile 450 × 600 × 20 (portrait) · carved wordmark · gilded dot · inset QR",12.5,MUTE,ls="0.3"))
     b.append(line(54,104,W-54,104,RULE,0.8))
 
     # ---- 1 · FRONT ELEVATION (1:1) ----
-    px,py,pw,ph=120,200,600,400
+    # 45 × 60 cm portrait tile (owner 2026-07): wordmark 70% of width (as before → 315),
+    # everything scaled with it; QR keeps its readability size (132) and sits low for scan height.
+    px,py,pw,ph=120,150,450,600
     b.append(txt(px,py-16,"1 — FRONT ELEVATION   (1:1)",12,OLIVE,weight="700",ls="1"))
     b.append(rect(px,py,pw,ph,TRAV,RULE,1.5))
     cs=26
     b.append(f'<rect x="{px+cs}" y="{py+cs}" width="{pw-2*cs}" height="{ph-2*cs}" fill="none" stroke="{OLIVE}" stroke-width="0.7" stroke-dasharray="4 4"/>')
-    ww=420; wx=px+(pw-ww)/2; wy=py+50
+    ww=315; wx=px+(pw-ww)/2; wy=py+110
     g,gw,gh=wordmark(wx,wy,ww); b.append(g)
     # cap-height dim — flat caps E/T/H/N span y 23.35–83.66 in the 366.78-wide brand vector
-    # (the O overshoots; measured via getBBox) -> 60.31 units = 69 mm at the 420 wordmark
+    # (the O overshoots; measured via getBBox) -> 60.31 units = 52 mm at the 315 wordmark
     _s=ww/WORD_W; capT=wy+23.35*_s; capB=wy+83.66*_s
     b.append(dim_v(capT,capB,wx+ww+26,f"cap {round(60.31*_s)}",ext_to=wx+ww,side="right"))
     uy=wy+gh+44
-    b.append(txt(px+pw/2,uy,"aethon.house",24,INK,"middle",weight="500",ff="Georgia,'Times New Roman',serif",ls="1"))
-    tile=132; tx=px+(pw-tile)/2; ty=py+ph-32-tile
+    b.append(txt(px+pw/2,uy,"aethon.house",18,INK,"middle",weight="500",ff="Georgia,'Times New Roman',serif",ls="0.8"))
+    tile=132; tx=px+(pw-tile)/2; ty=py+ph-40-tile
     b.append(rect(tx,ty,tile,tile,"#FFFFFF",ENAMEL,1.2))
     qs,_=qr_svg_modules(tx,ty,tile*N/(N+8),dark=INK,light="#FFFFFF",logo=True); b.append(qs)
     # dims
-    b.append(dim_h(px,px+pw,py+ph+46,"600",ext_to=py+ph))
-    b.append(dim_v(py,py+ph,px-46,"400",ext_to=px))
+    b.append(dim_h(px,px+pw,py+ph+46,"450",ext_to=py+ph))
+    b.append(dim_v(py,py+ph,px-46,"600",ext_to=px))
     b.append(dim_h(tx,tx+tile,ty-12,"132",ext_to=ty))
     # keynote bubbles on the drawing (legend lower-right)
     dotx=wx+ww*0.749; doty=wy+gh*0.076
@@ -277,24 +279,25 @@ def build_sheet1():
 
     # ---- keynotes legend (right column, below spec) ----
     b.append(keylegend(sx, qy+qsz+40, [
-        (1,"Carved wordmark","LT Museum (brand vector) · V-cut · bare · cap height 69"),
+        (1,"Carved wordmark","from the logotype FILE (brand vector) — never typeset · V-cut · bare · cap 52"),
         (2,"Gild this dot only","23.5ct gold leaf — the single gold accent"),
         (3,"Engraved URL","'aethon.house' — permanent (a link never ages)"),
         (4,"Inset QR plate","see panel 3 · matte · replaceable"),
-        (5,"Honed marble tile","600 × 400 × 20 · matte · sealed · shelter from spray"),
+        (5,"Honed marble tile","450 × 600 × 20 portrait · matte · sealed · shelter from spray"),
         (6,"Clear space","≥ 2X around the lock-up (1X = gold-dot diameter)")]))
 
     # ---- general notes (lower-left) ----
-    b.append(note_block(120,688,"GENERAL NOTES",[
-        "Lettering hand-carved V-incision preferred (CNC acceptable); letters left bare.",
+    b.append(note_block(120,822,"GENERAL NOTES",[
+        "Artwork: carve from the supplied logotype vector (the logo file) — never re-set in the font.",
+        "Lettering: hand-carved V-incision preferred (CNC acceptable); letters left bare.",
         "Lighting: warm 2700–3000K grazing from one side; a tight glint on the dot. Never cool / blue.",
         "Fixing: full-bed adhesive + concealed 316 pins sized to the 20 thick tile; verify substrate.",
-        "Setting-out: wordmark centre-line approx. 1400–1500 AFL; QR centre approx. 1200–1300 AFL.",
+        "Setting-out: tile top ≈ 1630–1650 AFL → wordmark centre ≈ 1480–1500; QR centre ≈ 1140–1160.",
         "Sign-off: cut a stone sample (two letters + gilded dot) and scan-test the QR in sun and dusk."]))
 
     b.append(titleblock(740,H-180,540,"Sheet 1 of 2  ·  ENTRANCE THRESHOLD MARKER",
         "AETHON · ENTRANCE PLATE",
-        [(TRAV,"Honed marble — tile 600 × 400 × 20"),(GOLD,"23.5ct gold leaf — dot only"),
+        [(TRAV,"Honed marble — tile 450 × 600 × 20"),(GOLD,"23.5ct gold leaf — dot only"),
          (ENAMEL,"Enamel / etched 316 stainless — QR tile"),(INK,"V-cut incision — bare letters")]))
     return svg_doc(W,H,"".join(b))
 
