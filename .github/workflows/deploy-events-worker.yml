@@ -19,5 +19,6 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_TAG: ${{ secrets.CF_ACCOUNT_TAG }}
         run: |
+          set -o pipefail   # a failing deploy must fail the run — tee alone would mask it
           bash scripts/deploy-events-worker.sh | tee deploy.log
           { echo '## Events worker deploy'; echo; echo '```'; cat deploy.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

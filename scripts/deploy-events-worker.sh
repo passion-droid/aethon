@@ -34,6 +34,8 @@ else
 fi
 
 # ---- 2 · upload the worker with the KV binding ----------------------------------------
+# NB: the Workers API resolves modules by the multipart part's FILENAME, not the field
+# name — without ;filename=worker.js the upload fails with 10021 'No such module'.
 say "upload worker '${SCRIPT_NAME}'"
 METADATA=$(jq -nc --arg ns "${NS_ID}" '{
   main_module: "worker.js",
@@ -42,7 +44,7 @@ METADATA=$(jq -nc --arg ns "${NS_ID}" '{
 }')
 UPLOAD=$(curl -sS -X PUT "${AUTH[@]}" \
   -F "metadata=${METADATA};type=application/json" \
-  -F "worker.js=@${WORKER_FILE};type=application/javascript+module" \
+  -F "worker.js=@${WORKER_FILE};type=application/javascript+module;filename=worker.js" \
   "${API}/accounts/${ACCT}/workers/scripts/${SCRIPT_NAME}")
 echo "${UPLOAD}" | jq -e '.success' >/dev/null || fail "worker upload failed (need: Workers Scripts:Edit) — $(echo "${UPLOAD}" | jq -c '.errors')"
 say "worker uploaded"
