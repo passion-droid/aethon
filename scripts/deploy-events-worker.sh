@@ -60,16 +60,28 @@ say "zone ${ZONE_ID}"
 # ---- 4 · route upsert: aethon.house/e* -> worker ---------------------------------------
 say "route ${ZONE_NAME}/e*"
 ROUTES=$(curl -sS "${AUTH[@]}" "${API}/zones/${ZONE_ID}/workers/routes")
-echo "${ROUTES}" | jq -e '.success' >/dev/null || fail "cannot list worker routes (need: Workers Routes:Edit) — $(echo "${ROUTES}" | jq -c '.errors')"
-ROUTE_ID=$(echo "${ROUTES}" | jq -r --arg p "${ZONE_NAME}/e*" '.result[] | select(.pattern==$p) | .id' | head -1)
-BODY=$(jq -nc --arg p "${ZONE_NAME}/e*" --arg s "${SCRIPT_NAME}" '{pattern:$p, script:$s}')
-if [ -z "${ROUTE_ID}" ]; then
-  R=$(curl -sS -X POST "${AUTH[@]}" -H 'Content-Type: application/json' -d "${BODY}" "${API}/zones/${ZONE_ID}/workers/routes")
+if echo "${ROUTES}" | jq -e '.success' >/dev/null; then
+  ROUTE_ID=$(echo "${ROUTES}" | jq -r --arg p "${ZONE_NAME}/e*" '.result[] | select(.pattern==$p) | .id' | head -1)
+  BODY=$(jq -nc --arg p "${ZONE_NAME}/e*" --arg s "${SCRIPT_NAME}" '{pattern:$p, script:$s}')
+  if [ -z "${ROUTE_ID}" ]; then
+    R=$(curl -sS -X POST "${AUTH[@]}" -H 'Content-Type: application/json' -d "${BODY}" "${API}/zones/${ZONE_ID}/workers/routes")
+  else
+    R=$(curl -sS -X PUT  "${AUTH[@]}" -H 'Content-Type: application/json' -d "${BODY}" "${API}/zones/${ZONE_ID}/workers/routes/${ROUTE_ID}")
+  fi
+  echo "${R}" | jq -e '.success' >/dev/null || fail "route upsert failed (need: Zone → Workers Routes → Edit) — $(echo "${R}" | jq -c '.errors')"
+  say "route active (managed via API)"
 else
-  R=$(curl -sS -X PUT  "${AUTH[@]}" -H 'Content-Type: application/json' -d "${BODY}" "${API}/zones/${ZONE_ID}/workers/routes/${ROUTE_ID}")
+  # Token cannot manage routes. If the route already exists (e.g. created once by hand in
+  # the dashboard: zone aethon.house → Workers Routes → aethon.house/e* → aethon-events),
+  # the worker still answers 204 on /e — verify live and accept that as success.
+  say "no route permission on the token — probing whether the route exists anyway"
+  PROBE=$(curl -sS -o /dev/null -w '%{http_code}' "https://${ZONE_NAME}/e?n=probe" -H 'User-Agent: Mozilla/5.0 (deploy-verify)') || PROBE="curl-error"
+  if [ "${PROBE}" = "204" ]; then
+    say "route exists and answers 204 — fine (unmanaged by this token)"
+  else
+    fail "cannot list worker routes AND /e does not answer 204 (got ${PROBE}). Either grant the token 'Zone → Workers Routes → Edit' for ${ZONE_NAME}, or create the route once by hand: dashboard → ${ZONE_NAME} → Workers Routes → add route 'aethon.house/e*' → worker 'aethon-events'."
+  fi
 fi
-echo "${R}" | jq -e '.success' >/dev/null || fail "route upsert failed (need: Workers Routes:Edit) — $(echo "${R}" | jq -c '.errors')"
-say "route active"
 
 # ---- 5 · verify ------------------------------------------------------------------------
 say "verify: beacon through the live route"
