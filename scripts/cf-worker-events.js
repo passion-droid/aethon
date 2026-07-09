@@ -33,9 +33,16 @@ export default {
     if (!url.pathname.startsWith('/e')) return new Response(null, { status: 404 });
     const name = url.searchParams.get('n') || '';
     const optedOut = request.headers.get('DNT') === '1' || request.headers.get('Sec-GPC') === '1';
+    const day = new Date().toISOString().slice(0, 10);
+    // diagnostic heartbeat: counts that the route delivered ANY request to this worker —
+    // one anonymous number per day, no name, no visitor data. Separates "route not wired"
+    // from "beacon suppressed" when debugging; ignore it in reports.
+    try {
+      const h = parseInt((await env.EVENTS.get(`_hits:${day}`)) || '0', 10);
+      await env.EVENTS.put(`_hits:${day}`, String(h + 1), { expirationTtl: 60 * 60 * 24 * 60 });
+    } catch (e) {}
     if (ALLOW.has(name) && !optedOut) {
-      const day = new Date().toISOString().slice(0, 10); // UTC day buckets
-      const key = `${name}:${day}`;
+      const key = `${name}:${day}`; // UTC day buckets
       const current = parseInt((await env.EVENTS.get(key)) || '0', 10);
       // keep ~13 months, then buckets age out on their own
       await env.EVENTS.put(key, String(current + 1), { expirationTtl: 60 * 60 * 24 * 400 });
