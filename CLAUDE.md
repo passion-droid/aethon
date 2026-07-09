@@ -354,8 +354,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   the KV buckets via `CLOUDFLARE_API_TOKEN` (owner extended the token 2026-07-09: Workers
   Scripts:Edit, KV Storage:Edit, Zone:Read, Workers Routes:Edit). **Deploy:**
   `deploy-events-worker.yml` (workflow_dispatch) → `scripts/deploy-events-worker.sh` — idempotent
-  (namespace create-or-get, module upload with KV binding, route upsert, live verify; on failure
-  it names the missing token permission). Legal's hosting paragraph now discloses the counters +
+  (namespace create-or-get, module upload with KV binding; on failure it names the missing token
+  permission). **The route `aethon.house/e*` is OWNER-MANAGED** (created by hand in the dashboard
+  2026-07-09 after the token's route permission couldn't be located; the script treats a missing
+  route permission as fine and only requires the worker upload). **Verification path:** curl/
+  headless probes CANNOT reach aethon.house — the zone's bot protection 403s non-browser clients
+  before the worker, and this session's egress proxy blocks the domain entirely
+  (ERR_TUNNEL_CONNECTION_FAILED) — so the factual end-to-end check is: real visitor (or owner's
+  phone) fires events → `seo-insights.yml` reads the KV counters into the report. Legal's hosting paragraph now discloses the counters +
   DNT/GPC (counsel batch re-checks wording). Verified by a **21-check Playwright matrix**
   (route-intercepted beacons: via count + URL strip, full chapter-scroll set, afterglow
   once-per-visit chosen vs auto, hold, DNT ⇒ zero beacons, form start/submit through native
