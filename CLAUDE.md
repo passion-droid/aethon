@@ -281,13 +281,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   reads close to coastal-sandstone, so it sits in the stone palette). Brand palette **gold
   `#C1A152` · olive `#4C5039` · warm black `#222216`** (+ 60/20% tints) recorded for future use.
   Masters (`.ttf`, source SVGs, the raw favicon) aren't committed — only the served assets are.
-- **`og:image` / `twitter:image`: open (todo).** Still **no social-share image** — **awaiting
-  photography** (needs a 1200×630 master, warm/afterglow register, never blue; run through the
-  image pipeline). Both tags are **pre-wired as comments** in `index.html` (with `og:image:alt`
-  + `og:image:width/height`): drop the photo at `/images/og.jpg` and uncomment to activate. Until
-  then shared links show text only (no image) — this is the one preview gap that's asset-blocked.
-  **Interim option now available:** with the brand assets shipped, a **branded** `og:image` (the
-  AETHON logo on warm stone / afterglow, 1200×630) could fill the gap before the photo shoot.
+- **`og:image` / `twitter:image`: INTERIM LIVE (2026-07-09).** The branded master is live at
+  `/images/og.jpg` (1200×630, ~22KB progressive JPEG): **logo-white with the gold dot on warm
+  dark stone, the afterglow glow upper-right** — warm, never blue; reads at thumbnail size
+  (WhatsApp-checked at 400px). All five metas are active in `index.html` (og:image + dims + alt,
+  twitter:image + alt); the alt text stays as pre-written. **When photography lands, replace the
+  FILE at the same path** (same dims, warm/afterglow register) — no meta edits needed. Master
+  recipe: scratch HTML (night tokens + logo-white) → Playwright screenshot → JPEG q88.
 - **SEO / meta pass — done (PR #39; title refined #49).** The meta/OG **descriptions** carry the
   searchable terms (seafront residence · Paphos, Cyprus · Faros beach, "a sanctuary…"); the
   **site name** (`og:site_name` + `WebSite` JSON-LD `name`) is the poetic lockup **"AETHON ·
@@ -416,10 +416,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   main; assets on `internal:docs/signage/`; PDFs printed from the SVGs at 1320×980 via headless
   Chromium. **Learned: leader/caption collisions only show in the RENDER — always rasterize both
   sheets and look before shipping** (two text overlaps caught this way in REV D).
-- **First search/traffic traction (baseline, 2026-07-03 pull):** GSC — homepage 1 click /
-  14 impressions / avg position **6.1** (was pos 27 a week earlier); Cloudflare Web Analytics —
-  ~60 visits / 90 views per 28 days, CY + US. Owner's WhatsApp share test passed (link previews
-  render — preview scrapers are not bot-blocked).
+- **Search/traffic traction (2026-07-09 pull; baseline 07-03 in parens):** GSC — query
+  **"aethon" at position 1.1** (9 impressions, CTR 11%; site avg 6.5 across 17 impressions —
+  dragged by stray queries; was pos 27 mid-June, 6.1 on 07-03). Cloudflare — **90 visits /
+  150 views per 28d** (~60/90), CY 90 + US 60 views; **/gallery/ 20 views, all via homepage
+  nav** (visitors do descend — quantifies the photography priority). PSI desktop 100×4;
+  **mobile perf 97** — the WIP dialog is the LCP on fresh visits (see photography-day
+  checklist); trigger runs via `seo-insights.yml` workflow_dispatch, read via job logs. Owner's
+  WhatsApp share test passed (preview scrapers are not bot-blocked); shared links now carry the
+  interim branded og:image.
 - **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
   run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
 - **Playwright-testing gotchas (learned the hard way):** plain `window.scrollTo(x,y)` obeys the
@@ -441,7 +446,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   group-C item is decided and shipped (see the walkthrough block above + the memo's checkboxes).
   The only audit artefact still live is the **photography-day launch checklist** (strip
   "forthcoming" labels in the image commit; re-sample text-over-photo contrast per frame; retire
-  the WIP notice; re-check the toggle border over the real hero).
+  the WIP notice; re-check the toggle border over the real hero; **re-run PSI — the mobile 97
+  (2026-07-09) is the WIP dialog itself**: on a fresh visit the dialog body becomes the LCP
+  element (measured via throttled probe — hero-line 696ms without dialog, dialog text re-claims
+  LCP at ~1.3s with it), so retiring the notice should return mobile to ~100).
 
 ## Decided / planned
 - **Floor plans:** a conceptual *Plan* section after *The architecture* — atmospheric,
