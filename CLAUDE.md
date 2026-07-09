@@ -330,9 +330,36 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Analytics — decided: cookieless, no banner (no Google Analytics).** GA4 = personal data to Google
   + cookies → EU consent banner, and re-introduces the visitor-IP-to-Google transfer the self-hosted
   fonts removed. Chosen: **GSC (search) + Cloudflare** (dashboard if the domain is proxied — zero code;
-  else the cookieless Web Analytics beacon). Self-hosted **Umami** is the on-brand step up for on-page
-  events. Owner action + the one-line beacon snippet are in `docs/seo-and-search.md`. **Never add GA
+  else the cookieless Web Analytics beacon). Self-hosted **Umami** was noted as the step up for on-page
+  events — **superseded 2026-07-09 by the first-party events worker (next bullet)**; Umami stays
+  the fallback only if a clickable dashboard is ever wanted. Owner action + the one-line beacon
+  snippet are in `docs/seo-and-search.md`. **Never add GA
   or any cookie-setting analytics without revisiting the consent/no-banner stance.**
+- **On-page events — LIVE (2026-07-09, owner-directed "Eigenbau"):** first-party, anonymous
+  per-day counters via a **Cloudflare Worker** (`aethon-events`, route **`aethon.house/e*`**, KV
+  namespace `aethon_events`) — no third party, no cookies, no IDs/IPs/UAs stored; **DNT + Global
+  Privacy Control honoured on the page AND at the edge**; KV lost-update races (±1) accepted at
+  this scale. **Allowlist (17) in `scripts/cf-worker-events.js`:** `via-gate`/`via-sea`
+  (**dormant** — owner chose PURE stone QR URLs; params remain available for future digital
+  shares), `afterglow`/`afterglow-auto` (chosen vs given — auto = R4 night-at-load without saved
+  pref; chosen = MutationObserver on a later switch into night, once per visit),
+  `hold`, `film-play`+`hero-loop` (pre-registered — wire `window.__aeEv('film-play')` into the
+  media play handlers when footage lands), `ch-place…ch-views` + `reach-register` (chapter reach:
+  IntersectionObserver **threshold 0 + rootMargin '0px 0px -25%'** — ratio thresholds never fire
+  on sections taller than the phone viewport), `form-start`/`form-submit` (sendBeacon survives
+  the Brevo navigation). The beacon IIFE sits in index.html BEFORE the hold module (hold's
+  `engage()` calls `window.__aeEv('hold')`); one count per event per pageview; `?via=` is counted
+  then stripped via `history.replaceState`. **No beacons on gallery/legal** (Cloudflare already
+  counts their views). **Read path:** the fortnightly report — `seo-pull.py pull_events()` reads
+  the KV buckets via `CLOUDFLARE_API_TOKEN` (owner extended the token 2026-07-09: Workers
+  Scripts:Edit, KV Storage:Edit, Zone:Read, Workers Routes:Edit). **Deploy:**
+  `deploy-events-worker.yml` (workflow_dispatch) → `scripts/deploy-events-worker.sh` — idempotent
+  (namespace create-or-get, module upload with KV binding, route upsert, live verify; on failure
+  it names the missing token permission). Legal's hosting paragraph now discloses the counters +
+  DNT/GPC (counsel batch re-checks wording). Verified by a **21-check Playwright matrix**
+  (route-intercepted beacons: via count + URL strip, full chapter-scroll set, afterglow
+  once-per-visit chosen vs auto, hold, DNT ⇒ zero beacons, form start/submit through native
+  submit).
 - **Deep audit — done (PR #34).** Code-only hardening across all three pages: `theme-color`
   follows the Daylight/Afterglow toggle; mobile overlay menu got a focus trap + iOS-safe
   `position:fixed` scroll-lock (wordmark set `inert` too); `<noscript>` `.reveal` fallback;
