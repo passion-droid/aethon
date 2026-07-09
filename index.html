@@ -1398,6 +1398,63 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     });
   })();
 
+  // On-page event counters — anonymous, aggregate, first-party (disclosed in /legal/).
+  // A fire-and-forget beacon to /e?n=<event>; a Cloudflare Worker counts per-day buckets —
+  // no IDs, no cookies, no IPs stored. Honours Do-Not-Track / Global Privacy Control.
+  // Each event counts at most once per pageview; every call is fail-silent.
+  (function(){
+    try{
+      if (navigator.doNotTrack === '1' || window.globalPrivacyControl) return;
+      var sent = {};
+      var ev = window.__aeEv = function(n){
+        if (sent[n]) return; sent[n] = 1;
+        try { navigator.sendBeacon('/e?n=' + n); } catch (e) {}
+      };
+      // channel attribution — dormant while the stone QRs carry the pure URL; the parameter
+      // is stripped from the address bar immediately after counting
+      var via = location.search.match(/[?&]via=(gate|sea)(&|$)/);
+      if (via){
+        ev('via-' + via[1]);
+        try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+      }
+      // the evening, given by the house's hours (R4: night at load without a saved choice)
+      var stored = null; try { stored = localStorage.getItem('aethon-theme'); } catch (e) {}
+      if (document.body.classList.contains('night') && !stored) ev('afterglow-auto');
+      // the evening, chosen — any switch INTO night during this visit
+      var wasNight = document.body.classList.contains('night');
+      new MutationObserver(function(){
+        var night = document.body.classList.contains('night');
+        if (night && !wasNight) ev('afterglow');
+        wasNight = night;
+      }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      // how far the portrait carries — a chapter counts when it enters the upper 75% of the
+      // viewport (threshold 0 + negative bottom margin: tall sections can never reach a
+      // ratio threshold on phones)
+      var chapters = { place: 'ch-place', architecture: 'ch-architecture', plan: 'ch-plan',
+                       garden: 'ch-garden', interior: 'ch-interior', materials: 'ch-materials',
+                       gallery: 'ch-views', interest: 'reach-register' };
+      if ('IntersectionObserver' in window){
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            if (!en.isIntersecting) return;
+            ev(chapters[en.target.id]); io.unobserve(en.target);
+          });
+        }, { threshold: 0, rootMargin: '0px 0px -25% 0px' });
+        Object.keys(chapters).forEach(function(id){
+          var s = document.getElementById(id); if (s) io.observe(s);
+        });
+      }
+      // the ask — begun and completed (sendBeacon survives the form's navigation to Brevo)
+      var form = document.getElementById('register-form');
+      if (form){
+        form.addEventListener('focusin', function(){ ev('form-start'); }, { once: true });
+        form.addEventListener('submit', function(){ ev('form-submit'); });
+      }
+      // 'film-play' / 'hero-loop' are pre-registered in the worker — call
+      // window.__aeEv('film-play') from the media play handlers once real footage lands.
+    } catch (e) {}
+  })();
+
   // Hold to preview the other hour — press-and-hold (touch/mouse) or hold Space/Enter on a
   // paired view to see it in the opposite light; release returns. A short still-hold
   // threshold keeps page scrolling clean on touch.
@@ -1405,7 +1462,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     var DELAY = 200, TOL = 10;
     document.querySelectorAll('[data-hold]').forEach(function(el){
       var timer = null, held = false, x0 = 0, y0 = 0;
-      function engage(){ held = true; el.classList.add('held'); }
+      function engage(){ held = true; el.classList.add('held'); (window.__aeEv || function(){})('hold'); }
       function release(){
         if (timer){ clearTimeout(timer); timer = null; }
         if (held){ held = false; el.classList.remove('held'); }

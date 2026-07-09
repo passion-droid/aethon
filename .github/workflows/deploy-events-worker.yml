@@ -1,0 +1,23 @@
+# Deploys the AETHON events worker (anonymous on-page counters) to Cloudflare.
+# Manual trigger only — deploying edge code is a deliberate act. Idempotent; re-run any time
+# the worker (scripts/cf-worker-events.js) changes. Counters are read by seo-insights.yml.
+name: Deploy events worker
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy worker + KV + route
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_TAG: ${{ secrets.CF_ACCOUNT_TAG }}
+        run: |
+          bash scripts/deploy-events-worker.sh | tee deploy.log
+          { echo '## Events worker deploy'; echo; echo '```'; cat deploy.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

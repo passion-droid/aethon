@@ -165,8 +165,63 @@ def pull_cloudflare(days):
         return {"available": False, "reason": f"parse error: {ex}"}
 
 
+# ---------- On-page events (aethon-events worker, Workers KV) ----------
+def pull_events(days):
+    """Anonymous per-day event counters written by the aethon-events worker.
+
+    Reads KV keys of the form  <event>:<YYYY-MM-DD>  from the "aethon_events" namespace.
+    Degrades gracefully (like every other source) until the worker/token exist.
+    """
+    token = os.environ.get("CLOUDFLARE_API_TOKEN")
+    account = os.environ.get("CF_ACCOUNT_TAG")
+    if not token or not account:
+        return {"available": False, "reason": "no CLOUDFLARE_API_TOKEN / CF_ACCOUNT_TAG set"}
+    api = "https://api.cloudflare.com/client/v4"
+    hdrs = {"Authorization": f"Bearer {token}"}
+
+    def get(url):
+        req = urllib.request.Request(url, headers=hdrs)
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.load(resp)
+
+    try:
+        ns = get(f"{api}/accounts/{account}/storage/kv/namespaces?per_page=100")
+        ns_id = next((n["id"] for n in ns.get("result", []) if n.get("title") == "aethon_events"), None)
+        if not ns_id:
+            return {"available": False, "reason": "KV namespace 'aethon_events' not found — worker not deployed yet?"}
+        keys, cursor = [], ""
+        while True:
+            page = get(f"{api}/accounts/{account}/storage/kv/namespaces/{ns_id}/keys?limit=1000"
+                       + (f"&cursor={cursor}" if cursor else ""))
+            keys += [k["name"] for k in page.get("result", [])]
+            cursor = (page.get("result_info") or {}).get("cursor") or ""
+            if not cursor:
+                break
+        start = (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
+        window, totals = {}, {}
+        for name in keys:
+            event, _, day = name.rpartition(":")
+            if not event:
+                continue
+            try:
+                val = int(urllib.request.urlopen(urllib.request.Request(
+                    f"{api}/accounts/{account}/storage/kv/namespaces/{ns_id}/values/{name}",
+                    headers=hdrs), timeout=60).read() or b"0")
+            except Exception:  # noqa: BLE001
+                continue
+            totals[event] = totals.get(event, 0) + val
+            if day >= start:
+                window[event] = window.get(event, 0) + val
+        return {"available": True, "days": days, "window": window, "totals": totals,
+                "tracked_keys": len(keys)}
+    except urllib.error.HTTPError as ex:
+        return {"available": False, "reason": f"HTTP {ex.code} — token may lack Workers KV read"}
+    except Exception as ex:  # noqa: BLE001
+        return {"available": False, "reason": str(ex)}
+
+
 # ---------- report ----------
-def render(gsc, psi_mobile, psi_desktop, cf, when):
+def render(gsc, psi_mobile, psi_desktop, cf, events, when):
     out = [f"# AETHON — insights · {when}", ""]
 
     out.append("## PageSpeed Insights (lab)")
@@ -225,6 +280,19 @@ def render(gsc, psi_mobile, psi_desktop, cf, when):
             for c in cf["countries"]:
                 out.append(f"| {c['country']} | {c['views']} |")
     out.append("")
+    out.append("## On-page events (anonymous counters)")
+    if not events.get("available"):
+        out.append(f"_Unavailable: {events.get('reason', '')[:200]}_")
+    else:
+        win = events.get("window", {})
+        if not win:
+            out.append(f"No events in the last {events.get('days')} days yet.")
+        else:
+            out += [f"Last {events.get('days')} days (all-time in parens):", "",
+                    "| event | count |", "|---|--:|"]
+            for name in sorted(win, key=win.get, reverse=True):
+                out.append(f"| {name} | {win[name]} ({events['totals'].get(name, 0)}) |")
+    out.append("")
     return "\n".join(out) + "\n"
 
 
@@ -239,14 +307,15 @@ def main():
     psi_mobile = pull_psi("mobile")
     psi_desktop = pull_psi("desktop")
     cf = pull_cloudflare(args.days)
+    events = pull_events(args.days)
 
     os.makedirs(args.out, exist_ok=True)
-    report = render(gsc, psi_mobile, psi_desktop, cf, when)
+    report = render(gsc, psi_mobile, psi_desktop, cf, events, when)
     base = os.path.join(args.out, when)
     with open(base + ".md", "w", encoding="utf-8") as fh:
         fh.write(report)
     with open(base + ".json", "w", encoding="utf-8") as fh:
-        json.dump({"date": when, "gsc": gsc, "cloudflare": cf,
+        json.dump({"date": when, "gsc": gsc, "cloudflare": cf, "events": events,
                    "psi": {"mobile": psi_mobile, "desktop": psi_desktop}}, fh, indent=2)
 
     print(report)
