@@ -366,7 +366,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Logo letters stay warm black on screen (owner: "leave as is").** The styleguide PDF's primary
   logotype is olive-lettered (#4C5039) — that remains the reference for print/physical; the shipped
   warm-black `brand/logo-dark.svg` is the sanctioned on-screen variant. Don't "fix" either direction.
-- **Bedrooms are public: 3** (In brief row; matches the source memo — master + two).
+- **Bedrooms are public: 3+1** (In brief row; owner 2026-07-09 — was "3"; the +1 reads as the
+  flexible fourth room without contradicting the gather/withdraw story).
 - **Gallery ends with a register path** (quiet "Register interest" link at the close — the
   audit's top visitor finding). Keep it when the gallery is redesigned around real photography.
 - **C-item walkthrough decided + shipped (2026-07-04):** mid-page register pointer at the end of
