@@ -357,7 +357,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   (namespace create-or-get, module upload with KV binding; on failure it names the missing token
   permission). **The route `aethon.house/e*` is OWNER-MANAGED** (created by hand in the dashboard
   2026-07-09 after the token's route permission couldn't be located; the script treats a missing
-  route permission as fine and only requires the worker upload). **Verification path:** curl/
+  route permission as fine and only requires the worker upload). **Route gotcha that cost a day:**
+  the hand-made route was first saved as `*.aethon.house/e*` — a `*.`-prefixed pattern matches
+  subdomains only, NEVER the apex domain, so the worker sat at 0 invocations while real traffic
+  flowed; fixed to `aethon.house/e*` (owner, 2026-07-10) and the chain verified end-to-end the
+  same minute (first counters: 7 chapters ×2, reach-register 2, afterglow 1, form-start 1).
+  The worker also keeps a `_hits:<day>` heartbeat (counts EVERY /e request, no name, 60-day
+  TTL) — it appears in the report table; read it as route-level diagnostics, not as an event. **Verification path:** curl/
   headless probes CANNOT reach aethon.house — the zone's bot protection 403s non-browser clients
   before the worker, and this session's egress proxy blocks the domain entirely
   (ERR_TUNNEL_CONNECTION_FAILED) — so the factual end-to-end check is: real visitor (or owner's
