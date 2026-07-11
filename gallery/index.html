@@ -187,6 +187,12 @@
   body.night .shot-pair .shot-day{ opacity:0; }
   .shot-pair img{ display:block; width:100%; height:100%; object-fit:cover; }
   @media (prefers-reduced-motion: reduce){ .shot-pair .shot-day, .shot-pair .shot-night{ transition:none; } }
+  /* cellular-data guardrail — on phones gallery pairs keep one hour; the evening layer is
+     display:none here and loading="lazy" in markup, so it is never even fetched. */
+  @media (max-width:640px), ((pointer: coarse) and (max-height: 500px)){
+    .plate .shot-night{ display:none; }
+    body.night .plate .shot-day{ opacity:1; }
+  }
 
   /* ---------- closing beat ---------- */
   .gal-close{ margin-top:clamp(2.5rem, 6vw, 4.5rem); padding:clamp(3rem, 7vw, 5.5rem) 0 0; border-top:1px solid var(--rule); }
@@ -354,7 +360,20 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <p class="measure">The road off the coast, the threshold, the first quiet inside. A single, soft nod to the faros that names the shore — no more than that.</p>
       </div>
       <figure class="plate feature">
-        <div class="ph" aria-hidden="true"></div>
+        <!-- matched day/evening pair (light-study stand-ins until photography) —
+             replace FILES via scripts/process-photos.py (masters gallery-approach--day/--eve) -->
+        <div class="shot-pair">
+          <picture class="shot-day">
+            <source type="image/avif" srcset="/images/gallery/gallery-approach-day-800.avif 800w, /images/gallery/gallery-approach-day-1600.avif 1600w, /images/gallery/gallery-approach-day-2400.avif 2400w" sizes="100vw">
+            <source type="image/webp" srcset="/images/gallery/gallery-approach-day-800.webp 800w, /images/gallery/gallery-approach-day-1600.webp 1600w, /images/gallery/gallery-approach-day-2400.webp 2400w" sizes="100vw">
+            <img src="/images/gallery/gallery-approach-day-1600.jpg" srcset="/images/gallery/gallery-approach-day-800.jpg 800w, /images/gallery/gallery-approach-day-1600.jpg 1600w, /images/gallery/gallery-approach-day-2400.jpg 2400w" sizes="100vw" width="2400" height="1029" loading="lazy" decoding="async" alt="">
+          </picture>
+          <picture class="shot-night">
+            <source type="image/avif" srcset="/images/gallery/gallery-approach-eve-800.avif 800w, /images/gallery/gallery-approach-eve-1600.avif 1600w, /images/gallery/gallery-approach-eve-2400.avif 2400w" sizes="100vw">
+            <source type="image/webp" srcset="/images/gallery/gallery-approach-eve-800.webp 800w, /images/gallery/gallery-approach-eve-1600.webp 1600w, /images/gallery/gallery-approach-eve-2400.webp 2400w" sizes="100vw">
+            <img src="/images/gallery/gallery-approach-eve-1600.jpg" srcset="/images/gallery/gallery-approach-eve-800.jpg 800w, /images/gallery/gallery-approach-eve-1600.jpg 1600w, /images/gallery/gallery-approach-eve-2400.jpg 2400w" sizes="100vw" width="2400" height="1029" loading="lazy" decoding="async" alt="">
+          </picture>
+        </div>
         <figcaption class="cap">Approach · the western coast</figcaption>
       </figure>
       <div class="plates">
@@ -543,7 +562,15 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     function show(i){
       if (!figs.length) return;
       idx = (i + figs.length) % figs.length;
-      var f = figs[idx], im = f.querySelector('img'), c = f.querySelector('.cap');
+      var f = figs[idx], c = f.querySelector('.cap');
+      // show the hour the visitor is in — prefer the evening layer under body.night,
+      // unless the cellular guardrail has display:none'd it (then only day is real)
+      var im = null;
+      if (document.body.classList.contains('night')){
+        var n = f.querySelector('.shot-night img');
+        if (n && n.offsetParent !== null) im = n;
+      }
+      if (!im) im = f.querySelector('img');
       if (im){
         lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt || '';
         lbImg.style.display = ''; lbPh.style.display = 'none';

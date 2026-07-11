@@ -61,8 +61,13 @@ impression and the mobile layout matter.
   inline nav links; **below 640px they are replaced by a quiet full-screen overlay menu**
   (`#menu` + `#menu-btn` → "Menu"/"Close"; Esc to close, scroll-lock, background set `inert`,
   closes on link tap). The hero is a **still on mobile** (ambient motion/video reserved for
-  larger/wifi); the hero light-drift is disabled < 640px. When paired photos land, limit the
-  `.shot-pair` day↔afterglow swap to the hero on mobile (cellular data).
+  larger/wifi); the hero light-drift is disabled < 640px. **Cellular-data guardrail —
+  IMPLEMENTED (2026-07-11):** on phones (`max-width:640px` or coarse+short) only the **hero**
+  crossfades and the two **hold-to-preview pause plates** keep their pair (the hold IS their touch
+  feature, night layers lazy); every other `.shot-night` layer is `display:none` + `loading="lazy"`
+  — hidden lazy images never intersect, so the evening set is **never fetched** on phones (index +
+  gallery, hand-synced; verified by request-log in the rehearsal matrix). At night those frames
+  keep their day layer visible via an opacity revert — don't remove it, or phones go blank at night.
 - **Desktop rhythm — one uniform two-column system.** Every content section is a `.two-col`:
   eyebrow + section title in a narrow left column, body in a wider right column —
   `minmax(0,1fr) minmax(0,2fr)` at ≥880px, collapsing to a single stacked column below. Image-led
@@ -216,10 +221,28 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   metadata stripped; Pillow runs it in-session). **Materials done:** the 8 macro swatches
   are wired (48 assets in `images/materials/`, brand colour kept as a load-time tint;
   **Patiti** — the Mediterranean hand-pressed lime plaster — replaced Venetian plaster, #53).
-  Still placeholders, awaiting real images via the same pipeline: the hero ambient loop,
-  the establishing-film plate in *The place*, companion images under *The architecture* /
-  *The garden* / *The interior*, and the eight-slot *Views* gallery (in-code shot brief). Scales to ~20–30 photographs; once they land,
-  consolidate woven vs. gallery to avoid duplication. **The full brief is `docs/imagery-brief.md`
+  **Dress rehearsal LIVE (2026-07-11): every front-page photo slot + the gallery's chapter-I
+  feature now carries a synthetic light study** — abstract Daylight/Afterglow compositions in the
+  brand palette (matched pair geometry per slot; owner chose to deploy them live while the site is
+  unpromoted). Generator: `scripts/gen-light-studies.py` (deterministic seeds; masters into the
+  gitignored `images/_masters/`). **Intake pipeline: `scripts/process-photos.py`** — slot registry
+  mirrors the brief's Appendix A; masters named `<slot>--day/--eve.*` (pairs) or `<slot>.*`
+  (singles) → AVIF/WebP/JPEG sets with the exact filenames the pages reference. **The photo markup
+  is FINAL: photography day = replace files, rerun the script, commit — no HTML edits** (runbook:
+  `images/README.md`). Wired slots: hero pair (day = LCP, `fetchpriority=high`, both layers eager
+  for the R4 night arrival), both pause pairs (hold-to-preview now flips real images), architecture
+  plate pair, garden/interior single-hour plates, all 8 Views (3 pairs + 5 singles), gallery
+  `gallery-approach` pair; the establishing-film plate stays a labelled placeholder (it awaits
+  footage, not a still). **Single-hour frames carry `hour-day`/`hour-eve`** — the label colour
+  follows the IMAGE's register, not the theme (theme-following labels landed pale-on-pale /
+  dark-on-dark, 1.0–1.7:1; with the classes all 16 label samples measure 5.5–8.5:1 in both hours —
+  keep the classes when real photos land). **Rendering lessons from the studies:** additive glows
+  clip R+G to acid green — lerp toward a warm colour instead (generator comments); and the
+  `body.preview .hero-inner::before` text-wash must fade out INSIDE its box — its old stops were
+  still translucent at the edge, drawing a seam over any real image (fixed; invisible over the flat
+  placeholder it was designed on). The gallery **lightbox now opens the CURRENT hour's layer**
+  (`.shot-night img` under `body.night` when visible; it always took the first = day img). Scales
+  to ~20–30 photographs; once they land, consolidate woven vs. gallery to avoid duplication. **The full brief is `docs/imagery-brief.md`
   on the `internal` branch — Rev B (2026-07-05), synced to the live slots and shared with the
   owner's photographer contact** (external-ready render: `internal:docs/imagery-brief.pdf`, brand
   type, no address / no sale framing / contact mail@aethon.house; Appendix A maps all 15 front-page
@@ -266,8 +289,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   `SOURCE=aethon.house` tag, kept separate from the owner's *other* Brevo site; visible
   fields map to attributes `FIRSTNAME` / `EMAIL` / `MESSAGE`, honeypot `email_address_check`.
   Note Brevo's contact DB is global (unique by email) — separate AETHON interest by **list
-  membership + SOURCE**, not separate databases. Optional polish: AJAX submit to stay
-  on-page, and a Brevo custom redirect back to the site.
+  membership + SOURCE**, not separate databases. **The AJAX submit is LIVE since #15
+  (2026-06-21)** — visitors stay on the page: `fetch` with `mode:'no-cors'` (opaque response =
+  success; single opt-in, the inline thank-you is the receipt), honeypot re-checked, button
+  swaps to "Sending…", success hides the form + focuses the `#register-thanks` block (the
+  owner-approved completeness copy), genuine network failure shows the quiet `#register-error`
+  line and re-enables; no-JS falls back to the native POST. Formally verified 2026-07-11
+  (Playwright: success / failure / beacon coexistence — the `form-submit` beacon fires either
+  way). A Brevo custom redirect is moot (no navigation happens).
 - **Domain:** `aethon.house` is connected (a `CNAME` file is on `main`); the site uses it
   as the canonical / Open Graph URL.
 - **Icons / brand mark — DONE (Oli's styleguide, wired).** Full spec in
@@ -552,11 +581,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   verify direction with a frame BURST + left/right luminance strips and assert monotonic
   progression (probe pattern in the session notes). Sweep CSS/JS hand-synced across index +
   gallery + legal.
-  (R2) **Hold-to-preview** — `[data-hold]` paired views (currently the two pause plates) show the
+  (R2) **Hold-to-preview** — `[data-hold]` paired views (the two pause plates) show the
   *opposite* hour while pressed: touch still-hold (200ms, >10px movement = scroll → cancels),
-  mouse-hold, or holding Space/Enter (focusable, role=button). Placeholders flip their frame
-  tokens locally (`.shot-pair.held` — values hand-synced with `:root`/`body.night`); the `.held`
-  image rules for real pairs are already in place. **Cursor = the other hour's glyph** on fine
+  mouse-hold, or holding Space/Enter (focusable, role=button). Since the 2026-07-11 rehearsal the
+  pause plates hold REAL image pairs (light studies) — `.held` flips the actual layers; the token
+  flip (`.shot-pair.held`, values hand-synced with `:root`/`body.night`) stays underneath as the
+  loading/failure backdrop. **Cursor = the other hour's glyph** on fine
   pointers (moon in a dark disc by day, sun in a marble disc by night; data-URI SVGs). The pause
   labels carry a `· hold for the evening/daylight` affordance (`.hold-hint` CSS content);
   aria-labels re-name the hour via a body-class MutationObserver.
@@ -683,7 +713,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   eyebrows set in LT Museum Bold; gold stays logo-only. Full record: `docs/brand-styleguide.md`
   + the *Icons / brand mark* TODO.
 - **Next up (the real frontier): photography.** Text, structure, responsive UX **and the brand
-  identity** are now complete; the remaining quality is visual — commission the matched Daylight/
-  Afterglow shoot per `docs/imagery-brief.md`, then drop pairs into `.shot-pair`, wire the
-  woven plates + *Views* + `/gallery/`, and add the lightbox. (A branded `og:image` — the logo on
-  warm stone — is now possible as an interim until photography lands; see the og:image TODO.)
+  identity** are complete — and since the 2026-07-11 dress rehearsal the ENTIRE photo path is
+  wired, tested and live on light-study stand-ins (crossfades, hold, lightbox, cellular guardrail,
+  label registers). Commission the matched Daylight/Afterglow shoot per `docs/imagery-brief.md`
+  (sent to Fynn 2026-07-11); integration is then a one-command file swap — see the runbook in
+  `images/README.md` and the photography-day checklist (contrast re-check per frame, strip
+  "forthcoming" labels, retire the WIP notice, re-run PSI).

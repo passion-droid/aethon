@@ -5,19 +5,67 @@ Every photograph the site serves lives here, **pre-optimised**. The site itself 
 committed ready-to-serve. Nothing here runs at page load beyond the browser fetching
 a small WebP.
 
-Folders scale to the rest of the page later (`hero/`, `views/`, …). First up:
-**8 macro close-ups for the Materials section** — one per material → `materials/`.
+Folders: `hero/` · `pause/` · `plates/` · `views/` · `gallery/` (the photo slots),
+`materials/` (macro chips), `plan/` (floor renders), `sketch/` (the concept artifact).
 
 ## ⚠️ This is a public repo — never commit raw originals
 Phone/camera files embed **EXIF GPS (the house's location)** and timestamps, and are
 large. Committing them would leak location (against the brand guardrails) and bloat
 history. So:
 
-- **Drop raw files (any format / size / resolution) into a local `materials/_originals/`
-  folder** — it's `.gitignore`d and never committed. *Or* simply attach them in the
-  Claude chat.
-- The transform **strips all metadata** and writes small **WebP** files into
-  `materials/`. **Only those get committed.**
+- **Drop master files into `images/_masters/`** (any of png/jpg/tif/webp) — it's
+  `.gitignore`d and never committed. *Or* simply attach them in the Claude chat.
+  (Material macros may also use the older `materials/_originals/`, equally ignored.)
+- The pipeline **strips all metadata** and writes only the small web assets. **Only
+  those get committed.**
+
+## Photography day — the one command
+Every photo slot on both pages is **already wired**; the markup is final. Integrating
+the real photography changes **files only**:
+
+1. Name each delivered master by its slot (list below): matched pairs as
+   `<slot>--day.*` + `<slot>--eve.*`, single-hour slots as `<slot>.*`, and drop them
+   into `images/_masters/`.
+2. `python3 scripts/process-photos.py` (add `--check` first to validate presence,
+   ratio and size without writing). Per image: EXIF orientation honoured, colour
+   managed to sRGB (embedded ICC respected), centre-cropped to the slot's exact
+   ratio, resized, saved AVIF q55 + WebP q75 + progressive JPEG q82, metadata
+   stripped.
+3. Commit the regenerated `hero/ pause/ plates/ views/ gallery/` files. Done — the
+   pages pick them up by name.
+
+| Slot | Where | Ratio | Hours |
+|---|---|---|---|
+| `hero` | hero, full viewport | 16:10 | pair |
+| `plate-living` | The architecture | 16:10 | pair |
+| `pause-west` / `pause-afterglow` | the two full-bleed pauses | 16:10 | pair |
+| `plate-garden` | The garden | 16:10 | day |
+| `plate-interior` | The interior | 16:10 | evening |
+| `views-west` | Views, wide | 21:9 | pair |
+| `views-living` / `views-pool` | Views | 16:10 | pair |
+| `views-olives` | Views, tall | 4:5 | day |
+| `views-olive-night` | Views, tall | 4:5 | evening |
+| `views-terrace` / `views-interior` | Views | 16:10 | day / evening |
+| `views-material` | Views, band | 3:1 | day |
+| `gallery-approach` | /gallery/ chapter I feature | 21:9 | pair |
+
+(The registry lives in `scripts/process-photos.py`; it mirrors the imagery brief's
+Appendix A. Gallery chapters II–VI get their slots the same way as they're shot —
+extend the registry + swap each `.ph` per the pattern already documented in
+`gallery/index.html`.)
+
+**Until then: synthetic light studies.** `scripts/gen-light-studies.py` generates the
+abstract Daylight/Afterglow stand-ins now live in every slot (brand palette only,
+matched pair geometry, deterministic seeds) — they flow through the exact same
+pipeline, so the whole photo path stays exercised. Two rendering rules learned from
+them: **lerp glows toward a warm colour, never add** (additive light clips R+G to an
+acid green), and **any text-backing wash must fade out inside its box** (a stop that
+is still translucent at the edge draws a visible seam over real imagery).
+
+**Single-hour slots carry `hour-day` / `hour-eve` on their `.frame`** — the label
+colour follows the *image's* register, not the theme (a day image keeps its dark
+label at night). Keep those classes when real photography lands, and re-check each
+frame's label contrast per the photography-day checklist.
 
 ## What gets produced (per image)
 | Property | Value |

@@ -491,6 +491,25 @@
   body.night .shot-pair .shot-day{ opacity:0; }
   .shot-pair img{ display:block; width:100%; height:100%; object-fit:cover; }
   @media (prefers-reduced-motion: reduce){ .shot-pair .shot-day, .shot-pair .shot-night{ transition:none; } }
+  /* real images inside a placeholder .frame (and the hero) — fill the box beneath its label;
+     covers a lone <picture> on single-hour slots and .shot-day/.shot-night pair layers alike */
+  .frame:not(.plan) > picture, .hero-photo > picture{ position:absolute; inset:0; }
+  .frame:not(.plan) > picture > img, .hero-photo > picture > img{ display:block; width:100%; height:100%; object-fit:cover; }
+  /* an image carries its own light — drop the placeholder's ambient glow so they don't double up */
+  .frame:has(> picture)::after, .pause-media:has(> picture)::after,
+  body.preview .hero-photo:has(> picture)::after{ content:none; }
+  /* single-hour slots — the label matches its IMAGE's register, not the theme: a day image
+     keeps the dark label at night, an evening image keeps the pale label by day; the theme-
+     following default would land pale-on-pale / dark-on-dark (light-study rehearsal finding) */
+  .frame.hour-day .label{ color: rgba(34,29,24,0.96); }
+  .frame.hour-eve .label{ color: rgba(238,231,214,0.78); }
+  /* cellular-data guardrail — on phones only the hero crossfades; the two hold-to-preview pause
+     plates keep their pair (the hold IS their touch feature); every OTHER evening layer is
+     display:none here and loading="lazy" in markup, so it is never even fetched. */
+  @media (max-width: 640px), ((pointer: coarse) and (max-height: 500px)){
+    #gallery .frame .shot-night, .plate .frame .shot-night{ display:none; }
+    body.night #gallery .frame .shot-day, body.night .plate .frame .shot-day{ opacity:1; }
+  }
 
   /* ---------- hold to preview the other hour ----------
      Press-and-hold (touch), mouse-hold, or hold Space (keyboard) on a paired view previews
@@ -701,8 +720,11 @@
   body.preview .hero::after{ height: 58%; }       /* deepen the scrim so the headline holds over a photo */
   /* text-zone wash — guarantees the hero type keeps contrast independent of the photo (WCAG F83) */
   body.preview .hero-inner::before{
-    content:""; position:absolute; inset: -30% -20%; z-index: -1; pointer-events:none;
-    background: radial-gradient(78% 82% at 38% 52%, var(--hero-wash) 30%, transparent 78%);
+    content:""; position:absolute; inset: -42% -26%; z-index: -1; pointer-events:none;
+    /* the radial must reach full transparency INSIDE the box — a stop that is still
+       translucent at the edge clips to a visible seam over real imagery (found in the
+       light-study rehearsal; invisible over the old flat placeholder gradient) */
+    background: radial-gradient(66% 62% at 38% 52%, var(--hero-wash) 26%, transparent 72%);
     transition: background 0.7s ease;
   }
   /* over imagery the muted hero smalls step one role up (ink-soft) to hold 4.5:1 — no effect on the finished plain-ground state */
@@ -867,22 +889,31 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
 
   <!-- HERO — the western light -->
   <section class="hero" aria-label="Introduction">
-    <div class="hero-photo" aria-hidden="true"></div>
     <!--
-      HERO MEDIA (when assets exist) — keep it the LCP element and fast on mobile:
-        • Still: place an <img class="hero-photo" src="images/hero.avif"
-          width="1600" height="1000" fetchpriority="high" decoding="async"
-          alt="AETHON House at dusk — the west elevation open to the pool and garden, toward the sea">
-          (the alt is a draft — adjust to the delivered frame; entity first, then the view, museal register)
-          as the FIRST child (never loading="lazy").
-        • Motion (optional, on-brand): a SHORT, muted, looping ambient clip / cinemagraph
-          (sea light; stirring olive leaves) — <video muted loop playsinline autoplay
-          preload="none" poster="images/hero.jpg"> with the poster as the LCP image;
-          gate autoplay behind prefers-reduced-motion and fall back to the still.
-      Lay a darkening scrim over either so the headline keeps ≥ 4.5:1 contrast (WCAG F83).
-      DAYLIGHT ↔ AFTERGLOW — shoot this view as a matched day + warm-evening PAIR (same tripod
-      position) and wire it as a .shot-pair so the toggle crossfades the two. Full brief: docs/imagery-brief.md.
+      HERO MEDIA — a matched day/evening light-study PAIR stands in until the photography
+      lands; this markup is FINAL. Photography day = replace FILES only: drop hero--day.* +
+      hero--eve.* masters into images/_masters/, run scripts/process-photos.py, commit
+      images/hero/ — no markup edit. Keep the day image the LCP element: first in DOM,
+      fetchpriority="high", never loading="lazy" (the evening layer stays eager too — the
+      house's hours can open the page in Afterglow). When the real pair lands, give the day
+      <img> its alt (draft, museal register): "AETHON House at dusk — the west elevation open
+      to the pool and garden, toward the sea". The headline keeps ≥ 4.5:1 contrast over any
+      image (WCAG F83) via the body.preview scrim + hero-wash. Motion stays an option per the
+      brief: a muted looping clip with the day frame as poster, gated behind
+      prefers-reduced-motion; the hero stays a still on mobile. (docs/imagery-brief.md)
     -->
+    <div class="hero-photo shot-pair" aria-hidden="true">
+      <picture class="shot-day">
+        <source type="image/avif" srcset="images/hero/hero-day-800.avif 800w, images/hero/hero-day-1600.avif 1600w, images/hero/hero-day-2400.avif 2400w" sizes="100vw">
+        <source type="image/webp" srcset="images/hero/hero-day-800.webp 800w, images/hero/hero-day-1600.webp 1600w, images/hero/hero-day-2400.webp 2400w" sizes="100vw">
+        <img src="images/hero/hero-day-1600.jpg" srcset="images/hero/hero-day-800.jpg 800w, images/hero/hero-day-1600.jpg 1600w, images/hero/hero-day-2400.jpg 2400w" sizes="100vw" width="2400" height="1500" fetchpriority="high" decoding="async" alt="">
+      </picture>
+      <picture class="shot-night">
+        <source type="image/avif" srcset="images/hero/hero-eve-800.avif 800w, images/hero/hero-eve-1600.avif 1600w, images/hero/hero-eve-2400.avif 2400w" sizes="100vw">
+        <source type="image/webp" srcset="images/hero/hero-eve-800.webp 800w, images/hero/hero-eve-1600.webp 1600w, images/hero/hero-eve-2400.webp 2400w" sizes="100vw">
+        <img src="images/hero/hero-eve-1600.jpg" srcset="images/hero/hero-eve-800.jpg 800w, images/hero/hero-eve-1600.jpg 1600w, images/hero/hero-eve-2400.jpg 2400w" sizes="100vw" width="2400" height="1500" decoding="async" alt="">
+      </picture>
+    </div>
     <div class="hero-inner">
       <p class="descriptor">AETHON House · Paphos</p>
       <h1 class="wordmark">AETHON</h1>
@@ -936,7 +967,19 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       <li><span class="tl-year">2026</span><span class="tl-note">Renewed · AETHON</span></li>
     </ol>
     <figure class="plate reveal">
-      <div class="frame"><span class="label">The living spaces, toward the sea · forthcoming</span></div>
+      <div class="frame shot-pair">
+        <picture class="shot-day">
+          <source type="image/avif" srcset="images/plates/plate-living-day-800.avif 800w, images/plates/plate-living-day-1600.avif 1600w" sizes="92vw">
+          <source type="image/webp" srcset="images/plates/plate-living-day-800.webp 800w, images/plates/plate-living-day-1600.webp 1600w" sizes="92vw">
+          <img src="images/plates/plate-living-day-1600.jpg" srcset="images/plates/plate-living-day-800.jpg 800w, images/plates/plate-living-day-1600.jpg 1600w" sizes="92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+        </picture>
+        <picture class="shot-night">
+          <source type="image/avif" srcset="images/plates/plate-living-eve-800.avif 800w, images/plates/plate-living-eve-1600.avif 1600w" sizes="92vw">
+          <source type="image/webp" srcset="images/plates/plate-living-eve-800.webp 800w, images/plates/plate-living-eve-1600.webp 1600w" sizes="92vw">
+          <img src="images/plates/plate-living-eve-1600.jpg" srcset="images/plates/plate-living-eve-800.jpg 800w, images/plates/plate-living-eve-1600.jpg 1600w" sizes="92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+        </picture>
+        <span class="label">The living spaces, toward the sea · forthcoming</span>
+      </div>
     </figure>
   </section>
 
@@ -983,9 +1026,18 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
   <!-- PAUSE — a silent full-bleed breath (Daylight ↔ Afterglow when the matched pair lands) -->
   <section class="pause" aria-label="The house, toward the western sea">
     <div class="pause-media shot-pair" data-hold role="button" tabindex="0" aria-label="Hold to preview the evening view">
-      <!-- When photography lands: a matched day/evening PAIR of the west elevation —
-           <picture class="shot-day">…</picture><picture class="shot-night">…</picture>.
-           On mobile serve a single image (not the pair), per the cellular-data guardrail. -->
+      <!-- matched day/evening pair (light-study stand-ins) — photography day replaces the
+           FILES via scripts/process-photos.py (masters pause-west--day.* / --eve.*) -->
+      <picture class="shot-day">
+        <source type="image/avif" srcset="images/pause/pause-west-day-800.avif 800w, images/pause/pause-west-day-1600.avif 1600w, images/pause/pause-west-day-2400.avif 2400w" sizes="100vw">
+        <source type="image/webp" srcset="images/pause/pause-west-day-800.webp 800w, images/pause/pause-west-day-1600.webp 1600w, images/pause/pause-west-day-2400.webp 2400w" sizes="100vw">
+        <img src="images/pause/pause-west-day-1600.jpg" srcset="images/pause/pause-west-day-800.jpg 800w, images/pause/pause-west-day-1600.jpg 1600w, images/pause/pause-west-day-2400.jpg 2400w" sizes="100vw" width="2400" height="1500" loading="lazy" decoding="async" alt="">
+      </picture>
+      <picture class="shot-night">
+        <source type="image/avif" srcset="images/pause/pause-west-eve-800.avif 800w, images/pause/pause-west-eve-1600.avif 1600w, images/pause/pause-west-eve-2400.avif 2400w" sizes="100vw">
+        <source type="image/webp" srcset="images/pause/pause-west-eve-800.webp 800w, images/pause/pause-west-eve-1600.webp 1600w, images/pause/pause-west-eve-2400.webp 2400w" sizes="100vw">
+        <img src="images/pause/pause-west-eve-1600.jpg" srcset="images/pause/pause-west-eve-800.jpg 800w, images/pause/pause-west-eve-1600.jpg 1600w, images/pause/pause-west-eve-2400.jpg 2400w" sizes="100vw" width="2400" height="1500" loading="lazy" decoding="async" alt="">
+      </picture>
       <span class="pause-label">The house, toward the western sea · forthcoming<span class="hold-hint"></span></span>
     </div>
   </section>
@@ -1004,7 +1056,14 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       </div>
     </div>
     <figure class="plate reveal">
-      <div class="frame"><span class="label">Ancient olives, the dry garden · forthcoming</span></div>
+      <div class="frame hour-day">
+        <picture>
+          <source type="image/avif" srcset="images/plates/plate-garden-800.avif 800w, images/plates/plate-garden-1600.avif 1600w" sizes="92vw">
+          <source type="image/webp" srcset="images/plates/plate-garden-800.webp 800w, images/plates/plate-garden-1600.webp 1600w" sizes="92vw">
+          <img src="images/plates/plate-garden-1600.jpg" srcset="images/plates/plate-garden-800.jpg 800w, images/plates/plate-garden-1600.jpg 1600w" sizes="92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+        </picture>
+        <span class="label">Ancient olives, the dry garden · forthcoming</span>
+      </div>
     </figure>
   </section>
 
@@ -1031,14 +1090,32 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       <figcaption>Concept sketch &mdash; the rooms, from within &middot; <a href="https://www.dearmodern.com/" target="_blank" rel="noopener">Cliff Tan, Dear Modern</a></figcaption>
     </figure>
     <figure class="plate reveal">
-      <div class="frame"><span class="label">Lit from within, at evening · forthcoming</span></div>
+      <div class="frame hour-eve">
+        <picture>
+          <source type="image/avif" srcset="images/plates/plate-interior-800.avif 800w, images/plates/plate-interior-1600.avif 1600w" sizes="92vw">
+          <source type="image/webp" srcset="images/plates/plate-interior-800.webp 800w, images/plates/plate-interior-1600.webp 1600w" sizes="92vw">
+          <img src="images/plates/plate-interior-1600.jpg" srcset="images/plates/plate-interior-800.jpg 800w, images/plates/plate-interior-1600.jpg 1600w" sizes="92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+        </picture>
+        <span class="label">Lit from within, at evening · forthcoming</span>
+      </div>
     </figure>
   </section>
 
   <!-- PAUSE — the afterglow breath before the materials -->
   <section class="pause" aria-label="The afterglow — lit from within">
     <div class="pause-media shot-pair" data-hold role="button" tabindex="0" aria-label="Hold to preview the evening view">
-      <!-- Matched day/evening PAIR — the house lit warm from within at dusk. -->
+      <!-- matched day/evening pair — the house lit warm from within at dusk
+           (masters pause-afterglow--day.* / --eve.*) -->
+      <picture class="shot-day">
+        <source type="image/avif" srcset="images/pause/pause-afterglow-day-800.avif 800w, images/pause/pause-afterglow-day-1600.avif 1600w, images/pause/pause-afterglow-day-2400.avif 2400w" sizes="100vw">
+        <source type="image/webp" srcset="images/pause/pause-afterglow-day-800.webp 800w, images/pause/pause-afterglow-day-1600.webp 1600w, images/pause/pause-afterglow-day-2400.webp 2400w" sizes="100vw">
+        <img src="images/pause/pause-afterglow-day-1600.jpg" srcset="images/pause/pause-afterglow-day-800.jpg 800w, images/pause/pause-afterglow-day-1600.jpg 1600w, images/pause/pause-afterglow-day-2400.jpg 2400w" sizes="100vw" width="2400" height="1500" loading="lazy" decoding="async" alt="">
+      </picture>
+      <picture class="shot-night">
+        <source type="image/avif" srcset="images/pause/pause-afterglow-eve-800.avif 800w, images/pause/pause-afterglow-eve-1600.avif 1600w, images/pause/pause-afterglow-eve-2400.avif 2400w" sizes="100vw">
+        <source type="image/webp" srcset="images/pause/pause-afterglow-eve-800.webp 800w, images/pause/pause-afterglow-eve-1600.webp 1600w, images/pause/pause-afterglow-eve-2400.webp 2400w" sizes="100vw">
+        <img src="images/pause/pause-afterglow-eve-1600.jpg" srcset="images/pause/pause-afterglow-eve-800.jpg 800w, images/pause/pause-afterglow-eve-1600.jpg 1600w, images/pause/pause-afterglow-eve-2400.jpg 2400w" sizes="100vw" width="2400" height="1500" loading="lazy" decoding="async" alt="">
+      </picture>
       <span class="pause-label">The afterglow — lit from within · forthcoming<span class="hold-hint"></span></span>
     </div>
   </section>
@@ -1192,14 +1269,85 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
           8. Material detail                — band 3:1, travertine · olive leather · iroko.
       -->
       <div class="frames">
-        <div class="frame wide"><span class="label">West elevation · sunset</span></div>
-        <div class="frame"><span class="label">Living, toward the sea</span></div>
-        <div class="frame"><span class="label">The pool, at dusk</span></div>
-        <div class="frame tall"><span class="label">The garden, sculptural olives</span></div>
-        <div class="frame tall"><span class="label">The lit olive, after dark</span></div>
-        <div class="frame"><span class="label">The terrace, under shade sails</span></div>
-        <div class="frame"><span class="label">The interior, lit from within</span></div>
-        <div class="frame band"><span class="label">Material detail</span></div>
+        <div class="frame wide shot-pair">
+          <picture class="shot-day">
+            <source type="image/avif" srcset="images/views/views-west-day-800.avif 800w, images/views/views-west-day-1600.avif 1600w" sizes="92vw">
+            <source type="image/webp" srcset="images/views/views-west-day-800.webp 800w, images/views/views-west-day-1600.webp 1600w" sizes="92vw">
+            <img src="images/views/views-west-day-1600.jpg" srcset="images/views/views-west-day-800.jpg 800w, images/views/views-west-day-1600.jpg 1600w" sizes="92vw" width="1600" height="686" loading="lazy" decoding="async" alt="">
+          </picture>
+          <picture class="shot-night">
+            <source type="image/avif" srcset="images/views/views-west-eve-800.avif 800w, images/views/views-west-eve-1600.avif 1600w" sizes="92vw">
+            <source type="image/webp" srcset="images/views/views-west-eve-800.webp 800w, images/views/views-west-eve-1600.webp 1600w" sizes="92vw">
+            <img src="images/views/views-west-eve-1600.jpg" srcset="images/views/views-west-eve-800.jpg 800w, images/views/views-west-eve-1600.jpg 1600w" sizes="92vw" width="1600" height="686" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">West elevation · sunset</span>
+        </div>
+        <div class="frame shot-pair">
+          <picture class="shot-day">
+            <source type="image/avif" srcset="images/views/views-living-day-800.avif 800w, images/views/views-living-day-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-living-day-800.webp 800w, images/views/views-living-day-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-living-day-1600.jpg" srcset="images/views/views-living-day-800.jpg 800w, images/views/views-living-day-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <picture class="shot-night">
+            <source type="image/avif" srcset="images/views/views-living-eve-800.avif 800w, images/views/views-living-eve-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-living-eve-800.webp 800w, images/views/views-living-eve-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-living-eve-1600.jpg" srcset="images/views/views-living-eve-800.jpg 800w, images/views/views-living-eve-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">Living, toward the sea</span>
+        </div>
+        <div class="frame shot-pair">
+          <picture class="shot-day">
+            <source type="image/avif" srcset="images/views/views-pool-day-800.avif 800w, images/views/views-pool-day-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-pool-day-800.webp 800w, images/views/views-pool-day-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-pool-day-1600.jpg" srcset="images/views/views-pool-day-800.jpg 800w, images/views/views-pool-day-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <picture class="shot-night">
+            <source type="image/avif" srcset="images/views/views-pool-eve-800.avif 800w, images/views/views-pool-eve-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-pool-eve-800.webp 800w, images/views/views-pool-eve-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-pool-eve-1600.jpg" srcset="images/views/views-pool-eve-800.jpg 800w, images/views/views-pool-eve-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">The pool, at dusk</span>
+        </div>
+        <div class="frame tall hour-day">
+          <picture>
+            <source type="image/avif" srcset="images/views/views-olives-800.avif 800w, images/views/views-olives-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-olives-800.webp 800w, images/views/views-olives-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-olives-1600.jpg" srcset="images/views/views-olives-800.jpg 800w, images/views/views-olives-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">The garden, sculptural olives</span>
+        </div>
+        <div class="frame tall hour-eve">
+          <picture>
+            <source type="image/avif" srcset="images/views/views-olive-night-800.avif 800w, images/views/views-olive-night-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-olive-night-800.webp 800w, images/views/views-olive-night-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-olive-night-1600.jpg" srcset="images/views/views-olive-night-800.jpg 800w, images/views/views-olive-night-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">The lit olive, after dark</span>
+        </div>
+        <div class="frame hour-day">
+          <picture>
+            <source type="image/avif" srcset="images/views/views-terrace-800.avif 800w, images/views/views-terrace-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-terrace-800.webp 800w, images/views/views-terrace-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-terrace-1600.jpg" srcset="images/views/views-terrace-800.jpg 800w, images/views/views-terrace-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">The terrace, under shade sails</span>
+        </div>
+        <div class="frame hour-eve">
+          <picture>
+            <source type="image/avif" srcset="images/views/views-interior-800.avif 800w, images/views/views-interior-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-interior-800.webp 800w, images/views/views-interior-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
+            <img src="images/views/views-interior-1600.jpg" srcset="images/views/views-interior-800.jpg 800w, images/views/views-interior-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">The interior, lit from within</span>
+        </div>
+        <div class="frame band hour-day">
+          <picture>
+            <source type="image/avif" srcset="images/views/views-material-800.avif 800w, images/views/views-material-1600.avif 1600w" sizes="92vw">
+            <source type="image/webp" srcset="images/views/views-material-800.webp 800w, images/views/views-material-1600.webp 1600w" sizes="92vw">
+            <img src="images/views/views-material-1600.jpg" srcset="images/views/views-material-800.jpg 800w, images/views/views-material-1600.jpg 1600w" sizes="92vw" width="1600" height="533" loading="lazy" decoding="async" alt="">
+          </picture>
+          <span class="label">Material detail</span>
+        </div>
       </div>
       <p class="more"><a class="more-link" href="/gallery/">A longer look — the gallery<span class="arrow" aria-hidden="true">&rarr;</span></a></p>
     </div>
