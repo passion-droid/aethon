@@ -492,7 +492,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   **mobile perf 97** — the WIP dialog is the LCP on fresh visits (see photography-day
   checklist); trigger runs via `seo-insights.yml` workflow_dispatch, read via job logs. Owner's
   WhatsApp share test passed (preview scrapers are not bot-blocked); shared links now carry the
-  interim branded og:image.
+  interim branded og:image. **07-11 refresh (pull ~90s after the rehearsal deploy):** Cloudflare
+  **100 visits / 170 views per 28d**, /gallery/ 30 views (still all via homepage nav); "aethon"
+  steady at pos 1.1; events — `_hits` 17, all 7 chapters ×2, reach-register 2, **afterglow-auto 3**
+  (three no-preference arrivals after Paphos sunset opened in Afterglow — R4 observed in the
+  wild); PSI desktop 100×4, mobile 97 (LCP 2.0s — ran before CDN caches settled; the scheduled
+  07-15 run measures the steady state with the light studies).
 - **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
   run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
 - **Playwright-testing gotchas (learned the hard way):** plain `window.scrollTo(x,y)` obeys the
@@ -506,10 +511,17 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   silently eat content — pass values via environment (`WT="$WT" python3 - <<'EOF'`) and keep
   the delimiter quoted. And the container's system `cryptography` package is broken (cffi
   backend panic), which kills `pypdf` on import — verify PDF link annotations by scanning the
-  raw bytes for `/URI (…)` (or via pypdfium2), not with pypdf.
-- **Owner-side micro-todo:** on a real iPhone, glance at (a) the landscape overlay menu and
-  (b) the new dusk sweep + hold-to-preview (Chromium emulation is green everywhere; real iOS
-  Safari unverified — Safari 18+ should run the sweep, older falls back to the plain crossfade).
+  raw bytes for `/URI (…)` (or via pypdfium2), not with pypdf. Two more (2026-07-11): pip's
+  `playwright` wants browsers newer than the preinstalled set — launch with
+  `p.chromium.launch(executable_path='/opt/pw-browsers/chromium')`, never `playwright install`;
+  and Playwright's URL globs need a `/` before the host segment — `**/sibforms.com/**` silently
+  NEVER matches `https://06e3f483.sibforms.com/…` (dot before the host, not a slash), so the
+  "mocked" request goes to the real network — route subdomain hosts with
+  `re.compile(r"sibforms\.com")` instead.
+- **Owner-side micro-todo:** on a real iPhone, glance at (a) the landscape overlay menu,
+  (b) the dusk sweep + hold-to-preview, and (c) the live light studies (hero crossfade, a held
+  pause plate, the Views grid — 2026-07-11 rehearsal). Chromium emulation is green everywhere;
+  real iOS Safari unverified — Safari 18+ should run the sweep, older falls back to the crossfade.
 - ~~Still open from the audit~~ **The audit is fully closed (2026-07-04):** every group-B and
   group-C item is decided and shipped (see the walkthrough block above + the memo's checkboxes).
   The only audit artefact still live is the **photography-day launch checklist** (strip
