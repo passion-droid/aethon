@@ -351,7 +351,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   `/legal/` discovered).
 - **SEO measurement — automated (PR #40, extended #42).** `scripts/seo-pull.py` +
   `.github/workflows/seo-insights.yml` pull **Search Console + PageSpeed Insights + Cloudflare Web
-  Analytics** on the **1st & 15th** (≈ fortnightly) and on demand, emitting a dated report as a
+  Analytics** on the **1st & 15th** (≈ fortnightly) and on demand — since 2026-07-15 incl. an
+  **Index-status section** (GSC URL Inspection: verdict / coverage / last crawl / canonical for
+  `/`, `/legal/`, `/gallery/` + sitemap health; readonly scope suffices; `/gallery/` showing
+  noindex/unknown is the intended state), emitting a dated report as a
   **workflow artifact + run summary** (nothing committed — safe for any repo visibility). Auth via
   GitHub secrets **`GSC_SA_KEY`** (service-account JSON added as a GSC user), **`PSI_API_KEY`**, and
   **`CLOUDFLARE_API_TOKEN`** + **`CF_ACCOUNT_TAG`** (+ optional **`CF_SITE_TAG`**); every source
