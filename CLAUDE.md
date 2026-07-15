@@ -234,7 +234,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   plate pair, garden/interior single-hour plates, all 8 Views (3 pairs + 5 singles), and —
   since 2026-07-15 — the FULL gallery (all six chapters, 23 frames: 3 feature pairs incl.
   `gallery-approach`, 2 portrait + 18 further curated single-hour plates whose captions name
-  their hour); the establishing-film plate stays a labelled placeholder (it awaits
+  their hour — own 11-check matrix green: trio/offset geometry, lightbox hours, phone
+  guardrail); the establishing-film plate stays a labelled placeholder (it awaits
   footage, not a still). **Single-hour frames carry `hour-day`/`hour-eve`** — the label colour
   follows the IMAGE's register, not the theme (theme-following labels landed pale-on-pale /
   dark-on-dark, 1.0–1.7:1; with the classes all 16 label samples measure 5.5–8.5:1 in both hours —
@@ -318,7 +319,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   (WhatsApp-checked at 400px). All five metas are active in `index.html` (og:image + dims + alt,
   twitter:image + alt); the alt text stays as pre-written. **When photography lands, replace the
   FILE at the same path** (same dims, warm/afterglow register) — no meta edits needed. Master
-  recipe: scratch HTML (night tokens + logo-white) → Playwright screenshot → JPEG q88.
+  recipe: scratch HTML (night tokens + logo-white) → Playwright screenshot → JPEG q88. A
+  hero-eve light-study backdrop was offered 2026-07-15 and left open — the logo-first interim
+  stands; don't re-propose unprompted.
 - **SEO / meta pass — done (PR #39; title refined #49).** The meta/OG **descriptions** carry the
   searchable terms (seafront residence · Paphos, Cyprus · Faros beach, "a sanctuary…"); the
   **site name** (`og:site_name` + `WebSite` JSON-LD `name`) is the poetic lockup **"AETHON ·
@@ -498,8 +501,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   **100 visits / 170 views per 28d**, /gallery/ 30 views (still all via homepage nav); "aethon"
   steady at pos 1.1; events — `_hits` 17, all 7 chapters ×2, reach-register 2, **afterglow-auto 3**
   (three no-preference arrivals after Paphos sunset opened in Afterglow — R4 observed in the
-  wild); PSI desktop 100×4, mobile 97 (LCP 2.0s — ran before CDN caches settled; the scheduled
-  07-15 run measures the steady state with the light studies).
+  wild); PSI desktop 100×4, mobile 97 (LCP 2.0s — ran before CDN caches settled). **07-15
+  scheduled run (first full week of events): steady state confirmed** — PSI mobile 97 /
+  desktop 100×4 WITH the studies live (LCP 2.0s, **CLS 0** — the ~30 images cost nothing
+  measurable; the 97 remains the WIP dialog). Events: `_hits` 30 · all 7 chapters ×3 AND
+  reach-register 3 (who arrives reads the whole portrait) · afterglow-auto 4 · afterglow 2 ·
+  **first `hold` 1** (the gesture gets discovered unaided) · form-start 1. Cloudflare 110
+  visits / 180 views per 28d, /gallery/ 30; "aethon" steady at pos 1.1.
 - **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
   run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
 - **Playwright-testing gotchas (learned the hard way):** plain `window.scrollTo(x,y)` obeys the
