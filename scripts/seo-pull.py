@@ -282,11 +282,16 @@ def pull_cloudflare_extras(days):
         zone = (zones.get("result") or [{}])[0].get("id")
         if not zone:
             raise RuntimeError("zone not visible to token")
+        # free-plan zones cap this dataset at a 1-day query span — a 24h spot-check
+        # is the watchman we can have (report cadence samples it fortnightly)
+        now = datetime.datetime.now(datetime.timezone.utc)
+        day = (f'datetime_geq: "{(now - datetime.timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")}", '
+               f'datetime_leq: "{now.strftime("%Y-%m-%dT%H:%M:%SZ")}"')
         q = """query { viewer { zones(filter: {zoneTag: "%s"}) {
           nf: httpRequestsAdaptiveGroups(
             filter: {%s, edgeResponseStatus: 404}, limit: 10, orderBy: [count_DESC]) {
             count dimensions { clientRequestPath } }
-        } } }""" % (zone, flt)
+        } } }""" % (zone, day)
         data = gql(q)
         if data.get("errors"):
             out["errors"].append("404: " + "; ".join(e.get("message", "") for e in data["errors"])[:150])
@@ -494,14 +499,15 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
         out.append("")
         nf_err = next((e for e in cfx.get("errors", []) if e.startswith("404:")), None)
         if cfx.get("notfound"):
-            out += ["**404s (proxied)** — check for broken links:", ""]
+            out += ["**404s (proxied, last 24 h)** — check for broken links:", ""]
             for nf in cfx["notfound"]:
                 out.append(f"- `{nf['path']}` × {nf['count']}")
         elif nf_err:
-            out.append(f"**404s (proxied)** — not checked: {nf_err[5:]}")
-            out.append("  _(token needs Zone → Analytics → Read on the aethon.house zone)_")
+            out.append(f"**404s (proxied, last 24 h)** — not checked: {nf_err[5:]}")
+            if "permission" in nf_err:
+                out.append("  _(token needs Zone → Analytics → Read on the aethon.house zone)_")
         else:
-            out.append("**404s (proxied)** — none. No broken links in the window.")
+            out.append("**404s (proxied, last 24 h)** — none. No broken links.")
         for e in cfx.get("errors", []):
             if not e.startswith("404:"):
                 out.append(f"- _extras partial: {e}_")
