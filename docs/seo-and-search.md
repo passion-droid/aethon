@@ -188,3 +188,32 @@ card · region-level geo (`CY-05`, no coordinates) · `lang="en-GB"` on all four
 **`og:image` / `twitter:image`(+`:alt`) are pre-wired but asset-blocked** — drop a
 1200×630 warm/afterglow master at `/images/og.jpg` and uncomment. Gallery is
 `noindex`; legal is indexable.
+
+## Report-Erweiterungen (2026-07-15)
+
+Der 14-tägige Report zieht seit 2026-07-15 zusätzlich: **Index-Status** (GSC URL
+Inspection: Verdict/Coverage/letzter Crawl/Canonical für `/`, `/legal/`, `/gallery/` +
+Sitemap-Gesundheit + Rich-Results-Check), **Brand-vs-Discovery-Split** ('aethon' in der
+Query ja/nein) + **Bildersuche-Baseline** (`type=image`), GSC **Country/Device/Tages-
+Trend**, **PSI für /gallery/** (SEO-Score dort = beabsichtigtes noindex, im Report
+annotiert) + **Top-Lighthouse-Vorschläge**, Cloudflare **Referrer + Tageskurve** und
+einen **404-Wächter**.
+
+### Owner-Setup 1 — Brevo-Listengröße (BREVO_API_KEY)
+Zeigt die Größe der „AETHON — Interest"-Liste im Report (nur die Zahl, nie Kontaktdaten).
+1. Brevo → Profil (oben rechts) → **SMTP & API** → Reiter **API-Schlüssel** →
+   **Neuen API-Schlüssel generieren**, Name z. B. `aethon-report` → Schlüssel kopieren
+   (wird nur einmal angezeigt).
+2. GitHub → Repo `passion-droid/aethon` → **Settings → Secrets and variables → Actions →
+   New repository secret** → Name exakt `BREVO_API_KEY`, Wert = der Schlüssel.
+3. Fertig — der nächste Report füllt die Sektion „Interest list (Brevo)" von selbst.
+   (Bis dahin steht dort die Erinnerung „no BREVO_API_KEY secret set".)
+
+### Owner-Setup 2 — 404-Wächter (Cloudflare-Token erweitern)
+Der 404-Teil braucht auf dem bestehenden Token zusätzlich **Zone → Analytics → Read**
+(Fehlertext im Report bis dahin: `does not have permission
+'com.cloudflare.api.account.zone.analytics.read'`).
+Cloudflare-Dashboard → **My Profile → API Tokens** → beim vorhandenen Token **Edit** →
+unter *Zone* eine Permission-Zeile hinzufügen: Dropdown **Analytics** + **Read**,
+Zone Resources: Include → Specific zone → `aethon.house` → **Continue to summary → Save**.
+Kein neuer Token nötig; Worker/KV/Zone-Read bleiben unberührt.
