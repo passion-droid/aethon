@@ -54,10 +54,22 @@ def gsc_service():
         return None, f"credential error: {ex}"
 
 
-def _gsc_rows(svc, start, end, dimensions, limit):
+def _gsc_rows(svc, start, end, dimensions, limit, extra=None):
     body = {"startDate": start, "endDate": end, "dimensions": dimensions,
             "rowLimit": limit, "dataState": "all"}
+    if extra:
+        body.update(extra)
     return svc.searchanalytics().query(siteUrl=PROPERTY, body=body).execute().get("rows", [])
+
+
+def _gsc_totals(svc, start, end, extra=None):
+    rows = _gsc_rows(svc, start, end, [], 1, extra)
+    return rows[0] if rows else {}
+
+
+def _brand_filter(op):
+    return {"dimensionFilterGroups": [{"filters": [
+        {"dimension": "query", "operator": op, "expression": "aethon"}]}]}
 
 
 def pull_gsc(days):
@@ -68,13 +80,19 @@ def pull_gsc(days):
     start = end - datetime.timedelta(days=days)
     s, e = start.isoformat(), end.isoformat()
     try:
-        totals = _gsc_rows(svc, s, e, [], 1)
         return {
             "available": True,
             "range": [s, e],
-            "totals": totals[0] if totals else {},
+            "totals": _gsc_totals(svc, s, e),
             "queries": _gsc_rows(svc, s, e, ["query"], 25),
             "pages": _gsc_rows(svc, s, e, ["page"], 25),
+            # brand vs discovery vs image search — the strategic split for a brand site
+            "brand": _gsc_totals(svc, s, e, _brand_filter("contains")),
+            "nonbrand": _gsc_totals(svc, s, e, _brand_filter("notContains")),
+            "image": _gsc_totals(svc, s, e, {"type": "image"}),
+            "countries": _gsc_rows(svc, s, e, ["country"], 8),
+            "devices": _gsc_rows(svc, s, e, ["device"], 5),
+            "daily": _gsc_rows(svc, s, e, ["date"], 40),
         }
     except Exception as ex:  # noqa: BLE001
         return {"available": False, "reason": f"query failed: {ex}"}
@@ -92,12 +110,15 @@ def pull_index():
             r = svc.urlInspection().index().inspect(
                 body={"inspectionUrl": u, "siteUrl": PROPERTY}).execute()
             st = r.get("inspectionResult", {}).get("indexStatusResult", {})
+            rr = r.get("inspectionResult", {}).get("richResultsResult") or {}
+            kinds = [d.get("richResultType", "?") for d in rr.get("detectedItems", [])]
             out["pages"].append({
                 "url": u,
                 "verdict": st.get("verdict", "?"),
                 "coverage": st.get("coverageState", "?"),
                 "lastCrawl": (st.get("lastCrawlTime") or "—")[:16].replace("T", " "),
                 "canonical": st.get("googleCanonical") or "—",
+                "rich": f"{rr.get('verdict', '')}: {', '.join(kinds)}" if rr else "",
             })
         except Exception as ex:  # noqa: BLE001
             out["pages"].append({"url": u, "verdict": "ERROR", "coverage": str(ex)[:120],
@@ -118,8 +139,8 @@ def pull_index():
 
 
 # ---------- PageSpeed Insights ----------
-def pull_psi(strategy):
-    params = {"url": f"https://{SITE}/", "strategy": strategy,
+def pull_psi(strategy, path="/"):
+    params = {"url": f"https://{SITE}{path}", "strategy": strategy,
               "category": ["performance", "accessibility", "best-practices", "seo"]}
     key = os.environ.get("PSI_API_KEY")
     if key:
@@ -150,6 +171,13 @@ def pull_psi(strategy):
                     ["first-contentful-paint", "largest-contentful-paint",
                      "total-blocking-time", "cumulative-layout-shift", "speed-index"]},
         "field": data.get("loadingExperience", {}).get("overall_category", "insufficient real-user data"),
+        # the audit's top improvement suggestions (only real ones — >=100ms estimated savings)
+        "opportunities": sorted(
+            (f"{a.get('title', '?')} (~{round(a['details']['overallSavingsMs'])} ms)"
+             for a in audits.values()
+             if (a.get("details") or {}).get("type") == "opportunity"
+             and (a["details"].get("overallSavingsMs") or 0) >= 100),
+        )[:3],
     }
 
 
@@ -200,6 +228,101 @@ def pull_cloudflare(days):
         }
     except Exception as ex:  # noqa: BLE001
         return {"available": False, "reason": f"parse error: {ex}"}
+
+
+def pull_cloudflare_extras(days):
+    """Referrers, daily visits and a 404 watch — separate GraphQL call so a schema
+    hiccup here never takes the core Web-Analytics section down with it."""
+    token = os.environ.get("CLOUDFLARE_API_TOKEN")
+    account = os.environ.get("CF_ACCOUNT_TAG")
+    if not token or not account:
+        return {"available": False, "reason": "no CLOUDFLARE_API_TOKEN / CF_ACCOUNT_TAG set"}
+    end = datetime.date.today()
+    start = end - datetime.timedelta(days=days)
+    flt = f'date_geq: "{start.isoformat()}", date_leq: "{end.isoformat()}"'
+    out = {"available": True, "referrers": [], "daily": [], "notfound": [],
+           "errors": []}
+
+    def gql(query):
+        req = urllib.request.Request(
+            CF_GRAPHQL, data=json.dumps({"query": query}).encode(),
+            headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return json.load(resp)
+
+    # referrers + daily curve (same RUM dataset as the core section)
+    try:
+        q = """query { viewer { accounts(filter: {accountTag: "%s"}) {
+          refs: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 10, orderBy: [count_DESC]) {
+            count dimensions { refererHost } }
+          daily: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 40, orderBy: [date_ASC]) {
+            count sum { visits } dimensions { date } }
+        } } }""" % (account, flt, flt)
+        data = gql(q)
+        if data.get("errors"):
+            out["errors"].append("rum: " + "; ".join(e.get("message", "") for e in data["errors"])[:150])
+        else:
+            acct = data["data"]["viewer"]["accounts"][0]
+            out["referrers"] = [
+                {"host": g["dimensions"]["refererHost"] or "(direct)", "views": g["count"]}
+                for g in acct.get("refs", [])]
+            out["daily"] = [
+                {"date": g["dimensions"]["date"], "visits": (g.get("sum") or {}).get("visits", 0)}
+                for g in acct.get("daily", [])]
+    except Exception as ex:  # noqa: BLE001
+        out["errors"].append(f"rum: {str(ex)[:150]}")
+
+    # 404 watch on the proxied zone (needs the zone id via REST; Zone:Read covers it)
+    try:
+        req = urllib.request.Request(
+            f"https://api.cloudflare.com/client/v4/zones?name={SITE}",
+            headers={"Authorization": f"Bearer {token}"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            zones = json.load(resp)
+        zone = (zones.get("result") or [{}])[0].get("id")
+        if not zone:
+            raise RuntimeError("zone not visible to token")
+        q = """query { viewer { zones(filter: {zoneTag: "%s"}) {
+          nf: httpRequestsAdaptiveGroups(
+            filter: {%s, edgeResponseStatus: 404}, limit: 10, orderBy: [count_DESC]) {
+            count dimensions { clientRequestPath } }
+        } } }""" % (zone, flt)
+        data = gql(q)
+        if data.get("errors"):
+            out["errors"].append("404: " + "; ".join(e.get("message", "") for e in data["errors"])[:150])
+        else:
+            z = data["data"]["viewer"]["zones"][0]
+            out["notfound"] = [
+                {"path": g["dimensions"]["clientRequestPath"], "count": g["count"]}
+                for g in z.get("nf", [])]
+    except Exception as ex:  # noqa: BLE001
+        out["errors"].append(f"404: {str(ex)[:150]}")
+    return out
+
+
+# ---------- Brevo — the interest list (count only, never contact data) ----------
+def pull_brevo():
+    """Size of the "AETHON — Interest" list. Degrades gracefully until the
+    BREVO_API_KEY secret exists (create a read-suited key in Brevo -> SMTP & API)."""
+    key = os.environ.get("BREVO_API_KEY")
+    if not key:
+        return {"available": False,
+                "reason": "no BREVO_API_KEY secret set — add it and this section fills itself"}
+    req = urllib.request.Request(
+        "https://api.brevo.com/v3/contacts/lists?limit=50",
+        headers={"api-key": key, "accept": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.load(resp)
+    except urllib.error.HTTPError as ex:
+        return {"available": False, "reason": f"HTTP {ex.code} — {ex.read().decode('utf-8', 'replace')[:150]}"}
+    except Exception as ex:  # noqa: BLE001
+        return {"available": False, "reason": str(ex)[:150]}
+    lists = [{"name": l.get("name", "?"),
+              "subscribers": l.get("totalSubscribers", 0),
+              "blacklisted": l.get("totalBlacklisted", 0)}
+             for l in data.get("lists", []) if "aethon" in l.get("name", "").lower()]
+    return {"available": True, "lists": lists}
 
 
 # ---------- On-page events (aethon-events worker, Workers KV) ----------
@@ -258,11 +381,12 @@ def pull_events(days):
 
 
 # ---------- report ----------
-def render(gsc, index, psi_mobile, psi_desktop, cf, events, when):
+def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, when):
     out = [f"# AETHON — insights · {when}", ""]
 
     out.append("## PageSpeed Insights (lab)")
-    for label, psi in [("Mobile", psi_mobile), ("Desktop", psi_desktop)]:
+    for label, psi in [("Mobile /", psi_mobile), ("Desktop /", psi_desktop),
+                       ("Mobile /gallery/", psi_gallery)]:
         if psi.get("available"):
             sc = psi["scores"]
             out.append(f"- **{label}** — perf **{sc.get('performance', '?')}** · a11y {sc.get('accessibility', '?')} · "
@@ -271,6 +395,8 @@ def render(gsc, index, psi_mobile, psi_desktop, cf, events, when):
             m = psi["metrics"]
             out.append(f"    - LCP {m['largest-contentful-paint']} · CLS {m['cumulative-layout-shift']} · "
                        f"TBT {m['total-blocking-time']} · FCP {m['first-contentful-paint']} · SI {m['speed-index']}")
+            for o in psi.get("opportunities", []):
+                out.append(f"    - suggest: {o}")
         else:
             out.append(f"- **{label}** — unavailable ({psi.get('reason', '')[:180]})")
     out.append("")
@@ -298,6 +424,22 @@ def render(gsc, index, psi_mobile, psi_desktop, cf, events, when):
                              f"{r.get('ctr', 0) * 100:.1f}% | {r.get('position', 0):.1f} |")
             return lines
 
+        b, nb, im = gsc.get("brand", {}), gsc.get("nonbrand", {}), gsc.get("image", {})
+        out.append(f"- **Brand vs discovery** — 'aethon' queries: {int(b.get('impressions', 0))} impressions / "
+                   f"{int(b.get('clicks', 0))} clicks · other queries: {int(nb.get('impressions', 0))} / "
+                   f"{int(nb.get('clicks', 0))} · **image search**: {int(im.get('impressions', 0))} impressions"
+                   f"{' (baseline for the photography)' if not im.get('impressions') else ''}")
+        if gsc.get("devices"):
+            out.append("- **Devices** — " + " · ".join(
+                f"{r['keys'][0].lower()} {int(r.get('impressions', 0))}" for r in gsc["devices"]))
+        if gsc.get("countries"):
+            out.append("- **Countries** — " + " · ".join(
+                f"{r['keys'][0].upper()} {int(r.get('impressions', 0))}" for r in gsc["countries"][:8]))
+        active_days = [r for r in gsc.get("daily", []) if int(r.get("impressions", 0)) > 0]
+        if active_days:
+            out.append("- **By day** — " + " · ".join(
+                f"{r['keys'][0][5:]} ×{int(r['impressions'])}" for r in active_days))
+
         out += gsc_table(gsc.get("queries"), "queries")
         out += gsc_table(gsc.get("pages"), "pages")
     out.append("")
@@ -317,6 +459,10 @@ def render(gsc, index, psi_mobile, psi_desktop, cf, events, when):
                            f"{m['errors']} errors / {m['warnings']} warnings")
         elif index.get("sitemap_error"):
             out.append(f"- _sitemap status unavailable: {index['sitemap_error']}_")
+        rich = [f"{p['url'].replace('https://' + SITE, '') or '/'} → {p['rich']}"
+                for p in index["pages"] if p.get("rich")]
+        out.append("- rich results: " + ("; ".join(rich) if rich
+                   else "none detected — expected (WebSite/Residence JSON-LD are not rich-result types)"))
         out.append("- _(/gallery/ is noindex **by design** — an 'excluded by noindex' row is the intended state.)_")
     out.append("")
 
@@ -334,6 +480,37 @@ def render(gsc, index, psi_mobile, psi_desktop, cf, events, when):
             out += ["", "### Top countries", "", "| country | views |", "|---|--:|"]
             for c in cf["countries"]:
                 out.append(f"| {c['country']} | {c['views']} |")
+    if cfx.get("available"):
+        if cfx.get("referrers"):
+            out += ["", "### Referrers", "", "| source | views |", "|---|--:|"]
+            for r in cfx["referrers"]:
+                out.append(f"| {r['host']} | {r['views']} |")
+        if cfx.get("daily"):
+            out.append("")
+            out.append("**Visits by day** — " + " · ".join(
+                f"{d['date'][5:]}:{d['visits']}" for d in cfx["daily"] if d["visits"]))
+        out.append("")
+        if cfx.get("notfound"):
+            out += ["**404s (proxied)** — check for broken links:", ""]
+            for nf in cfx["notfound"]:
+                out.append(f"- `{nf['path']}` × {nf['count']}")
+        else:
+            out.append("**404s (proxied)** — none. No broken links in the window.")
+        for e in cfx.get("errors", []):
+            out.append(f"- _extras partial: {e}_")
+    else:
+        out.append(f"_Extras unavailable: {cfx.get('reason', '')[:150]}_")
+    out.append("")
+
+    out.append("## Interest list (Brevo)")
+    if not brevo.get("available"):
+        out.append(f"_Unavailable: {brevo.get('reason', '')[:200]}_")
+    elif not brevo.get("lists"):
+        out.append("_No list with 'AETHON' in its name found — check the list name in Brevo._")
+    else:
+        for l in brevo["lists"]:
+            out.append(f"- **{l['name']}** — **{l['subscribers']}** on the list"
+                       + (f" ({l['blacklisted']} unsubscribed/blocked)" if l["blacklisted"] else ""))
     out.append("")
     out.append("## On-page events (anonymous counters)")
     if not events.get("available"):
@@ -362,17 +539,22 @@ def main():
     index = pull_index()
     psi_mobile = pull_psi("mobile")
     psi_desktop = pull_psi("desktop")
+    psi_gallery = pull_psi("mobile", "/gallery/")
     cf = pull_cloudflare(args.days)
+    cfx = pull_cloudflare_extras(args.days)
+    brevo = pull_brevo()
     events = pull_events(args.days)
 
     os.makedirs(args.out, exist_ok=True)
-    report = render(gsc, index, psi_mobile, psi_desktop, cf, events, when)
+    report = render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, when)
     base = os.path.join(args.out, when)
     with open(base + ".md", "w", encoding="utf-8") as fh:
         fh.write(report)
     with open(base + ".json", "w", encoding="utf-8") as fh:
-        json.dump({"date": when, "gsc": gsc, "index": index, "cloudflare": cf, "events": events,
-                   "psi": {"mobile": psi_mobile, "desktop": psi_desktop}}, fh, indent=2)
+        json.dump({"date": when, "gsc": gsc, "index": index, "cloudflare": cf,
+                   "cloudflare_extras": cfx, "brevo": brevo, "events": events,
+                   "psi": {"mobile": psi_mobile, "desktop": psi_desktop,
+                           "gallery_mobile": psi_gallery}}, fh, indent=2)
 
     print(report)
     step = os.environ.get("GITHUB_STEP_SUMMARY")

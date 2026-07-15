@@ -33,6 +33,7 @@ jobs:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_TAG: ${{ secrets.CF_ACCOUNT_TAG }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           CF_SITE_TAG: ${{ secrets.CF_SITE_TAG }}
         run: python scripts/seo-pull.py --out seo-reports --days 28
 
