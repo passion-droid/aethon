@@ -51,6 +51,21 @@ REGISTRY = {
     "views-interior":    ("images/views",   (16, 10), (1600, 800),       "eve"),
     "views-material":    ("images/views",   (3, 1),   (1600, 800),       "day"),
     "gallery-approach":  ("images/gallery", (21, 9),  (2400, 1600, 800), "pair"),
+    # gallery chapters I (remainder) + II–VI — 2026-07-15 extension. Features are pairs;
+    # everything else keeps one curated hour (captions name it: "after dark", "golden hour", …)
+    "gallery-living":     ("images/gallery", (21, 9), (2400, 1600, 800), "pair"),
+    "gallery-west":       ("images/gallery", (21, 9), (2400, 1600, 800), "pair"),
+    "gallery-olives":     ("images/gallery", (4, 5),  (1600, 800), "day"),
+    "gallery-cypress":    ("images/gallery", (4, 5),  (1600, 800), "day"),
+    "gallery-lit-olive":  ("images/gallery", (3, 2),  (1600, 800), "eve"),
+    "gallery-terrace-gold": ("images/gallery", (3, 2), (1600, 800), "eve"),
+    "gallery-last-light": ("images/gallery", (3, 2),  (1600, 800), "eve"),
+    "gallery-evening-glow": ("images/gallery", (3, 2), (1600, 800), "eve"),
+    **{s: ("images/gallery", (3, 2), (1600, 800), "day") for s in (
+        "gallery-threshold", "gallery-first-light", "gallery-dining", "gallery-kitchen",
+        "gallery-pool", "gallery-terrace", "gallery-room-sea", "gallery-stair",
+        "gallery-patiti", "gallery-travertine-leather", "gallery-iroko", "gallery-rosemary",
+        "gallery-palette-hand", "gallery-coast-still")},
 }
 
 

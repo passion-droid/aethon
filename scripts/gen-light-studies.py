@@ -52,19 +52,24 @@ def _gauss(xx, yy, cx, cy, sx, sy):
 
 
 def study(w, h, register, motif="horizon", horizon=0.58, sunx=0.68, seed=7,
-          glow=1.0):
+          glow=1.0, opts=None):
     """One abstract coastal light study as an RGB uint8 array."""
     rng = np.random.default_rng(seed)
     yy, xx = np.meshgrid(np.linspace(0, 1, h), np.linspace(0, 1, w), indexing="ij")
     day = register == "day"
 
     if motif == "band":
-        # close raking-light texture — pressed lime / travertine ridges, no horizon
-        base = _ramp(h, [(0.0, TRAVERTINE), (1.0, SANDSTONE)])[:, None, :] * np.ones((h, w, 3))
+        # close raking-light texture — ridged material study, no horizon. opts (per slot):
+        # tones=(top,bottom) material colours · freq scales the ridge frequency · amp depth
+        o = opts or {}
+        tone_a, tone_b = o.get("tones", (TRAVERTINE, SANDSTONE))
+        f = o.get("freq", 1.0)
+        amp = o.get("amp", 0.055)
+        base = _ramp(h, [(0.0, tone_a), (1.0, tone_b)])[:, None, :] * np.ones((h, w, 3))
         diag = xx * 2.2 + yy * 0.9
-        ridges = (np.sin(diag * 34 + rng.uniform(0, 6)) * 0.5
-                  + np.sin(diag * 89 + rng.uniform(0, 6)) * 0.22)
-        shade = 1.0 + ridges[..., None] * 0.055
+        ridges = (np.sin(diag * 34 * f + rng.uniform(0, 6)) * 0.5
+                  + np.sin(diag * 89 * f + rng.uniform(0, 6)) * 0.22)
+        shade = 1.0 + ridges[..., None] * amp
         img = base * shade
         light = _gauss(xx, yy, 0.18, 0.25, 0.9, 0.7)[..., None] * np.array(GLOW_DAY)
         img = img + light * 0.10
@@ -146,6 +151,29 @@ COMPOSITIONS = {
     "views-interior":  ("glowpool",  0.55, 0.55, 131, 0.95),
     "views-material":  ("band",      0.50, 0.50, 141, 1.00),
     "gallery-approach": ("horizon",  0.61, 0.60, 151, 1.00),
+    # gallery chapters I (remainder) + II–VI — 2026-07-15 extension
+    "gallery-threshold":   ("horizon",   0.55, 0.35, 161, 0.70),
+    "gallery-first-light": ("horizon",   0.62, 0.34, 171, 1.05),   # low morning sun at the threshold
+    "gallery-living":      ("horizon",   0.52, 0.76, 181, 0.90),
+    "gallery-dining":      ("horizon",   0.50, 0.60, 191, 0.60),
+    "gallery-kitchen":     ("band",      0.50, 0.50, 201, 1.00, {"tones": ((220, 205, 179), (156, 106, 62)), "freq": 0.7, "amp": 0.05}),
+    "gallery-pool":        ("horizon",   0.68, 0.50, 211, 0.90),
+    "gallery-olives":      ("verticals", 0.62, 0.30, 221, 0.75),
+    "gallery-cypress":     ("verticals", 0.70, 0.20, 231, 0.70),
+    "gallery-terrace":     ("horizon",   0.58, 0.42, 241, 0.85),
+    "gallery-lit-olive":   ("glowpool",  0.58, 0.50, 251, 1.00),
+    "gallery-west":        ("horizon",   0.60, 0.64, 261, 1.00),
+    "gallery-terrace-gold": ("horizon",  0.55, 0.68, 271, 1.15),
+    "gallery-last-light":  ("horizon",   0.64, 0.50, 281, 0.80),
+    "gallery-room-sea":    ("horizon",   0.50, 0.80, 291, 0.80),
+    "gallery-stair":       ("verticals", 0.50, 0.30, 301, 0.60),
+    "gallery-evening-glow": ("glowpool", 0.55, 0.55, 311, 0.90),
+    "gallery-patiti":      ("band",      0.50, 0.50, 321, 1.00, {"tones": ((205, 186, 156), (181, 160, 128))}),
+    "gallery-travertine-leather": ("band", 0.50, 0.50, 331, 1.00, {"tones": ((220, 205, 179), (134, 132, 104)), "freq": 0.6, "amp": 0.06}),
+    "gallery-iroko":       ("band",      0.50, 0.50, 341, 1.00, {"tones": ((176, 124, 78), (140, 94, 56)), "freq": 1.2, "amp": 0.05}),
+    "gallery-rosemary":    ("band",      0.50, 0.50, 351, 1.00, {"tones": ((150, 156, 133), (122, 129, 106)), "freq": 1.8, "amp": 0.04}),
+    "gallery-palette-hand": ("band",     0.50, 0.50, 361, 1.00, {"tones": ((233, 231, 224), (160, 150, 132)), "freq": 0.30, "amp": 0.08}),
+    "gallery-coast-still": ("horizon",   0.60, 0.50, 371, 0.60),
 }
 
 # master canvas per slot: largest width the registry emits, at the slot's exact ratio
@@ -156,6 +184,15 @@ CANVAS = {
     "views-olives": (1600, 2000), "views-olive-night": (1600, 2000),
     "views-terrace": (1600, 1000), "views-interior": (1600, 1000),
     "views-material": (1602, 534), "gallery-approach": (2400, 1029),  # 1602x534 = exact 3:1
+    "gallery-living": (2400, 1029), "gallery-west": (2400, 1029),
+    "gallery-olives": (1600, 2000), "gallery-cypress": (1600, 2000),
+    # all remaining gallery plates: exact 3:2
+    **{s: (1602, 1068) for s in (
+        "gallery-threshold", "gallery-first-light", "gallery-dining", "gallery-kitchen",
+        "gallery-pool", "gallery-terrace", "gallery-lit-olive", "gallery-terrace-gold",
+        "gallery-last-light", "gallery-room-sea", "gallery-stair", "gallery-evening-glow",
+        "gallery-patiti", "gallery-travertine-leather", "gallery-iroko", "gallery-rosemary",
+        "gallery-palette-hand", "gallery-coast-still")},
 }
 
 # which hours each slot keeps (mirrors process-photos.py / Appendix A)
@@ -164,6 +201,14 @@ HOURS = {
     "views-west": "pair", "views-living": "pair", "views-pool": "pair", "gallery-approach": "pair",
     "plate-garden": "day", "views-olives": "day", "views-terrace": "day", "views-material": "day",
     "plate-interior": "eve", "views-olive-night": "eve", "views-interior": "eve",
+    "gallery-living": "pair", "gallery-west": "pair",
+    "gallery-lit-olive": "eve", "gallery-terrace-gold": "eve", "gallery-last-light": "eve",
+    "gallery-evening-glow": "eve",
+    **{s: "day" for s in (
+        "gallery-threshold", "gallery-first-light", "gallery-dining", "gallery-kitchen",
+        "gallery-pool", "gallery-olives", "gallery-cypress", "gallery-terrace",
+        "gallery-room-sea", "gallery-stair", "gallery-patiti", "gallery-travertine-leather",
+        "gallery-iroko", "gallery-rosemary", "gallery-palette-hand", "gallery-coast-still")},
 }
 
 
@@ -175,14 +220,16 @@ def main():
     os.makedirs(args.out, exist_ok=True)
     only = {s.strip() for s in args.only.split(",") if s.strip()}
 
-    for slot, (motif, horizon, sunx, seed, glow) in COMPOSITIONS.items():
+    for slot, comp in COMPOSITIONS.items():
         if only and slot not in only:
             continue
+        motif, horizon, sunx, seed, glow = comp[:5]
+        opts = comp[5] if len(comp) > 5 else None
         w, h = CANVAS[slot]
         hours = HOURS[slot]
         for hour in (("day", "eve") if hours == "pair" else (hours,)):
             reg = "day" if hour == "day" else "eve"
-            arr = study(w, h, reg, motif, horizon, sunx, seed, glow)
+            arr = study(w, h, reg, motif, horizon, sunx, seed, glow, opts)
             name = f"{slot}--{hour}.png" if hours == "pair" else f"{slot}.png"
             Image.fromarray(arr).save(os.path.join(args.out, name))
             print(f"  {name}  {w}x{h}")

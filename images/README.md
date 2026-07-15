@@ -50,9 +50,13 @@ the real photography changes **files only**:
 | `gallery-approach` | /gallery/ chapter I feature | 21:9 | pair |
 
 (The registry lives in `scripts/process-photos.py`; it mirrors the imagery brief's
-Appendix A. Gallery chapters II–VI get their slots the same way as they're shot —
-extend the registry + swap each `.ph` per the pattern already documented in
-`gallery/index.html`.)
+Appendix A. **The gallery is fully wired too (2026-07-15)** — all six chapters, 23
+frames: the features `gallery-approach` / `gallery-living` / `gallery-west` are 21:9
+**pairs**; `gallery-olives` / `gallery-cypress` are 4:5 portraits; every other plate
+is a 3:2 **single that carries its caption's hour** — evening for `gallery-lit-olive`,
+`gallery-terrace-gold`, `gallery-last-light`, `gallery-evening-glow`, day for the
+rest, incl. the chapter-VI material textures. Photography day covers them with the
+same master-naming rules; nothing in `gallery/index.html` needs editing.)
 
 **Until then: synthetic light studies.** `scripts/gen-light-studies.py` generates the
 abstract Daylight/Afterglow stand-ins now live in every slot (brand palette only,

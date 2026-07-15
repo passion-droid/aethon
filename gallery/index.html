@@ -159,7 +159,8 @@
     /* trio: the lead plate fills the height of the two stacked alongside (no orphaned single) —
        scoped here so single-column phones keep the standard 3:2 plate */
     .plates.trio > .plate:first-child{ display:flex; flex-direction:column; }
-    .plates.trio > .plate:first-child .ph{ aspect-ratio:auto; flex:1 1 auto; min-height:18rem; }
+    .plates.trio > .plate:first-child .ph,
+    .plates.trio > .plate:first-child picture{ aspect-ratio:auto; flex:1 1 auto; min-height:18rem; height:auto; }
   }
   .plate{ margin:0; }
   .ph{ position:relative; width:100%; aspect-ratio:3 / 2; background:var(--frame-grad); border:1px solid var(--rule); overflow:hidden; transition:background 0.7s ease; }
@@ -377,8 +378,14 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <figcaption class="cap">Approach · the western coast</figcaption>
       </figure>
       <div class="plates">
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The threshold</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">First light in the entrance</figcaption></figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-threshold-800.avif 800w, /images/gallery/gallery-threshold-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-threshold-800.webp 800w, /images/gallery/gallery-threshold-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-threshold-1600.jpg" srcset="/images/gallery/gallery-threshold-800.jpg 800w, /images/gallery/gallery-threshold-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The threshold</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-first-light-800.avif 800w, /images/gallery/gallery-first-light-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-first-light-800.webp 800w, /images/gallery/gallery-first-light-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-first-light-1600.jpg" srcset="/images/gallery/gallery-first-light-800.jpg 800w, /images/gallery/gallery-first-light-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">First light in the entrance</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -389,13 +396,33 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <p class="measure">The ground level is for gathering — living and dining open to the terrace, the pool, and the sea beyond. Reduced, unhurried lines.</p>
       </div>
       <figure class="plate feature">
-        <div class="ph" aria-hidden="true"></div>
+        <div class="shot-pair">
+          <picture class="shot-day">
+            <source type="image/avif" srcset="/images/gallery/gallery-living-day-800.avif 800w, /images/gallery/gallery-living-day-1600.avif 1600w, /images/gallery/gallery-living-day-2400.avif 2400w" sizes="100vw">
+            <source type="image/webp" srcset="/images/gallery/gallery-living-day-800.webp 800w, /images/gallery/gallery-living-day-1600.webp 1600w, /images/gallery/gallery-living-day-2400.webp 2400w" sizes="100vw">
+            <img src="/images/gallery/gallery-living-day-1600.jpg" srcset="/images/gallery/gallery-living-day-800.jpg 800w, /images/gallery/gallery-living-day-1600.jpg 1600w, /images/gallery/gallery-living-day-2400.jpg 2400w" sizes="100vw" width="2400" height="1029" loading="lazy" decoding="async" alt="">
+          </picture>
+          <picture class="shot-night">
+            <source type="image/avif" srcset="/images/gallery/gallery-living-eve-800.avif 800w, /images/gallery/gallery-living-eve-1600.avif 1600w, /images/gallery/gallery-living-eve-2400.avif 2400w" sizes="100vw">
+            <source type="image/webp" srcset="/images/gallery/gallery-living-eve-800.webp 800w, /images/gallery/gallery-living-eve-1600.webp 1600w, /images/gallery/gallery-living-eve-2400.webp 2400w" sizes="100vw">
+            <img src="/images/gallery/gallery-living-eve-1600.jpg" srcset="/images/gallery/gallery-living-eve-800.jpg 800w, /images/gallery/gallery-living-eve-1600.jpg 1600w, /images/gallery/gallery-living-eve-2400.jpg 2400w" sizes="100vw" width="2400" height="1029" loading="lazy" decoding="async" alt="">
+          </picture>
+        </div>
         <figcaption class="cap">Living, toward the sea</figcaption>
       </figure>
       <div class="plates trio">
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Dining, at the long table</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The kitchen, in stone and oak</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The pool, mirroring the sky</figcaption></figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-dining-800.avif 800w, /images/gallery/gallery-dining-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-dining-800.webp 800w, /images/gallery/gallery-dining-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-dining-1600.jpg" srcset="/images/gallery/gallery-dining-800.jpg 800w, /images/gallery/gallery-dining-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Dining, at the long table</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-kitchen-800.avif 800w, /images/gallery/gallery-kitchen-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-kitchen-800.webp 800w, /images/gallery/gallery-kitchen-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-kitchen-1600.jpg" srcset="/images/gallery/gallery-kitchen-800.jpg 800w, /images/gallery/gallery-kitchen-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The kitchen, in stone and oak</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-pool-800.avif 800w, /images/gallery/gallery-pool-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-pool-800.webp 800w, /images/gallery/gallery-pool-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-pool-1600.jpg" srcset="/images/gallery/gallery-pool-800.jpg 800w, /images/gallery/gallery-pool-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The pool, mirroring the sky</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -406,12 +433,24 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <p class="measure">Garden and terrace hold the horizon — old olives and cypress verticals, warm-sand shade sails for the midday, the evening kept for the sun.</p>
       </div>
       <div class="plates">
-        <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Sculptural olives</figcaption></figure>
-        <figure class="plate portrait"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Cypress verticals</figcaption></figure>
+        <figure class="plate portrait">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-olives-800.avif 800w, /images/gallery/gallery-olives-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-olives-800.webp 800w, /images/gallery/gallery-olives-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-olives-1600.jpg" srcset="/images/gallery/gallery-olives-800.jpg 800w, /images/gallery/gallery-olives-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Sculptural olives</figcaption>
+        </figure>
+        <figure class="plate portrait">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-cypress-800.avif 800w, /images/gallery/gallery-cypress-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-cypress-800.webp 800w, /images/gallery/gallery-cypress-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-cypress-1600.jpg" srcset="/images/gallery/gallery-cypress-800.jpg 800w, /images/gallery/gallery-cypress-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Cypress verticals</figcaption>
+        </figure>
       </div>
       <div class="plates">
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The terrace, under shade sails</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The lit olive, after dark</figcaption></figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-terrace-800.avif 800w, /images/gallery/gallery-terrace-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-terrace-800.webp 800w, /images/gallery/gallery-terrace-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-terrace-1600.jpg" srcset="/images/gallery/gallery-terrace-800.jpg 800w, /images/gallery/gallery-terrace-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The terrace, under shade sails</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-lit-olive-800.avif 800w, /images/gallery/gallery-lit-olive-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-lit-olive-800.webp 800w, /images/gallery/gallery-lit-olive-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-lit-olive-1600.jpg" srcset="/images/gallery/gallery-lit-olive-800.jpg 800w, /images/gallery/gallery-lit-olive-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The lit olive, after dark</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -422,12 +461,29 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <p class="measure">The coast faces west. Each evening the sun lowers into the sea, and the stone holds the warmth it leaves behind.</p>
       </div>
       <figure class="plate feature">
-        <div class="ph" aria-hidden="true"></div>
+        <div class="shot-pair">
+          <picture class="shot-day">
+            <source type="image/avif" srcset="/images/gallery/gallery-west-day-800.avif 800w, /images/gallery/gallery-west-day-1600.avif 1600w, /images/gallery/gallery-west-day-2400.avif 2400w" sizes="100vw">
+            <source type="image/webp" srcset="/images/gallery/gallery-west-day-800.webp 800w, /images/gallery/gallery-west-day-1600.webp 1600w, /images/gallery/gallery-west-day-2400.webp 2400w" sizes="100vw">
+            <img src="/images/gallery/gallery-west-day-1600.jpg" srcset="/images/gallery/gallery-west-day-800.jpg 800w, /images/gallery/gallery-west-day-1600.jpg 1600w, /images/gallery/gallery-west-day-2400.jpg 2400w" sizes="100vw" width="2400" height="1029" loading="lazy" decoding="async" alt="">
+          </picture>
+          <picture class="shot-night">
+            <source type="image/avif" srcset="/images/gallery/gallery-west-eve-800.avif 800w, /images/gallery/gallery-west-eve-1600.avif 1600w, /images/gallery/gallery-west-eve-2400.avif 2400w" sizes="100vw">
+            <source type="image/webp" srcset="/images/gallery/gallery-west-eve-800.webp 800w, /images/gallery/gallery-west-eve-1600.webp 1600w, /images/gallery/gallery-west-eve-2400.webp 2400w" sizes="100vw">
+            <img src="/images/gallery/gallery-west-eve-1600.jpg" srcset="/images/gallery/gallery-west-eve-800.jpg 800w, /images/gallery/gallery-west-eve-1600.jpg 1600w, /images/gallery/gallery-west-eve-2400.jpg 2400w" sizes="100vw" width="2400" height="1029" loading="lazy" decoding="async" alt="">
+          </picture>
+        </div>
         <figcaption class="cap">West elevation · sunset</figcaption>
       </figure>
       <div class="plates offset">
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The terrace, golden hour</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Last light on the water</figcaption></figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-terrace-gold-800.avif 800w, /images/gallery/gallery-terrace-gold-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-terrace-gold-800.webp 800w, /images/gallery/gallery-terrace-gold-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-terrace-gold-1600.jpg" srcset="/images/gallery/gallery-terrace-gold-800.jpg 800w, /images/gallery/gallery-terrace-gold-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The terrace, golden hour</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-last-light-800.avif 800w, /images/gallery/gallery-last-light-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-last-light-800.webp 800w, /images/gallery/gallery-last-light-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-last-light-1600.jpg" srcset="/images/gallery/gallery-last-light-800.jpg 800w, /images/gallery/gallery-last-light-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Last light on the water</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -438,9 +494,18 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <p class="measure">The upper floor withdraws for rest — the day&rsquo;s warmth drawn inward, the rooms quieted and dimmed.</p>
       </div>
       <div class="plates trio">
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">A room, toward the sea</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The stair, rising</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Evening, turned to a glow</figcaption></figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-room-sea-800.avif 800w, /images/gallery/gallery-room-sea-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-room-sea-800.webp 800w, /images/gallery/gallery-room-sea-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-room-sea-1600.jpg" srcset="/images/gallery/gallery-room-sea-800.jpg 800w, /images/gallery/gallery-room-sea-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">A room, toward the sea</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-stair-800.avif 800w, /images/gallery/gallery-stair-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-stair-800.webp 800w, /images/gallery/gallery-stair-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-stair-1600.jpg" srcset="/images/gallery/gallery-stair-800.jpg 800w, /images/gallery/gallery-stair-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The stair, rising</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-evening-glow-800.avif 800w, /images/gallery/gallery-evening-glow-1600.avif 1600w" sizes="(min-width: 680px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-evening-glow-800.webp 800w, /images/gallery/gallery-evening-glow-1600.webp 1600w" sizes="(min-width: 680px) 46vw, 92vw"><img src="/images/gallery/gallery-evening-glow-1600.jpg" srcset="/images/gallery/gallery-evening-glow-800.jpg 800w, /images/gallery/gallery-evening-glow-1600.jpg 1600w" sizes="(min-width: 680px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Evening, turned to a glow</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -451,12 +516,30 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <p class="measure">The colours gathered from the place — the light of the sea, the cliffs, the coastal herbs, the inland woods — in the materials that carry them.</p>
       </div>
       <div class="plates three">
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Patiti, pressed into waves</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Travertine and olive leather</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Iroko, close at hand</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Rosemary green, in fabric</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">The palette in the hand</figcaption></figure>
-        <figure class="plate"><div class="ph" aria-hidden="true"></div><figcaption class="cap">Of the coast — rosemary, olive, stone</figcaption></figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-patiti-800.avif 800w, /images/gallery/gallery-patiti-1600.avif 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-patiti-800.webp 800w, /images/gallery/gallery-patiti-1600.webp 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><img src="/images/gallery/gallery-patiti-1600.jpg" srcset="/images/gallery/gallery-patiti-800.jpg 800w, /images/gallery/gallery-patiti-1600.jpg 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Patiti, pressed into waves</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-travertine-leather-800.avif 800w, /images/gallery/gallery-travertine-leather-1600.avif 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-travertine-leather-800.webp 800w, /images/gallery/gallery-travertine-leather-1600.webp 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><img src="/images/gallery/gallery-travertine-leather-1600.jpg" srcset="/images/gallery/gallery-travertine-leather-800.jpg 800w, /images/gallery/gallery-travertine-leather-1600.jpg 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Travertine and olive leather</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-iroko-800.avif 800w, /images/gallery/gallery-iroko-1600.avif 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-iroko-800.webp 800w, /images/gallery/gallery-iroko-1600.webp 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><img src="/images/gallery/gallery-iroko-1600.jpg" srcset="/images/gallery/gallery-iroko-800.jpg 800w, /images/gallery/gallery-iroko-1600.jpg 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Iroko, close at hand</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-rosemary-800.avif 800w, /images/gallery/gallery-rosemary-1600.avif 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-rosemary-800.webp 800w, /images/gallery/gallery-rosemary-1600.webp 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><img src="/images/gallery/gallery-rosemary-1600.jpg" srcset="/images/gallery/gallery-rosemary-800.jpg 800w, /images/gallery/gallery-rosemary-1600.jpg 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Rosemary green, in fabric</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-palette-hand-800.avif 800w, /images/gallery/gallery-palette-hand-1600.avif 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-palette-hand-800.webp 800w, /images/gallery/gallery-palette-hand-1600.webp 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><img src="/images/gallery/gallery-palette-hand-1600.jpg" srcset="/images/gallery/gallery-palette-hand-800.jpg 800w, /images/gallery/gallery-palette-hand-1600.jpg 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">The palette in the hand</figcaption>
+        </figure>
+        <figure class="plate">
+          <picture><source type="image/avif" srcset="/images/gallery/gallery-coast-still-800.avif 800w, /images/gallery/gallery-coast-still-1600.avif 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><source type="image/webp" srcset="/images/gallery/gallery-coast-still-800.webp 800w, /images/gallery/gallery-coast-still-1600.webp 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw"><img src="/images/gallery/gallery-coast-still-1600.jpg" srcset="/images/gallery/gallery-coast-still-800.jpg 800w, /images/gallery/gallery-coast-still-1600.jpg 1600w" sizes="(min-width: 680px) 31vw, (min-width: 480px) 46vw, 92vw" width="1600" height="1067" loading="lazy" decoding="async" alt=""></picture>
+          <figcaption class="cap">Of the coast — rosemary, olive, stone</figcaption>
+        </figure>
       </div>
     </section>
 

@@ -231,8 +231,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   is FINAL: photography day = replace files, rerun the script, commit — no HTML edits** (runbook:
   `images/README.md`). Wired slots: hero pair (day = LCP, `fetchpriority=high`, both layers eager
   for the R4 night arrival), both pause pairs (hold-to-preview now flips real images), architecture
-  plate pair, garden/interior single-hour plates, all 8 Views (3 pairs + 5 singles), gallery
-  `gallery-approach` pair; the establishing-film plate stays a labelled placeholder (it awaits
+  plate pair, garden/interior single-hour plates, all 8 Views (3 pairs + 5 singles), and —
+  since 2026-07-15 — the FULL gallery (all six chapters, 23 frames: 3 feature pairs incl.
+  `gallery-approach`, 2 portrait + 18 further curated single-hour plates whose captions name
+  their hour); the establishing-film plate stays a labelled placeholder (it awaits
   footage, not a still). **Single-hour frames carry `hour-day`/`hour-eve`** — the label colour
   follows the IMAGE's register, not the theme (theme-following labels landed pale-on-pale /
   dark-on-dark, 1.0–1.7:1; with the classes all 16 label samples measure 5.5–8.5:1 in both hours —
@@ -624,8 +626,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Gallery subpage:** a deeper photo-essay at `/gallery/` (`gallery/index.html`) —
   self-contained, **noindex**; now linked from the **main nav** (homepage header + overlay menu)
   as well as the end of *Views* and the footer. Six chapters (Arrival → the ground that gathers
-  → garden & terrace → western evening → the withdraw → materials) with labeled placeholder
-  slots + a SHOT BRIEF; awaiting images via the pipeline (800w/1600w into `images/gallery/`).
+  → garden & terrace → western evening → the withdraw → materials) — since 2026-07-15 ALL 23
+  frames carry light-study stand-ins via the `process-photos.py` registry (3 feature pairs +
+  20 curated single-hour plates; chapter VI = band-motif material textures; the trio-lead CSS
+  covers real `<picture>`s too); photography day swaps files only. The in-code SHOT BRIEF stays.
   Buildless, so its `<style>` mirrors index.html's tokens **by hand — keep them in sync**.
   **Layout vocabulary (pass 3, 2026-06):** `.plate.feature` (full-bleed 21:9), `.plates`
   (default pair), `.offset` (asymmetric two), **`.trio`** (one large + two stacked — fixes the
