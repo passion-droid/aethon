@@ -80,6 +80,43 @@ def pull_gsc(days):
         return {"available": False, "reason": f"query failed: {ex}"}
 
 
+def pull_index():
+    """Index status via the URL Inspection API (3 calls, quota 2000/day) + sitemap health."""
+    svc, err = gsc_service()
+    if not svc:
+        return {"available": False, "reason": err}
+    urls = [f"https://{SITE}/", f"https://{SITE}/legal/", f"https://{SITE}/gallery/"]
+    out = {"available": True, "pages": [], "sitemaps": []}
+    for u in urls:
+        try:
+            r = svc.urlInspection().index().inspect(
+                body={"inspectionUrl": u, "siteUrl": PROPERTY}).execute()
+            st = r.get("inspectionResult", {}).get("indexStatusResult", {})
+            out["pages"].append({
+                "url": u,
+                "verdict": st.get("verdict", "?"),
+                "coverage": st.get("coverageState", "?"),
+                "lastCrawl": (st.get("lastCrawlTime") or "—")[:16].replace("T", " "),
+                "canonical": st.get("googleCanonical") or "—",
+            })
+        except Exception as ex:  # noqa: BLE001
+            out["pages"].append({"url": u, "verdict": "ERROR", "coverage": str(ex)[:120],
+                                 "lastCrawl": "—", "canonical": "—"})
+    try:
+        for m in svc.sitemaps().list(siteUrl=PROPERTY).execute().get("sitemap", []):
+            web = next((c for c in m.get("contents", []) if c.get("type") == "web"), {})
+            out["sitemaps"].append({
+                "path": m.get("path", "?"),
+                "lastDownloaded": (m.get("lastDownloaded") or "—")[:10],
+                "submitted": web.get("submitted", "?"),
+                "errors": m.get("errors", 0), "warnings": m.get("warnings", 0),
+            })
+    except Exception as ex:  # noqa: BLE001
+        out["sitemaps"] = []
+        out["sitemap_error"] = str(ex)[:160]
+    return out
+
+
 # ---------- PageSpeed Insights ----------
 def pull_psi(strategy):
     params = {"url": f"https://{SITE}/", "strategy": strategy,
@@ -221,7 +258,7 @@ def pull_events(days):
 
 
 # ---------- report ----------
-def render(gsc, psi_mobile, psi_desktop, cf, events, when):
+def render(gsc, index, psi_mobile, psi_desktop, cf, events, when):
     out = [f"# AETHON — insights · {when}", ""]
 
     out.append("## PageSpeed Insights (lab)")
@@ -265,6 +302,24 @@ def render(gsc, psi_mobile, psi_desktop, cf, events, when):
         out += gsc_table(gsc.get("pages"), "pages")
     out.append("")
 
+    out.append("## Index status (GSC URL Inspection)")
+    if not index.get("available"):
+        out.append(f"_Unavailable: {index.get('reason', '')[:200]}_")
+    else:
+        out += ["| page | verdict | coverage | last crawl | Google canonical |", "|---|---|---|---|---|"]
+        for pg in index["pages"]:
+            out.append(f"| {pg['url'].replace('https://' + SITE, '') or '/'} | {pg['verdict']} | "
+                       f"{pg['coverage']} | {pg['lastCrawl']} | {pg['canonical']} |")
+        if index.get("sitemaps"):
+            for m in index["sitemaps"]:
+                out.append(f"- sitemap `{m['path'].replace('https://' + SITE, '')}` — "
+                           f"{m['submitted']} URLs submitted · last downloaded {m['lastDownloaded']} · "
+                           f"{m['errors']} errors / {m['warnings']} warnings")
+        elif index.get("sitemap_error"):
+            out.append(f"- _sitemap status unavailable: {index['sitemap_error']}_")
+        out.append("- _(/gallery/ is noindex **by design** — an 'excluded by noindex' row is the intended state.)_")
+    out.append("")
+
     out.append("## Cloudflare Web Analytics (cookieless)")
     if not cf.get("available"):
         out.append(f"_Unavailable: {cf.get('reason', '')[:200]}_")
@@ -304,18 +359,19 @@ def main():
 
     when = datetime.date.today().isoformat()
     gsc = pull_gsc(args.days)
+    index = pull_index()
     psi_mobile = pull_psi("mobile")
     psi_desktop = pull_psi("desktop")
     cf = pull_cloudflare(args.days)
     events = pull_events(args.days)
 
     os.makedirs(args.out, exist_ok=True)
-    report = render(gsc, psi_mobile, psi_desktop, cf, events, when)
+    report = render(gsc, index, psi_mobile, psi_desktop, cf, events, when)
     base = os.path.join(args.out, when)
     with open(base + ".md", "w", encoding="utf-8") as fh:
         fh.write(report)
     with open(base + ".json", "w", encoding="utf-8") as fh:
-        json.dump({"date": when, "gsc": gsc, "cloudflare": cf, "events": events,
+        json.dump({"date": when, "gsc": gsc, "index": index, "cloudflare": cf, "events": events,
                    "psi": {"mobile": psi_mobile, "desktop": psi_desktop}}, fh, indent=2)
 
     print(report)
