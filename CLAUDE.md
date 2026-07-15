@@ -358,10 +358,18 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   + image-search split (baseline before the photography), GSC country/device/daily, PSI for
   /gallery/ (its SEO score = the deliberate noindex, annotated in-report) + top Lighthouse
   suggestions, Cloudflare referrers + daily visits, a 404 watch, and a Brevo interest-list
-  count.** Two of those wait on owner setup (exact steps: `internal:docs/seo-and-search.md`):
-  the Brevo section activates itself once a **`BREVO_API_KEY`** repo secret exists, and the 404
-  watch needs **Zone → Analytics → Read** added to the existing Cloudflare token (until then the
-  report says "not checked", never a false "none"). First run findings 2026-07-15: brand 9 /
+  count.** Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
+  secret, no IP allowlist — GitHub runners have none; list found, 0 subscribers = consistent
+  with form-submit 0) and the **404 watch live** after a three-step token odyssey worth
+  remembering: (1) the dashboard has TWO token areas — ours are ACCOUNT API tokens (My
+  Profile → API Tokens is empty; identify the report token by "Last used"); (2) **"Account
+  Analytics Read" is NOT "Zone Analytics Read"** — same-sounding groups, the policy's SCOPE
+  (account vs zone resource) decides, so the zone permission needs its own zone-scoped policy
+  block; (3) free-plan zones cap `httpRequestsAdaptiveGroups` at a **1-day query span** — the
+  watch reads a 24h window (fortnightly spot-check). First reading: top-10 404s are pure
+  scanner noise (`/wp-admin/install.php`, `/.env*`, `/.git/config`, aws configs — normal
+  internet background, harmless on a static site), ZERO real broken site links. The report
+  says "not checked" on errors, never a false "none". First run findings 2026-07-15: brand 9 /
   discovery 2 / **image search already 1** impression; GSC reach CY·GB·FI·GR·JO·NL·PK·PL;
   first organic referrers (google.com ×10, refseek.com ×10); PSI occasionally 500s on one
   strategy — transient, self-heals next run. emitting a dated report as a
