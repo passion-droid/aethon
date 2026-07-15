@@ -369,7 +369,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   watch reads a 24h window (fortnightly spot-check). First reading: top-10 404s are pure
   scanner noise (`/wp-admin/install.php`, `/.env*`, `/.git/config`, aws configs — normal
   internet background, harmless on a static site), ZERO real broken site links. The report
-  says "not checked" on errors, never a false "none". First run findings 2026-07-15: brand 9 /
+  says "not checked" on errors, never a false "none". (Optional, owner's call, offered
+  2026-07-15: slim the token to Workers Scripts/KV Write + Account & Zone Analytics Read —
+  the edits left it broad; don't re-propose unprompted.) First run findings 2026-07-15: brand 9 /
   discovery 2 / **image search already 1** impression; GSC reach CY·GB·FI·GR·JO·NL·PK·PL;
   first organic referrers (google.com ×10, refseek.com ×10); PSI occasionally 500s on one
   strategy — transient, self-heals next run. emitting a dated report as a
