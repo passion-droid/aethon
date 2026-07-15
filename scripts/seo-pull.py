@@ -395,6 +395,8 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
             m = psi["metrics"]
             out.append(f"    - LCP {m['largest-contentful-paint']} · CLS {m['cumulative-layout-shift']} · "
                        f"TBT {m['total-blocking-time']} · FCP {m['first-contentful-paint']} · SI {m['speed-index']}")
+            if "gallery" in label and sc.get("seo", 100) < 100:
+                out.append("    - _(SEO score reflects the deliberate noindex — intended)_")
             for o in psi.get("opportunities", []):
                 out.append(f"    - suggest: {o}")
         else:
@@ -490,14 +492,19 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
             out.append("**Visits by day** — " + " · ".join(
                 f"{d['date'][5:]}:{d['visits']}" for d in cfx["daily"] if d["visits"]))
         out.append("")
+        nf_err = next((e for e in cfx.get("errors", []) if e.startswith("404:")), None)
         if cfx.get("notfound"):
             out += ["**404s (proxied)** — check for broken links:", ""]
             for nf in cfx["notfound"]:
                 out.append(f"- `{nf['path']}` × {nf['count']}")
+        elif nf_err:
+            out.append(f"**404s (proxied)** — not checked: {nf_err[5:]}")
+            out.append("  _(token needs Zone → Analytics → Read on the aethon.house zone)_")
         else:
             out.append("**404s (proxied)** — none. No broken links in the window.")
         for e in cfx.get("errors", []):
-            out.append(f"- _extras partial: {e}_")
+            if not e.startswith("404:"):
+                out.append(f"- _extras partial: {e}_")
     else:
         out.append(f"_Extras unavailable: {cfx.get('reason', '')[:150]}_")
     out.append("")
