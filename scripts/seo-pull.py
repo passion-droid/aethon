@@ -230,9 +230,26 @@ def pull_cloudflare(days):
         return {"available": False, "reason": f"parse error: {ex}"}
 
 
+def _spike_days(daily, cap=3):
+    """Outlier days in the visits-by-day curve — the days worth a drilldown.
+
+    A day is a spike at >= max(2.5x the median active day, 20 visits); needs at
+    least 4 active days of context so a young site doesn't flag its whole first
+    week. Cloudflare rounds these counts to tens at this scale, so 2x is noise
+    and 2.5x+ is signal. Biggest first, capped to bound the follow-up queries."""
+    active = [d for d in daily if d.get("visits", 0) > 0]
+    if len(active) < 4:
+        return []
+    vals = sorted(d["visits"] for d in active)
+    threshold = max(2.5 * vals[len(vals) // 2], 20)
+    spikes = sorted((d for d in active if d["visits"] >= threshold),
+                    key=lambda d: d["visits"], reverse=True)
+    return spikes[:cap]
+
+
 def pull_cloudflare_extras(days):
-    """Referrers, daily visits and a 404 watch — separate GraphQL call so a schema
-    hiccup here never takes the core Web-Analytics section down with it."""
+    """Referrers, daily visits, spike-day forensics and a 404 watch — separate
+    GraphQL call so a schema hiccup here never takes the core section down."""
     token = os.environ.get("CLOUDFLARE_API_TOKEN")
     account = os.environ.get("CF_ACCOUNT_TAG")
     if not token or not account:
@@ -240,8 +257,8 @@ def pull_cloudflare_extras(days):
     end = datetime.date.today()
     start = end - datetime.timedelta(days=days)
     flt = f'date_geq: "{start.isoformat()}", date_leq: "{end.isoformat()}"'
-    out = {"available": True, "referrers": [], "daily": [], "notfound": [],
-           "errors": []}
+    out = {"available": True, "referrers": [], "daily": [], "spikes": [],
+           "notfound": [], "errors": []}
 
     def gql(query):
         req = urllib.request.Request(
@@ -271,6 +288,38 @@ def pull_cloudflare_extras(days):
                 for g in acct.get("daily", [])]
     except Exception as ex:  # noqa: BLE001
         out["errors"].append(f"rum: {str(ex)[:150]}")
+
+    # spike forensics: for each outlier day, ask the same RUM dataset WHO it was —
+    # referrer / country / path, one query per day (<= cap extra calls)
+    for d in _spike_days(out["daily"]):
+        day = d["date"]
+        try:
+            dflt = f'date_geq: "{day}", date_leq: "{day}"'
+            q = """query { viewer { accounts(filter: {accountTag: "%s"}) {
+              refs: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 5, orderBy: [count_DESC]) {
+                count dimensions { refererHost } }
+              geo: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 5, orderBy: [count_DESC]) {
+                count dimensions { countryName } }
+              paths: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 5, orderBy: [count_DESC]) {
+                count dimensions { requestPath } }
+            } } }""" % (account, dflt, dflt, dflt)
+            data = gql(q)
+            if data.get("errors"):
+                out["errors"].append(f"spike {day}: " + "; ".join(
+                    e.get("message", "") for e in data["errors"])[:120])
+                continue
+            acct = data["data"]["viewer"]["accounts"][0]
+            out["spikes"].append({
+                "date": day, "visits": d["visits"],
+                "referrers": [{"host": g["dimensions"]["refererHost"] or "(direct)",
+                               "views": g["count"]} for g in acct.get("refs", [])],
+                "countries": [{"country": g["dimensions"]["countryName"], "views": g["count"]}
+                              for g in acct.get("geo", [])],
+                "paths": [{"path": g["dimensions"]["requestPath"], "views": g["count"]}
+                          for g in acct.get("paths", [])],
+            })
+        except Exception as ex:  # noqa: BLE001
+            out["errors"].append(f"spike {day}: {str(ex)[:150]}")
 
     # 404 watch on the proxied zone (needs the zone id via REST; Zone:Read covers it)
     try:
@@ -496,6 +545,14 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
             out.append("")
             out.append("**Visits by day** — " + " · ".join(
                 f"{d['date'][5:]}:{d['visits']}" for d in cfx["daily"] if d["visits"]))
+        if cfx.get("spikes"):
+            out += ["", "**Spike forensics** — outlier days, and who that traffic was (views):", ""]
+            for s in cfx["spikes"]:
+                refs = ", ".join(f"{r['host']} {r['views']}" for r in s["referrers"][:4]) or "—"
+                geo = ", ".join(f"{c['country']} {c['views']}" for c in s["countries"][:4]) or "—"
+                paths = ", ".join(f"{p['path']} {p['views']}" for p in s["paths"][:4]) or "—"
+                out.append(f"- **{s['date'][5:]}** ({s['visits']} visits) — referrers: {refs} · "
+                           f"countries: {geo} · paths: {paths}")
         out.append("")
         nf_err = next((e for e in cfx.get("errors", []) if e.startswith("404:")), None)
         if cfx.get("notfound"):

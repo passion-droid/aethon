@@ -357,8 +357,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   `/gallery/` showing noindex/unknown is the intended state) **and, same day: brand-vs-discovery
   + image-search split (baseline before the photography), GSC country/device/daily, PSI for
   /gallery/ (its SEO score = the deliberate noindex, annotated in-report) + top Lighthouse
-  suggestions, Cloudflare referrers + daily visits, a 404 watch, and a Brevo interest-list
-  count.** Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
+  suggestions, Cloudflare referrers + daily visits — since 2026-07-26 with **spike-day
+  forensics** (outlier days ≥ max(2.5× median active day, 20) get a per-day
+  referrer/country/path drilldown; ≤3 days per report) — a 404 watch, and a Brevo
+  interest-list count.** Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
   secret, no IP allowlist — GitHub runners have none; list found, 0 subscribers = consistent
   with form-submit 0) and the **404 watch live** after a three-step token odyssey worth
   remembering: (1) the dashboard has TWO token areas — ours are ACCOUNT API tokens (My
