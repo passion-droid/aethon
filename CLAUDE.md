@@ -532,7 +532,21 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   measurable; the 97 remains the WIP dialog). Events: `_hits` 30 · all 7 chapters ×3 AND
   reach-register 3 (who arrives reads the whole portrait) · afterglow-auto 4 · afterglow 2 ·
   **first `hold` 1** (the gesture gets discovered unaided) · form-start 1. Cloudflare 110
-  visits / 180 views per 28d, /gallery/ 30; "aethon" steady at pos 1.1.
+  visits / 180 views per 28d, /gallery/ 30; "aethon" steady at pos 1.1. **07-26 on-demand
+  pull (+ spike forensics shipped same day):** ~210 visits / 280 views per 28d — ~doubled
+  in 11 days, driven by a **07-18/19 wave (50+30 visits)** the new drilldown attributes to
+  **US · ~100% direct · homepage-only, one view per visit** — reads as a privately shared
+  link making rounds (short glances, no gallery descent; a JS-running preview/AI-fetch
+  fleet would look identical, though `afterglow-auto` jumping to 47/109 hits says the
+  loads ran our JS at Cyprus-evening hours). First **bing.com referrals** (20 views) + 1 DE
+  visit on 07-19. GSC: first organic click on "aethon" (pos 1.1, CTR 11%); garbled query
+  "ainton sehou" = someone remembering the name. Brevo still 0; 404s pure scanner noise.
+  Operational learnings: (a) **Cloudflare RUM adaptive sampling is unstable at this
+  volume** — the same 28d range returned core totals 210/280 then 100/100 thirty minutes
+  apart (the referrer table still summed 280); read counts directionally, never as
+  bookkeeping. (b) The PSI flake can hit BOTH home strategies in one run (mobile timeout +
+  desktop 500) while /gallery/ succeeds — still transient. **Open owner question: did
+  someone share the link into a US circle around 07-18?**
 - **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
   run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
 - **Playwright-testing gotchas (learned the hard way):** plain `window.scrollTo(x,y)` obeys the
