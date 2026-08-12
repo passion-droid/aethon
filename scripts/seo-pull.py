@@ -20,9 +20,11 @@ optional (missing sources degrade gracefully so the workflow stays green):
 Output: a dated Markdown report + raw JSON in --out (default seo-reports/), and
 the same summary appended to $GITHUB_STEP_SUMMARY when running in Actions.
 """
+import io
 import os
 import sys
 import json
+import zipfile
 import argparse
 import datetime
 import urllib.parse
@@ -434,9 +436,84 @@ def pull_events(days):
         return {"available": False, "reason": str(ex)}
 
 
+# ---------- previous report (trend memory) ----------
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *a, **k):
+        return None
+
+
+def _download_artifact(url, hdrs):
+    """GitHub artifact zips 302-redirect to signed blob URLs that reject requests
+    still carrying the API Authorization header — follow the hop by hand, bare."""
+    try:
+        with urllib.request.build_opener(_NoRedirect).open(
+                urllib.request.Request(url, headers=hdrs), timeout=60) as resp:
+            return resp.read()
+    except urllib.error.HTTPError as ex:
+        if ex.code in (301, 302, 303, 307, 308) and ex.headers.get("Location"):
+            with urllib.request.urlopen(ex.headers["Location"], timeout=120) as resp:
+                return resp.read()
+        raise
+
+
+def fetch_previous_report():
+    """The previous run's raw JSON, read from its workflow artifact IN MEMORY —
+    the report gains a memory while the 'nothing committed' stance stays true.
+
+    Needs GITHUB_TOKEN with actions:read (granted in the workflow); degrades
+    gracefully anywhere else. The current run's artifact doesn't exist yet at
+    pull time, so the newest 'seo-insights-*' artifact IS the previous report."""
+    token = os.environ.get("GITHUB_TOKEN")
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    if not token or not repo:
+        return {"available": False, "reason": "no GITHUB_TOKEN / GITHUB_REPOSITORY (local run)"}
+    api = os.environ.get("GITHUB_API_URL", "https://api.github.com")
+    hdrs = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28"}
+    try:
+        req = urllib.request.Request(f"{api}/repos/{repo}/actions/artifacts?per_page=100",
+                                     headers=hdrs)
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            arts = json.load(resp).get("artifacts", [])
+        cand = sorted((a for a in arts if a.get("name", "").startswith("seo-insights-")
+                       and not a.get("expired")),
+                      key=lambda a: a.get("created_at", ""), reverse=True)
+        if not cand:
+            return {"available": False, "reason": "no previous seo-insights artifact (first run?)"}
+        blob = _download_artifact(cand[0]["archive_download_url"], hdrs)
+        with zipfile.ZipFile(io.BytesIO(blob)) as zf:
+            name = next((n for n in zf.namelist() if n.endswith(".json")), None)
+            if not name:
+                return {"available": False, "reason": "previous artifact holds no JSON"}
+            data = json.loads(zf.read(name))
+        return {"available": True, "data": data,
+                "date": data.get("date") or os.path.basename(name)[:-5]}
+    except urllib.error.HTTPError as ex:
+        return {"available": False, "reason": f"HTTP {ex.code} — workflow may lack actions:read"}
+    except Exception as ex:  # noqa: BLE001
+        return {"available": False, "reason": str(ex)[:150]}
+
+
+def _dig(d, *keys):
+    for k in keys:
+        if not isinstance(d, dict):
+            return None
+        d = d.get(k)
+    return d
+
+
+def _fmt_delta(cur, prev):
+    if cur is None or prev is None:
+        return None
+    d = int(cur) - int(prev)
+    return f"+{d}" if d > 0 else (f"-{-d}" if d < 0 else "±0")
+
+
 # ---------- report ----------
-def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, when):
+def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, prev, when):
     out = [f"# AETHON — insights · {when}", ""]
+    pd = prev.get("data") if prev.get("available") else None
+    pdate = prev.get("date") if pd else None
 
     out.append("## PageSpeed Insights (lab)")
     for label, psi in [("Mobile /", psi_mobile), ("Desktop /", psi_desktop),
@@ -465,8 +542,13 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
         t = gsc.get("totals", {})
         out.append(f"Range **{gsc['range'][0]} → {gsc['range'][1]}**")
         if t:
-            out.append(f"- **Totals** — clicks {int(t.get('clicks', 0))} · impressions {int(t.get('impressions', 0))} · "
-                       f"CTR {t.get('ctr', 0) * 100:.1f}% · avg position {t.get('position', 0):.1f}")
+            line = (f"- **Totals** — clicks {int(t.get('clicks', 0))} · impressions {int(t.get('impressions', 0))} · "
+                    f"CTR {t.get('ctr', 0) * 100:.1f}% · avg position {t.get('position', 0):.1f}")
+            pt = _dig(pd, "gsc", "totals")
+            if pt is not None:
+                line += (f"  _(vs {pdate}: impressions {_fmt_delta(t.get('impressions', 0), pt.get('impressions', 0))}, "
+                         f"clicks {_fmt_delta(t.get('clicks', 0), pt.get('clicks', 0))})_")
+            out.append(line)
         else:
             out.append("- No impressions in range yet.")
 
@@ -496,7 +578,13 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
             out.append("- **By day** — " + " · ".join(
                 f"{r['keys'][0][5:]} ×{int(r['impressions'])}" for r in active_days))
 
-        out += gsc_table(gsc.get("queries"), "queries")
+        if not gsc.get("queries") and int(t.get("impressions", 0)) > 0:
+            # empty query table + real impressions = Google anonymized the rare
+            # queries; "no queries yet" would misread as "no search activity"
+            out += ["", "_No reportable queries — Google anonymizes rare queries at this "
+                        "volume; the impressions above are real but unattributed._"]
+        else:
+            out += gsc_table(gsc.get("queries"), "queries")
         out += gsc_table(gsc.get("pages"), "pages")
     out.append("")
 
@@ -526,8 +614,12 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
     if not cf.get("available"):
         out.append(f"_Unavailable: {cf.get('reason', '')[:200]}_")
     else:
-        out.append(f"Range **{cf['range'][0]} → {cf['range'][1]}** — "
-                   f"**{cf['visits']} visits · {cf['pageviews']} page views**")
+        line = (f"Range **{cf['range'][0]} → {cf['range'][1]}** — "
+                f"**{cf['visits']} visits · {cf['pageviews']} page views**")
+        if _dig(pd, "cloudflare", "available"):
+            line += (f"  _(vs {pdate}: visits {_fmt_delta(cf['visits'], _dig(pd, 'cloudflare', 'visits'))}, "
+                     f"views {_fmt_delta(cf['pageviews'], _dig(pd, 'cloudflare', 'pageviews'))} — sampled)_")
+        out.append(line)
         if cf.get("pages"):
             out += ["", "### Top pages", "", "| path | views | visits |", "|---|--:|--:|"]
             for p in cf["pages"]:
@@ -578,8 +670,12 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
     elif not brevo.get("lists"):
         out.append("_No list with 'AETHON' in its name found — check the list name in Brevo._")
     else:
+        prev_lists = {x.get("name"): x.get("subscribers")
+                      for x in (_dig(pd, "brevo", "lists") or [])}
         for l in brevo["lists"]:
+            d = _fmt_delta(l["subscribers"], prev_lists.get(l["name"]))
             out.append(f"- **{l['name']}** — **{l['subscribers']}** on the list"
+                       + (f" (Δ {d})" if d else "")
                        + (f" ({l['blacklisted']} unsubscribed/blocked)" if l["blacklisted"] else ""))
     out.append("")
     out.append("## On-page events (anonymous counters)")
@@ -590,11 +686,22 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
         if not win:
             out.append(f"No events in the last {events.get('days')} days yet.")
         else:
-            out += [f"Last {events.get('days')} days (all-time in parens):", "",
-                    "| event | count |", "|---|--:|"]
+            prev_tot = _dig(pd, "events", "totals")
+            if prev_tot is not None:
+                out += [f"Last {events.get('days')} days (all-time in parens):", "",
+                        f"| event | count | Δ vs {pdate} |", "|---|--:|--:|"]
+            else:
+                out += [f"Last {events.get('days')} days (all-time in parens):", "",
+                        "| event | count |", "|---|--:|"]
             for name in sorted(win, key=win.get, reverse=True):
-                out.append(f"| {name} | {win[name]} ({events['totals'].get(name, 0)}) |")
+                tot = events["totals"].get(name, 0)
+                row = f"| {name} | {win[name]} ({tot}) |"
+                if prev_tot is not None:
+                    row += f" {_fmt_delta(tot, prev_tot.get(name, 0))} |"
+                out.append(row)
     out.append("")
+    if not prev.get("available") and os.environ.get("GITHUB_ACTIONS"):
+        out += [f"_Trend deltas unavailable: {prev.get('reason', '')[:150]}_", ""]
     return "\n".join(out) + "\n"
 
 
@@ -614,17 +721,22 @@ def main():
     cfx = pull_cloudflare_extras(args.days)
     brevo = pull_brevo()
     events = pull_events(args.days)
+    prev = fetch_previous_report()
 
     os.makedirs(args.out, exist_ok=True)
-    report = render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, when)
+    report = render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, prev, when)
     base = os.path.join(args.out, when)
     with open(base + ".md", "w", encoding="utf-8") as fh:
         fh.write(report)
     with open(base + ".json", "w", encoding="utf-8") as fh:
+        # trend_base stays metadata-only — embedding prev["data"] would chain
+        # every past report into every artifact
         json.dump({"date": when, "gsc": gsc, "index": index, "cloudflare": cf,
                    "cloudflare_extras": cfx, "brevo": brevo, "events": events,
                    "psi": {"mobile": psi_mobile, "desktop": psi_desktop,
-                           "gallery_mobile": psi_gallery}}, fh, indent=2)
+                           "gallery_mobile": psi_gallery},
+                   "trend_base": {k: prev.get(k) for k in ("available", "date", "reason")
+                                  if k in prev}}, fh, indent=2)
 
     print(report)
     step = os.environ.get("GITHUB_STEP_SUMMARY")

@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: read
+  actions: read   # read the previous run's artifact → trend deltas in the report
 
 jobs:
   insights:
@@ -35,6 +36,7 @@ jobs:
           CF_ACCOUNT_TAG: ${{ secrets.CF_ACCOUNT_TAG }}
           BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
           CF_SITE_TAG: ${{ secrets.CF_SITE_TAG }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/seo-pull.py --out seo-reports --days 28
 
       - name: Upload report

@@ -360,7 +360,17 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   suggestions, Cloudflare referrers + daily visits — since 2026-07-26 with **spike-day
   forensics** (outlier days ≥ max(2.5× median active day, 20) get a per-day
   referrer/country/path drilldown; ≤3 days per report) — a 404 watch, and a Brevo
-  interest-list count.** Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
+  interest-list count.** Since **2026-08-12** the report also carries **trend deltas vs the
+  previous report**: the workflow fetches the prior run's JSON artifact **in-memory**
+  (workflow permission `actions: read` + `GITHUB_TOKEN` in the step env — the deliberate
+  "nothing committed" stance stays true) and annotates GSC totals, Cloudflare visits/views
+  (with a "sampled" hint), the Brevo count, plus an events **Δ-column vs all-time**; the
+  report JSON stores only `trend_base` metadata, never the previous data (else every
+  artifact would chain all history). **Artifact-download gotcha:** the zip endpoint
+  302-redirects to signed blob URLs that reject the API Authorization header — the script
+  follows the hop manually and fetches the signed URL bare. And an empty GSC query table
+  beside real impressions now prints the honest "Google anonymizes rare queries" line
+  (the old "No queries yet" misread as zero search activity). Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
   secret, no IP allowlist — GitHub runners have none; list found, 0 subscribers = consistent
   with form-submit 0) and the **404 watch live** after a three-step token odyssey worth
   remembering: (1) the dashboard has TWO token areas — ours are ACCOUNT API tokens (My
@@ -546,7 +556,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   apart (the referrer table still summed 280); read counts directionally, never as
   bookkeeping. (b) The PSI flake can hit BOTH home strategies in one run (mobile timeout +
   desktop 500) while /gallery/ succeeds — still transient. **Open owner question: did
-  someone share the link into a US circle around 07-18?**
+  someone share the link into a US circle around 07-18?** **08-12 pull (trend deltas
+  shipped same day):** quiet plateau — the July wave was a one-off (140 visits/28d as it
+  leaves the window; August = single ~10-visit days on 08-01/06/08, shallow: chapter-reach
+  ~flat, register-reach +0). **First direct `/gallery/` entries** (10 visits landed there;
+  was always 0 = homepage-nav only — someone shared or bookmarked the gallery link). GSC:
+  since early July ALL reported queries are privacy-anonymized (a ~1/day impressions
+  trickle continues, `/` at pos ~3.8 when shown; zero "aethon" queries in window — brand
+  search is dormant, not derailed). PSI m96/d100×4 (lab noise, LCP 2.0 s steady); Brevo 0.
 - **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
   run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
 - **Playwright-testing gotchas (learned the hard way):** plain `window.scrollTo(x,y)` obeys the
@@ -781,4 +798,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   label registers). Commission the matched Daylight/Afterglow shoot per `docs/imagery-brief.md`
   (sent to Fynn 2026-07-11); integration is then a one-command file swap — see the runbook in
   `images/README.md` and the photography-day checklist (contrast re-check per frame, strip
-  "forthcoming" labels, retire the WIP notice, re-run PSI).
+  "forthcoming" labels, retire the WIP notice, re-run PSI). **Timeline decided (owner ↔ Fynn,
+  2026-08-12): the shoot WAITS until ~January** — Fynn's professional advice is to let the
+  freshly planted garden grow in and green up first (it currently reads dusty and new on
+  camera). The light-study preview state is therefore the *intended* long-running state
+  through autumn/winter; don't propose photography nudges, Fynn follow-ups or
+  photography-day checklist items unprompted before the owner raises it (~Jan 2027).
