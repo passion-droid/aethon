@@ -370,7 +370,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   302-redirects to signed blob URLs that reject the API Authorization header — the script
   follows the hop manually and fetches the signed URL bare. And an empty GSC query table
   beside real impressions now prints the honest "Google anonymizes rare queries" line
-  (the old "No queries yet" misread as zero search activity). Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
+  (the old "No queries yet" misread as zero search activity). Verified end-to-end the same
+  day: a control run against the same-morning base rendered every delta ±0 (correct, base
+  minutes old) and the artifact fetch worked first try — the redirect handling matters.
+  Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
   secret, no IP allowlist — GitHub runners have none; list found, 0 subscribers = consistent
   with form-submit 0) and the **404 watch live** after a three-step token odyssey worth
   remembering: (1) the dashboard has TWO token areas — ours are ACCOUNT API tokens (My
