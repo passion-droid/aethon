@@ -375,10 +375,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   minutes old) and the artifact fetch worked first try — the redirect handling matters.
   Since **2026-09-26** the events section also prints an **unattributed-`_hits` check**
   whenever the window gap is real: `_hits` counts EVERY /e request, and in September
-  scanners found the endpoint (all-time 186→295 while named events stayed ~flat), so the
-  report now states "N of M requests carry no allowlisted event name — route noise, not
-  visitors". Read `_hits` as route pressure; the named rows are the human signal.
-  (Slightly negative gaps are history — early events predate the heartbeat.)
+  scanners found the endpoint (rolling total 186→295 while named events stayed ~flat), so
+  the report now states "N of M window requests carry no allowlisted event name — route
+  noise, not visitors". Read `_hits` as route pressure; the named rows are the human
+  signal. **Window-only by design (same-day adversarial-review catch):** `_hits` keys
+  expire after 60 days while named events keep 400, so lifetime sums cross retention
+  horizons and don't compare — the first cut printed a mislabeled "all-time" pair whose
+  negative gaps my comment blamed on launch history; the real cause is the TTL asymmetry.
+  Any `_hits` "(all-time)" figure in the events TABLE is likewise a trailing ~60-day sum,
+  and a `--days` > 60 window would truncate `_hits` the same way.
   Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
   secret, no IP allowlist — GitHub runners have none; list found, 0 subscribers = consistent
   with form-submit 0) and the **404 watch live** after a three-step token odyssey worth

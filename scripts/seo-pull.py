@@ -703,13 +703,13 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
             # name (scanners probing the endpoint, DNT-suppressed sends) inflate
             # it past the named rows. Surface the gap in-report once it is real —
             # the heartbeat then reads as route pressure, not as visitors.
-            # (Slightly negative gaps are history: early events predate _hits.)
-            unattr_win = win.get("_hits", 0) - sum(v for k, v in win.items() if k != "_hits")
-            unattr_tot = (events["totals"].get("_hits", 0)
-                          - sum(v for k, v in events["totals"].items() if k != "_hits"))
+            # Window-only on purpose: _hits keys expire after 60 days while named
+            # events keep 400, so lifetime sums cross retention horizons and
+            # don't compare (and a --days > 60 window would truncate _hits too).
+            hits_win = win.get("_hits", 0)
+            unattr_win = hits_win - sum(v for k, v in win.items() if k != "_hits")
             if unattr_win > 0:
-                out += ["", f"_`_hits` check: {unattr_win} of {win.get('_hits', 0)} window requests "
-                            f"({max(unattr_tot, 0)} of {events['totals'].get('_hits', 0)} all-time) "
+                out += ["", f"_`_hits` check: {unattr_win} of {hits_win} window requests "
                             "carry no allowlisted event name — route noise (scanners/DNT), "
                             "not visitors; the named rows are the human signal._"]
     out.append("")
