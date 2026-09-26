@@ -373,6 +373,12 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   (the old "No queries yet" misread as zero search activity). Verified end-to-end the same
   day: a control run against the same-morning base rendered every delta ±0 (correct, base
   minutes old) and the artifact fetch worked first try — the redirect handling matters.
+  Since **2026-09-26** the events section also prints an **unattributed-`_hits` check**
+  whenever the window gap is real: `_hits` counts EVERY /e request, and in September
+  scanners found the endpoint (all-time 186→295 while named events stayed ~flat), so the
+  report now states "N of M requests carry no allowlisted event name — route noise, not
+  visitors". Read `_hits` as route pressure; the named rows are the human signal.
+  (Slightly negative gaps are history — early events predate the heartbeat.)
   Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
   secret, no IP allowlist — GitHub runners have none; list found, 0 subscribers = consistent
   with form-submit 0) and the **404 watch live** after a three-step token odyssey worth
@@ -567,6 +573,17 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   since early July ALL reported queries are privacy-anonymized (a ~1/day impressions
   trickle continues, `/` at pos ~3.8 when shown; zero "aethon" queries in window — brand
   search is dormant, not derailed). PSI m96/d100×4 (lab noise, LCP 2.0 s steady); Brevo 0.
+  **09-26 boot (six quiet weeks; workflow-extracted from the 08-15/09-01/09-15 scheduled
+  runs + a fresh pull):** Cloudflare 130→50→30→30 visits/28d as the July wave left the
+  window — the true unpromoted baseline is ~10 visits every week or two, all direct,
+  US/DE-tinged (bot-adjacent; `similarpages.com` and `naver.com` appeared once each as
+  referrers). GSC steady trickle (~15 impressions/28d, 0 clicks, all anonymized); the one
+  named query is the misspelling **"ethon house" at pos ~81** (recurring since September —
+  noted, not acted on; an `alternateName` for a typo is off-voice at 1 impression/window).
+  **One thorough human reader ~09-24** (every chapter event +1 down to reach-register).
+  `_hits` diverged from visitors (241 window vs ~17 named) → the unattributed-check
+  feature above. /gallery/ keeps getting occasional direct entries. All four reports'
+  trend deltas rendered correctly — the August feature holds in production.
 - **Workflow-artifact downloads are proxy-blocked** (Azure blob 403 — policy; don't retry). Read
   run results via the GitHub MCP job logs instead (`get_job_logs`, tail).
 - **Playwright-testing gotchas (learned the hard way):** plain `window.scrollTo(x,y)` obeys the

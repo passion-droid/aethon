@@ -699,6 +699,19 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
                 if prev_tot is not None:
                     row += f" {_fmt_delta(tot, prev_tot.get(name, 0))} |"
                 out.append(row)
+            # _hits counts EVERY /e request, so requests without an allowlisted
+            # name (scanners probing the endpoint, DNT-suppressed sends) inflate
+            # it past the named rows. Surface the gap in-report once it is real —
+            # the heartbeat then reads as route pressure, not as visitors.
+            # (Slightly negative gaps are history: early events predate _hits.)
+            unattr_win = win.get("_hits", 0) - sum(v for k, v in win.items() if k != "_hits")
+            unattr_tot = (events["totals"].get("_hits", 0)
+                          - sum(v for k, v in events["totals"].items() if k != "_hits"))
+            if unattr_win > 0:
+                out += ["", f"_`_hits` check: {unattr_win} of {win.get('_hits', 0)} window requests "
+                            f"({max(unattr_tot, 0)} of {events['totals'].get('_hits', 0)} all-time) "
+                            "carry no allowlisted event name — route noise (scanners/DNT), "
+                            "not visitors; the named rows are the human signal._"]
     out.append("")
     if not prev.get("available") and os.environ.get("GITHUB_ACTIONS"):
         out += [f"_Trend deltas unavailable: {prev.get('reason', '')[:150]}_", ""]
