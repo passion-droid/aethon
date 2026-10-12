@@ -39,6 +39,7 @@ items, and polish.
 - [x] Owner has read this memo — **"go für alle Vorschläge"** (2026-10-12)
 - [x] Group B decisions taken (see *Decisions* below)
 - [x] Group A + approved B batch implemented + deployed — `main@b5d0d8e`, one push, Pages run 142 `success` (2026-10-12 21:05 UTC), matrix 216 / 0 on the final tree
+- [x] Hero-print follow-up deployed — `main@a2e4051` (Pages run verified; print group 18 / 18, targeted suite green)
 
 ## Decisions and shipped values (2026-10-12)
 - **Group A:** all 23 items applied as specified, with one measurement-driven addition: the
@@ -144,7 +145,20 @@ groups so these stay covered — final tree: **208 PASS · 0 FAIL** on the full 
 last two fixes, then `bar` 6/6 + `print` 18/18 + the 20-check targeted suite re-run green.
 **Accepted as-is:** `/gallery/#ch-…` arrivals rest ~19 px short of `scroll-margin-top` because
 the chapters are themselves `.reveal` boxes (measured mid-transform) — pre-existing, identical to
-native in-page navigation, heading well clear of the bar.
+native in-page navigation (HEAD copy measures the same 61.3 px), heading well clear of the bar.
+The verifier also measured the hunter's proposed `h.classList.add('in')` before `scrollIntoView`:
+it changes nothing (the transition still starts from the 18 px value). If ever wanted, fix it at
+the markup level — take `reveal` off the anchor `<section class="chapter">` elements and put it on
+their inner children — so unlock(), native fragment arrival and tracker clicks all land alike.
+**Workflow tally:** 21 hunter findings → verify round: 1 confirmed (this one, S1, "no action"),
+20 refuted — every refutation reads "the fix is already in the working tree" (the verifiers ran
+against the repaired tree and re-measured each fix: more-link cascade, 116 px font probe, 36
+print cells, hint/skip alignment at nine widths). 26 agents, 0 errors, ~68 min.
+**Post-push catch (own render check, from a verifier's aside):** the absolutely positioned hero
+stand-in printed as a ~15 px dark/pale sliver under the bar in both hours (Chromium paginates it
+to a strip; made static it prints fully but adds a page). Hidden in print ×3 —
+`body.preview .hero-photo{ display:none }` — the hero prints as text; A4 stays 13 pages, no
+band. Shipped as a follow-up commit `main@a2e4051` (>1 h after the batch push — no stacking).
 **Lesson recorded in CLAUDE.md:** a batch that touches the cascade or the hand-synced blocks gets
 a skeptic pass over the DIFF, not only targeted checks — three of the four defects were
 specificity/order errors that "the rule is present" checks cannot see.
