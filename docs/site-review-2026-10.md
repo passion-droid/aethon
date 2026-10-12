@@ -38,7 +38,7 @@ items, and polish.
 - [x] Completeness critic complete (7 extras, 9 gaps)
 - [x] Owner has read this memo — **"go für alle Vorschläge"** (2026-10-12)
 - [x] Group B decisions taken (see *Decisions* below)
-- [ ] Group A + approved B batch implemented + deployed (one push, Pages verified, matrix green)
+- [x] Group A + approved B batch implemented + deployed — `main@b5d0d8e`, one push, Pages run 142 `success` (2026-10-12 21:05 UTC), matrix 216 / 0 on the final tree
 
 ## Decisions and shipped values (2026-10-12)
 - **Group A:** all 23 items applied as specified, with one measurement-driven addition: the
