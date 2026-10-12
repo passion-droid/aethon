@@ -36,9 +36,118 @@ items, and polish.
 - [x] Six lens reports received (2026-10-12)
 - [x] Adversarial verification complete (32 / 1 / 1)
 - [x] Completeness critic complete (7 extras, 9 gaps)
-- [ ] Owner has read this memo
-- [ ] Group A batch implemented + deployed (one push, Pages verified, matrix green)
-- [ ] Group B decisions taken (see recommendations)
+- [x] Owner has read this memo — **"go für alle Vorschläge"** (2026-10-12)
+- [x] Group B decisions taken (see *Decisions* below)
+- [ ] Group A + approved B batch implemented + deployed (one push, Pages verified, matrix green)
+
+## Decisions and shipped values (2026-10-12)
+- **Group A:** all 23 items applied as specified, with one measurement-driven addition: the
+  print block also resets `transition`/`animation` (`*, *::before, *::after` inside
+  `@media print`) — on a media switch Chromium starts a transition from the on-screen value,
+  so `.reveal` stayed at opacity 0 and the footer kept its dark fill without it.
+- **B-1 (bar band):** option (ii) — but measured first: six links + mark + toggle cannot share
+  one row below ~700 px at any sane size (links ≈ 475 px at 0.62rem/0.1em, mark 80, toggle 44,
+  padding), so the **overlay-menu threshold moved 640 → 700** (nav hide, both `.menu` display
+  rules, `.js .menu-btn`, the JS resize guard) and the **701–940 band** got the tightened bar
+  (`.bar .mark{ flex:none; width:5rem }`, links 0.62rem / 0.1em / `nowrap`, `.bar-right` gap
+  0.9rem, nav gap 0.7rem, bar padding `clamp(1.25rem, 4vw, 3rem)`; the Afterglow hint and the
+  skip link follow that edge — `header.bar .toggle-hint` / `a.skip-link`, specificity-raised
+  because the band block sits before their base rules). iPads (744 / 768 / 820 portrait) keep
+  the desktop nav as decided. The upper edge was first 900: the diff review measured a 4 px
+  mark-to-nav gap at 901 with a coarse pointer (44 px toggle), clearing only from ~920 — hence
+  940. Verified at every 10 px from 700 to 940 plus 744/768/820/901/905/915/941/1024/1440, fine
+  and coarse: mark 80 px (96 from 941), one nav row, ≥ 12 px gap, bar < 90 px, hint flush.
+  **Second diff-review catch:** a width-only band also matched landscape phones (844 × 390 is in
+  range but uses the overlay), shrinking their mark to 80 and pulling the bar 17 px off the
+  `--edge` content column — the band is now scoped to where the inline nav shows
+  (`and (min-height:501px)`, `and (pointer:fine)`, `and (pointer:none)` — the complement of the
+  nav-hide query's coarse + short). 844 × 390 coarse: mark 96, padding 50.64 = `--edge`; a short
+  FINE window (800 × 450) still gets the band (inline nav shown there).
+- **B-2:** `text-wrap: balance` on `h2.section-title` + legal `h1.title`; `pretty` on
+  `.note-source` (`.mat-note` is an inline span — no-op, skipped).
+- **B-3:** legal measure 92ch → **72ch** (`.measure` + `p`).
+- **B-4:** owner nudges DARK Architectural Lighting (Sectigo DV expired 21 Aug 2026); the credit
+  link stays.
+- **B-5:** "Last updated **12 October 2026**" — the notice text changed today (toggle wording,
+  anchors), so today's date is the honest one; rule recorded: bump whenever the text changes.
+- **B-6:** four Oxford commas inserted. **B-7:** touch `.more-link` underlines its text
+  (`text-decoration` with `--field-line`, offset .35em) instead of the box-wide border.
+  **B-8:** 404 gained `body.night` tokens, the white logo and a saved-preference init (no R4
+  clock on an error page). **B-9 / B-10:** deferred to photography day. **B-11:** gallery
+  chapter VI → "Materials, **close at hand**" (tracker title + aria-label, intro, eyebrow);
+  both briefs already carry "Iroko, close at hand" — untouched. **B-12:** "the Daylight /
+  Afterglow (day / night) toggle". **B-13:** The plan → "growing stiller **floor by floor**".
+- **B-14 (fallback font), measured:** the LT Museum fallback is set only in UPPERCASE + tracked
+  strings; tracking is in em and unaffected by `size-adjust`, so the July whole-glyph fit
+  (116.7 %) over-set every string. Against 40 live strings at 1366: 116.7 % → mean deviation
+  21.9 %, max 29 %; **90 %** → mean 2.4 %, max 8.3 %, range 92 % ("Iroko" mat-name, 0.06em)
+  … 106 % ("Register interest" nav, 0.18em). One value cannot fit all trackings; 90 % is the
+  minimum-mean compromise. Shipped in index / gallery / legal. **Diff-review catch:** the
+  ascent/descent overrides are percentages of the size-ADJUSTED em (100 px probe: real face
+  116 px line; 116.7 % + 81.3/18.2 → 116 px; 90 % + the same overrides → 89 px — every LT
+  Museum box 23 % shorter during the swap, the form button 47 → 43 px). Re-scaled together to
+  **105.4 % / 23.6 %** (0.9 × 1.29 ≈ 1.161): probe 116 px = real; with `/fonts/` blocked the
+  submit / label / more-link / nav-link boxes now hold within 1 px and the nav width within 4 %.
+- **B-15:** `html{ color-scheme:light } html:has(body.night){ color-scheme:dark }` on all four
+  pages. **B-16 / B-17:** owner-side / deferred (as proposed).
+- **Verification before push:** `scripts/verify-site.py` on the final tree — **198 PASS · 0 FAIL ·
+  2 SKIP** (DARK's certificate, Facebook's bot shield); a targeted 27-check script for the batch
+  (byte-sync of the four hand-synced blocks, band geometry fine+coarse, pair-label contrast 8.05:1
+  on the phone at night, gallery caption/ratio/trio geometry at 1440/768/390, print emulation +
+  A4 PDF, lightbox ring, touch sticky-hover, no-JS, 404 night, legal anchor arrival through the
+  WIP notice, fallback widths ±2.3 %) — **27 / 27**; adversarial diff review (five area reviewers
+  + a refutation round) — see *Diff review* below.
+
+## Diff review (adversarial, before the push — 2026-10-12)
+Five hunters over the batch diff (index CSS · index JS/copy · subpages · docs/comments ·
+regressions), each instructed to break the change in the browser, then a refutation round.
+**Four real defects the targeted checks had missed, all fixed before the push:**
+- **Touch `.more-link` underline rule was dead** — it sat in the touch media block BEFORE the
+  base `.more-link` rule; a media query adds no specificity, so the base rule's
+  `text-decoration:none; border-bottom:1px; padding-bottom:4px` won on every touch device (the
+  box-wide rule under the wrapped Plan pointer was still there at 390). Moved after the base
+  rule (and `padding-bottom:0.4rem` restored, which the base rule had been overriding too).
+- **Print block could not reach the header mark** — `.mark` (0,1,0) lost to `.bar .mark`
+  (0,2,0): the printed bar carried a blank 96×44 box where "AETHON" should read; `.wip` lost to
+  `.wip[open]` (the open notice printed as a card), `.menu-btn` to `.js .menu-btn` on narrow
+  paper, `body.night .wordmark` kept the white logo under the hero text. **And Afterglow printed
+  pale:** the night tokens stayed in force, so an evening Save-as-PDF (R4 opens every
+  no-preference visit after Paphos sunset in Afterglow) came out #EEE7D6-on-white (1.2:1; 2.98:1
+  after Chromium's text clamp). Rewritten ×3: selectors repeat the base specificity
+  (`.bar .mark, body.night .bar .mark, .wip[open], .js .menu-btn …`), `color-scheme:light`, and
+  `body.night{ --bg:inherit; --ink:inherit; … }` hands every role token back to the `:root`
+  Daylight value (the tokens all live on `:root`, so `inherit` is page-agnostic). Verified on
+  all three pages × both hours with the notice open: computed ink `rgb(44,38,32)`, marks
+  text-indent 0 / no background image, A4 PDFs carry the text wordmark (pdfium extracts the
+  tracked mark as "A E T H O N") and dark ink.
+- **Fallback-font vertical metrics** — see B-14 above (overrides scale with `size-adjust`).
+- **Band upper edge 900** — see B-1 above (4 px gap at 901 on touch → 940).
+The regressions hunter, re-run against the already-fixed tree, caught **two more**:
+- **Band on landscape phones** — see B-1 above (width-only query → scoped to where the nav shows).
+- **Printing with the WIP notice open gave ONE truncated page** — `lock()` pins the body inline
+  (`position:fixed; top:-sy; left/right:0; width:100%`) while the dialog is open; the print block
+  hid the card but inline styles outrank the sheet, so Ctrl+P on a first visit (the likeliest
+  print moment) printed one viewport-sized sheet (index 1 page vs 13, gallery 1 vs 7, legal 1 vs
+  3; same with the overlay menu or the lightbox open). Fixed ×3 with
+  `body{ position:static !important; top/left/right/width … !important }` in the print block;
+  the matrix's `print` group now asserts the lock is released (computed `static` with the inline
+  `fixed` still set) and that the A4 PDF runs past one page — 3 pages × 2 hours, all green.
+Plus ten stale leftovers: the index SHOT BRIEF still called the Views "grey placeholders"; the
+gallery lightbox comments still described placeholder plates; `images/README.md` step 3 claimed
+the evening layers are `aria-hidden` with their wrapper (only the hero wrapper is — and it hides
+the DAY image too, so photography day must remove it) and pointed to a gallery alt draft the
+batch had deleted; CLAUDE.md said "641–890 band", "WIP opened on every load", "lightbox dormant
+until a real img", and deferred the fallback numbers to this memo's (stale) B-14 row; the matrix
+label said "<640px". All corrected; the matrix gained `bar` (band geometry fine + coarse,
+hint alignment, the landscape phone) and `print` (3 pages × 2 hours, lock release, page count)
+groups so these stay covered — final tree: **208 PASS · 0 FAIL** on the full matrix before the
+last two fixes, then `bar` 6/6 + `print` 18/18 + the 20-check targeted suite re-run green.
+**Accepted as-is:** `/gallery/#ch-…` arrivals rest ~19 px short of `scroll-margin-top` because
+the chapters are themselves `.reveal` boxes (measured mid-transform) — pre-existing, identical to
+native in-page navigation, heading well clear of the bar.
+**Lesson recorded in CLAUDE.md:** a batch that touches the cascade or the hand-synced blocks gets
+a skeptic pass over the DIFF, not only targeted checks — three of the four defects were
+specificity/order errors that "the rule is present" checks cannot see.
 
 ## Group A — safe fixes (non-fundamental, no sign-off needed)
 | # | Sev | Where | Finding → fix |
@@ -87,7 +196,7 @@ Left as is.
 | B-11 | 1 | "close at hand" (two Iroko lines) vs "close to hand" (gallery chapter VI title ×3). | Harmonise one way. **Recommend "close at hand"** (the caption shipped in the brief). |
 | B-12 | 1 | Legal calls the toggle "day / night" while the site says Daylight / Afterglow. | "the Daylight / Afterglow (day / night) toggle". **Recommend yes** (counsel batch). |
 | B-13 | 1 | "as the house rises" verbatim in The plan (996) and The interior (1078), with "kept for rest" in both. | Vary The plan's clause (e.g. "growing stiller floor by floor"); The interior keeps the line. **Owner's voice call.** |
-| B-14 | 1 (conf .7) | The LT Museum metric-matched fallback over-sets uppercase tracked text by 6–19 % (nav 679 → 805 px) on a slow-network swap; Spectral's fallback is exact. | Re-fit `size-adjust` against the uppercase strings (~98–104 %). **Needs measurement — optional.** |
+| B-14 | 1 (conf .7) | The LT Museum metric-matched fallback over-sets uppercase tracked text by 6–19 % (nav 679 → 805 px) on a slow-network swap; Spectral's fallback is exact. | Re-fit `size-adjust` against the uppercase strings. **Measured + shipped: 90 % (the ~98–104 % guess was far off — up to 29 % over-set) with the ascent/descent overrides re-scaled to 105.4 / 23.6 % — see *Decisions*.** |
 | B-15 | — | `color-scheme` never declared: UA chrome (classic scrollbars, form-control internals, validation bubbles) stays light in Afterglow (critic gap). | `:root{ color-scheme:light }` + `body.night{ color-scheme:dark }`. **Recommend yes** (small, visible only in UA-drawn parts). |
 | B-16 | — | Security headers (HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy): GitHub Pages sets none; only Cloudflare can (Transform Rules → Modify Response Header; HSTS under SSL/TLS). | Owner-side, when convenient. |
 | B-17 | — | Data-saver: the cellular guardrail keys on viewport/pointer, not `prefers-reduced-data` / Save-Data. | Optional extension of the guardrail. **Defer.** |
