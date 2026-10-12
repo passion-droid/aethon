@@ -58,9 +58,20 @@ impression and the mobile layout matter.
   clips overflowing lists; list padding clears the fixed bar), a JS resize guard so mobile
   URL-bar resizes don't close an open menu, and a touch more hero bottom padding. iPads keep the
   desktop nav (coarse but tall). Don't regress these to width-only queries. Desktop shows the
-  inline nav links; **below 640px they are replaced by a quiet full-screen overlay menu**
+  inline nav links; **below 701px they are replaced by a quiet full-screen overlay menu**
   (`#menu` + `#menu-btn` → "Menu"/"Close"; Esc to close, scroll-lock, background set `inert`,
-  closes on link tap). The hero is a **still on mobile** (ambient motion/video reserved for
+  closes on link tap). **The overlay threshold was raised from 640 to 700 in the 2026-10 review:**
+  measured, six links + mark + toggle cannot share one row under ~700px at any sane size (the
+  mark was being squeezed to 0–94px and "Register interest" wrapped from 641 to ~890). In the
+  **701–940px band** (iPad / iPad-mini portrait, narrowed windows) the bar tightens instead —
+  `.bar .mark{ flex:none; width:5rem }`, links 0.62rem / 0.1em tracking / `nowrap`, bar padding
+  4vw (the Afterglow hint + skip link follow that edge) — so iPads keep the desktop nav as
+  decided. The band runs to 940 because the full-size bar only clears the mark with a coarse
+  pointer's 44px toggle from ~920px (at 901 the gap was 4px; `flex:none` made it visible), and it
+  is **scoped to where the inline nav shows** — `… and (min-height:501px), … and (pointer:fine),
+  … and (pointer:none)` — because a width-only band also fired on landscape phones (844×390 is in
+  range, uses the overlay) and shrank their mark / pulled the bar off the `--edge` column. The touch-sizing queries stay at 640
+  (capability-based; different concern). The hero is a **still on mobile** (ambient motion/video reserved for
   larger/wifi); the hero light-drift is disabled < 640px. **Cellular-data guardrail —
   IMPLEMENTED (2026-07-11):** on phones (`max-width:640px` or coarse+short) only the **hero**
   crossfades and the two **hold-to-preview pause plates** keep their pair (the hold IS their touch
@@ -475,6 +486,72 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   marketing" line (~831), and the "In brief" / "The house, plainly." colophon pairing (~878–879).
   **Never auto-apply voice changes — always present for sign-off first.**
 
+## Site review 2026-10 (six-lens adversarial review; memo: internal:docs/site-review-2026-10.md)
+- **Method that worked:** six reviewer lenses (code / function / aesthetic / copy / brand / seo) in
+  parallel → one skeptic per finding instructed to refute + check CLAUDE.md decisions → a
+  completeness critic over the modalities nobody touched (print, JS-off, blocked fonts, touch-hover,
+  autofill, zoom). 34 → 32 confirmed, 1 settled, 1 refuted, +7 critic finds. Owner: "go for all".
+- **Regression matrix lives in the repo now:** `scripts/verify-site.py` (~200 checks, ~2 min,
+  self-serving; `--only <group>`, `--no-external`, artifacts to the temp dir). Run it after any
+  change to the pages; it covers theme/R4/sweep/hold/menu/lightbox/WIP/form/beacons/guardrail/
+  404/keyboard/static links/assets. The July scratchpad matrices were lost with a container.
+- **Adversarial diff review before the push (same day):** five hunters over the batch diff found
+  four real defects the targeted checks had missed — the touch `.more-link` underline rule was
+  dead (a media query adds no specificity; the later base rule won → moved after it), the print
+  block's `.mark` rule lost to `.bar .mark` and the Afterglow tokens printed pale (fixed above),
+  the fallback font's vertical metrics were off after the size-adjust re-fit (see the lesson
+  below), and the band's upper edge left a 4px mark/nav gap at 901px on touch (→ 940); a
+  regressions hunter re-run against the FIXED tree then caught two more — the width-only band
+  also hit landscape phones (→ scoped to where the nav shows) and printing with the WIP notice
+  open still gave one truncated page (the inline body lock → released in print). Plus ~10
+  stale doc/comment leftovers. **Rule: a batch that touches hand-synced blocks or the cascade
+  gets a skeptic pass over the DIFF, not only the targeted checks — the matrix now carries print
+  and band checks so these stay covered.** The gallery's hash arrival (`/gallery/#ch-…`) rests
+  ~19px short of `scroll-margin-top` because the chapters are themselves `.reveal` boxes (the
+  measurement is taken mid-transform) — pre-existing, matches native in-page navigation, left as-is.
+- **Shipped (one batch, 2026-10-12):** phone-Afterglow pair-plate labels (were 1.4:1 — the
+  guardrail shows the day layer, so the label now keeps the day register); gallery plates
+  (`.plate picture{height:auto}` — pictures had swallowed the caption row; captions sat behind
+  the next plate on phones); the **701–940 bar band** (see *How the site is built*); lightbox focus
+  ring pale (#EEE7D6 — accent olive was 2:1 on the fixed-dark backdrop); Views `sizes` 620→760 and
+  Materials 22vw→27vw; WIP `unlock()` honours an arrival fragment (deep links were lost; ×3
+  byte-synced); honeypot-caught bots no longer count as `form-submit`; **a `@media print` block —
+  the 4th hand-synced block across index/gallery/legal** (reveal visible, bar static, controls
+  hidden, wordmarks as text, **Afterglow tokens handed back to Daylight via `--x:inherit` on
+  `body.night`** — pale ink on white paper otherwise; the print selectors repeat the base rules'
+  specificity, `.bar .mark` / `.wip[open]` / `.js .menu-btn`, so source order decides; and
+  `body{ position:static !important; … }` releases the inline scroll-lock of an open notice /
+  menu / lightbox — printing with the WIP card up gave ONE viewport-sized page otherwise;
+  Save-as-PDF was 13 blank pages); no-JS gating of toggle / hero chip /
+  evening-lines / hold-hint (like the menu button); **hover-only rules wrapped in
+  `@media (hover:hover)`** on all pages — touch no longer sticks a tapped submit button in its
+  inverted state (the WIP block's hovers are left as-is to keep its byte-sync); autofill override
+  (Chrome's light-blue tint — the one colour the guardrail forbids); `color-scheme` light/dark via
+  `html:has(body.night)` so scrollbars / UA form chrome follow Afterglow; manifest `start_url` +
+  `id`; `text-wrap: balance` on section titles + legal h1, `pretty` on `.note-source`; the touch
+  `.more-link` underlines its text (the inline-block rule spanned the box under a wrapped link);
+  404 honours a saved Afterglow (night tokens + white logo + saved-pref init; no R4 clock there);
+  `--light-warm` held-value re-synced; dead `.measure`/`.hairline`/`.ph` CSS removed; stale
+  comments fixed; **public view-source scrubbed** of the Brevo "other site"/list-name notes and
+  of `docs/` paths (those live on `internal`); README refreshed (it is served on the brand
+  domain); the outlook address scrubbed from this file. Copy (all owner-approved): four Oxford
+  commas, "growing stiller floor by floor" (The plan), gallery chapter VI "Materials, close at
+  hand" (matches the Iroko captions + both briefs), legal toggle wording, legal date.
+- **Deliberately NOT done:** `.nojekyll` (would newly expose `.github/` and dotfiles on the
+  domain); label type-size consolidation + worst-case label contrast (photography-day items);
+  `prefers-reduced-data` guardrail. **Owner-side:** DARK Architectural Lighting's TLS certificate
+  expired 21 Aug 2026 (their site; the credit link stays — a courtesy nudge); Cloudflare security
+  headers (HSTS etc. via Transform Rules — Pages sets none); real-iOS + screen-reader passes.
+- **Fallback-font lesson:** the July `size-adjust: 116.7%` for the LT Museum fallback was fitted
+  over the whole glyph set, but the site sets LT Museum only UPPERCASE + tracked (tracking is in
+  em and unaffected by size-adjust) — measured on the live strings the fallback over-set widths by
+  up to 29%; re-fitted empirically against the page's own strings — **90%** (fallback/web width
+  ratio 1.00–1.06 on nav, descriptor, tagline, eyebrows, labels; mean +2.4%, max +8.3%). **The
+  ascent/descent overrides are percentages of the size-ADJUSTED em** (verified: 116.7% + 81.3/18.2
+  matched the real 116px line at 100px; 90% with the same overrides gave 89px) — they were
+  re-scaled together to **105.4% / 23.6%** (0.9 × 1.29 ≈ 1.161). Fit fallbacks against the
+  strings actually set, not the font's average advance, and re-fit the vertical pair with it.
+
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
 - **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the
   thank-you states completeness ("no confirmation email will follow") and the legal notice says
@@ -616,7 +693,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - ~~Still open from the audit~~ **The audit is fully closed (2026-07-04):** every group-B and
   group-C item is decided and shipped (see the walkthrough block above + the memo's checkboxes).
   The only audit artefact still live is the **photography-day launch checklist** (strip
-  "forthcoming" labels in the image commit; re-sample text-over-photo contrast per frame; retire
+  "forthcoming" labels in the image commit; **write each frame's alt** — the stand-ins ship
+  `alt=""`, a real photograph is content: runbook step 3 in `images/README.md`; re-sample
+  text-over-photo contrast per frame; retire
   the WIP notice; re-check the toggle border over the real hero; **re-run PSI — the mobile 97
   (2026-07-09) is the WIP dialog itself**: on a fresh visit the dialog body becomes the LCP
   element (measured via throttled probe — hero-line 696ms without dialog, dialog text re-claims
@@ -730,9 +809,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   Esc / backdrop / ✕ / ←→, focus restore.
 - **Legal page:** a discreet `/legal/` (`legal/index.html`) — self-contained, mirrors the
   design; combines the provider/imprint, a GDPR privacy notice, and a cookie/storage
-  statement. Linked from every footer (next to *Gallery*). Controller is a **company**
-  (placeholders `[ ]` for legal name / registration / VAT / address, pending the lawyer);
-  contact `aethon-house-cy@outlook.com`. The form now links the privacy notice and the
+  statement. Linked from every footer (next to *Gallery*). Controller is a **company** — the
+  imprint is **fully populated** (SIGNGUARD APP LTD, HE 492256, TIN, the Kissonerga office
+  address marked "not the location of the residence", mail@aethon.house; the lawyer's pass
+  still re-checks wording). Since 2026-10: sections carry ids (`#imprint` `#privacy` `#storage`
+  `#content`, h2/h3 `scroll-margin-top`) and the form note links `/legal/#privacy`; the reading
+  measure is 72ch (≈ 80 CPL, the memo's cap — was 92ch ≈ 110); the toggle is named
+  "Daylight / Afterglow (day / night)"; typographic apostrophes; **bump the "Last updated"
+  line whenever the notice text changes** (12 Oct 2026 now). The form links the privacy notice and the
   "never shared" line is corrected (Brevo named as processor). **No cookie banner** — only
   the functional day/night preference is stored (self-hosted fonts removed the Google CDN
   transfer). Indexable (unlike the gallery).
@@ -761,7 +845,7 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   **layout vocabulary** (`.plates.offset` / `.solo`; full-bleed `.plate.feature` via
   `width:100vw; margin-left:calc(50% - 50vw)`), chapter VI expanded to ~6 **artifact** slots, a quiet
   **closing beat** (`.gal-close`), and a built-in **accessible lightbox** (native `<dialog>` +
-  Esc/backdrop/←→, focus restore; **dormant until a `.plate` holds a real `<img>`**); (6) **silent
+  Esc/backdrop/←→, focus restore; **opens any plate** — `.lb-ph` is the no-image fallback panel); (6) **silent
   full-bleed "pause" plates** (`.pause` / `.pause-media.shot-pair`) at two homepage scene-breaks
   (after *The Plan*, after *The interior*) — **currently visible labelled placeholders for review;
   add `.pause` to the reveal-only rule to hide them on the live homepage**; (7) **Day/Afterglow image
@@ -788,7 +872,7 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   replaces the placeholders. (Paired with the *Work-in-progress notice* below, which tells visitors the
   preview state is intentional.)
 - **Work-in-progress notice — shipped (2026-07).** A quiet, museal pop-up (`.wip`, a native
-  `<dialog>` opened on **every load**, no persistence by design) tells a visitor the site is still
+  `<dialog>` opened **once per visit** — sessionStorage `aethon-wip`) tells a visitor the site is still
   being finished. Copy (owner-approved 2026-07-03, reworded from the original after the audit —
   "AETHON is finished; the *site* isn't"): *"This site is still being finished — the photography is
   on its way. What you see is the shape of it; please, look around."* Blurred backdrop
@@ -822,8 +906,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   wired, tested and live on light-study stand-ins (crossfades, hold, lightbox, cellular guardrail,
   label registers). Commission the matched Daylight/Afterglow shoot per `docs/imagery-brief.md`
   (sent to Fynn 2026-07-11); integration is then a one-command file swap — see the runbook in
-  `images/README.md` and the photography-day checklist (contrast re-check per frame, strip
-  "forthcoming" labels, retire the WIP notice, re-run PSI). **Timeline decided (owner ↔ Fynn,
+  `images/README.md` and the photography-day checklist (per-frame alt text, contrast re-check
+  per frame, strip "forthcoming" labels, retire the WIP notice, re-run PSI). **Timeline decided (owner ↔ Fynn,
   2026-08-12): the shoot WAITS until ~January** — Fynn's professional advice is to let the
   freshly planted garden grow in and green up first (it currently reads dusty and new on
   camera). The light-study preview state is therefore the *intended* long-running state

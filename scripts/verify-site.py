@@ -521,7 +521,7 @@ MENU_STATE = """() => { var b = document.getElementById('menu-btn'), m = documen
 def check_menu_phone(site):
     s = site.session(theme='day', viewport=(390, 844), reduced_motion='reduce'); s.goto('/')
     st = s.ev(MENU_STATE)
-    R.check('menu: <640px shows the Menu button and hides the inline nav', st['btnDisplay'] != 'none' and st['linksDisplay'] == 'none' and st['vis'] == 'hidden', json.dumps({k: st[k] for k in ('btnDisplay', 'linksDisplay', 'vis')}))
+    R.check('menu: ≤700px shows the Menu button and hides the inline nav', st['btnDisplay'] != 'none' and st['linksDisplay'] == 'none' and st['vis'] == 'hidden', json.dumps({k: st[k] for k in ('btnDisplay', 'linksDisplay', 'vis')}))
     s.scroll_to(600); s.page.wait_for_timeout(100)
     s.page.click('#menu-btn'); s.page.wait_for_timeout(520)
     st = s.ev(MENU_STATE); s.shot('menu-phone-open.png')
@@ -998,6 +998,78 @@ def check_external(externals, enabled):
 # ----------------------------------------------------------------------------------------------
 # a few cheap sanity checks around the main matrix
 # ----------------------------------------------------------------------------------------------
+BAR_STATE = """() => { var mk = document.querySelector('.bar .mark').getBoundingClientRect();
+  var links = Array.from(document.querySelectorAll('nav.links a')).map(function(a){ return a.getBoundingClientRect(); });
+  var tops = {}; links.forEach(function(r){ tops[Math.round(r.top)] = 1; });
+  var navLeft = links.length ? Math.min.apply(null, links.map(function(r){ return r.left; })) : 9999;
+  var hint = document.querySelector('.toggle-hint'), tg = document.getElementById('theme-toggle');
+  return { mark: Math.round(mk.width), gap: Math.round(navLeft - mk.right), rows: Object.keys(tops).length,
+    navVis: getComputedStyle(document.querySelector('nav.links')).display !== 'none',
+    menuBtn: getComputedStyle(document.getElementById('menu-btn')).display !== 'none',
+    hintRight: hint ? Math.round(hint.getBoundingClientRect().right) : null, toggleRight: Math.round(tg.getBoundingClientRect().right),
+    overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth }; }"""
+
+
+def check_bar_band(site):
+    """The 701–940 band tightens the bar (mark 5rem, small links) so six links + mark + toggle share
+    one row; ≤700 is the overlay menu; from 941 the full-size bar. Fine and coarse pointers."""
+    for touch in (False, True):
+        s = site.session(theme='day', viewport=(760, 1000), has_touch=touch, reduced_motion='reduce'); s.goto('/')
+        s.ev("document.getElementById('theme-toggle').click()"); s.page.wait_for_timeout(150)   # populates the one-time hint
+        bad = []
+        for w in (700, 701, 744, 768, 820, 901, 915, 940, 941, 1024):
+            s.page.set_viewport_size({'width': w, 'height': 1000}); s.page.wait_for_timeout(120)
+            st = s.ev(BAR_STATE)
+            if w <= 700:
+                ok = (not st['navVis']) and st['menuBtn']
+            else:
+                ok = st['navVis'] and not st['menuBtn'] and st['rows'] == 1 and st['gap'] >= 12 and not st['overflow'] \
+                    and st['mark'] == (80 if w <= 940 else 96) and abs(st['hintRight'] - st['toggleRight']) <= 2
+            if not ok: bad.append((w, st))
+        R.check(f"bar band ({'coarse' if touch else 'fine'}): ≤700 overlay; 701–940 tight bar, one row, mark 80px, hint aligned to the toggle; 941+ full bar",
+                not bad, json.dumps(bad[:2]))
+        s.finish('bar band ' + ('coarse' if touch else 'fine'))
+    # a landscape phone is inside the band's width range but uses the overlay — it must keep the full bar
+    s = site.session(theme='day', viewport=(844, 390), has_touch=True, reduced_motion='reduce'); s.goto('/')
+    st = s.ev(BAR_STATE); edge = s.ev("parseFloat(getComputedStyle(document.getElementById('bar')).paddingLeft)")
+    R.check('bar band: a landscape phone (844×390, coarse) keeps the 6rem mark and the --edge padding (band not applied; overlay in use)',
+            st['mark'] == 96 and st['menuBtn'] and not st['navVis'] and abs(edge - 50.64) < 1, json.dumps({'mark': st['mark'], 'menuBtn': st['menuBtn'], 'navVis': st['navVis'], 'padding': edge}))
+    s.finish('bar band landscape phone')
+
+
+PRINT_STATE = """() => { var cs = function(sel){ var e = document.querySelector(sel); return e ? getComputedStyle(e) : null; };
+  var mk = cs('.bar .mark'), wip = cs('.wip'), body = getComputedStyle(document.body);
+  var hidden = ['.toggle', '.menu-btn', '.wip', '.tracker', '.lightbox', '.hero-media', '.skip-link'].filter(function(sel){ var c = cs(sel); return c && c.display !== 'none'; });
+  var fm = cs('.foot-mark');
+  return { markIndent: mk.textIndent, markBg: mk.backgroundImage, bodyColor: body.color, bodyBg: body.backgroundColor,
+    barPos: cs('header.bar').position, stillShown: hidden, footMarkBg: fm ? fm.backgroundImage : null,
+    reveal: cs('.reveal') ? cs('.reveal').opacity : '1', scheme: getComputedStyle(document.documentElement).colorScheme,
+    wipOpen: !!(document.getElementById('wip') && document.getElementById('wip').open), bodyPos: body.position, inlinePos: document.body.style.position }; }"""
+
+
+def check_print(site):
+    """Print media: controls hidden (even with the WIP notice open), bar static, wordmarks as text,
+    Daylight ink regardless of the saved theme — on all three pages."""
+    for path in ('/', '/gallery/', '/legal/'):
+        for theme in ('day', 'night'):
+            s = site.session(theme=theme, wip=False, viewport=(794, 1123), reduced_motion='reduce'); s.goto(path)
+            s.page.wait_for_timeout(300)
+            s.page.emulate_media(media='print'); s.page.wait_for_timeout(1200)   # transitions are off in print, but let the switch settle
+            st = s.ev(PRINT_STATE)
+            ok = st['markIndent'] == '0px' and st['markBg'] == 'none' and st['footMarkBg'] == 'none' and st['barPos'] == 'static' \
+                and not st['stillShown'] and st['bodyColor'] == 'rgb(44, 38, 32)' and st['reveal'] == '1' and st['scheme'] == 'light' \
+                and st['wipOpen'] and st['inlinePos'] == 'fixed' and st['bodyPos'] == 'static'
+            R.check(f'print {path} ({theme}, WIP open): wordmarks as text, controls hidden, bar static, Daylight ink, reveal visible, inline scroll-lock released', ok, json.dumps(st))
+            try:
+                import pypdfium2 as pdfium
+                pages = len(pdfium.PdfDocument(s.page.pdf(format='A4')))
+                R.check(f'print {path} ({theme}, WIP open): the PDF runs to more than one page (the lock gave one viewport-sized sheet)', pages > 1, f'{pages} page(s)')
+            except ImportError:
+                R.skip(f'print {path} ({theme}): PDF page count — pypdfium2 not installed')
+            s.page.emulate_media(media='screen')
+            s.finish(f'print {path} {theme}')
+
+
 def check_misc(site):
     s = site.session(theme='day', reduced_motion='reduce'); s.goto('/')
     yr = s.ev("document.getElementById('year').textContent")
@@ -1046,7 +1118,8 @@ def main():
     groups = [('theme', check_theme_toggle), ('r4', check_r4_clock), ('sweep', check_dusk_sweep), ('hold', check_hold),
               ('menu', lambda st: (check_menu_phone(st), check_menu_landscape(st))), ('lightbox', check_lightbox), ('wip', check_wip),
               ('form', check_form), ('beacons', check_beacons), ('cellular', check_cellular), ('404', check_404),
-              ('console', check_console_clean), ('keyboard', check_keyboard), ('misc', check_misc)]
+              ('console', check_console_clean), ('keyboard', check_keyboard), ('misc', check_misc),
+              ('bar', check_bar_band), ('print', check_print)]
     t0 = time.time()
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=CHROMIUM, headless=not args.headed)

@@ -29,8 +29,8 @@
   @font-face{ font-family:'Spectral'; font-style:italic; font-weight:300; font-display:swap; src:url(/fonts/spectral-300i-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:300; font-display:swap; src:url(/fonts/spectral-300-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:400; font-display:swap; src:url(/fonts/spectral-400-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-  /* Metric-matched fallbacks — local() fonts scaled to the web fonts so the swap doesn't shift layout (CLS). */
-  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:116.7%; ascent-override:81.3%; descent-override:18.2%; line-gap-override:0%; }
+  /* Metric-matched fallbacks — local() fonts scaled to the web fonts so the swap doesn't shift layout (CLS); LT Museum's value is fitted to the site's uppercase, tracked strings (see index.html). */
+  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:90%; ascent-override:105.4%; descent-override:23.6%; line-gap-override:0%; }
   @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
 
   :root{
@@ -44,6 +44,10 @@
     --space-md:1.5rem; --space-lg:2rem; --space-xl:2.5rem; --space-2xl:3rem;
     --ff-display:"LT Museum", "LT Museum fallback", system-ui, sans-serif; --ff-text:"Spectral", "Spectral fallback", Georgia, serif;
   }
+  /* tell the browser which scheme the page is in, so UA-drawn parts (scrollbars, form-control
+     internals, validation bubbles) follow Afterglow instead of staying light */
+  html{ color-scheme:light; }
+  html:has(body.night){ color-scheme:dark; }
   body.night{
     --bg:#1A1410; --bg-soft:#221B14; --ink:#EEE7D6; --ink-soft:#CEC4AE; --ink-mute:#9E9376;
     --accent:#9CA279; --accent-on:#15110B;
@@ -64,11 +68,12 @@
   .bar-right{ display:flex; align-items:center; gap:clamp(1.2rem, 3vw, 2.2rem); }
   nav.links{ display:flex; gap:clamp(1.2rem, 3vw, 2.4rem); }
   nav.links a{ font-family:var(--ff-display); font-weight:400; font-size:0.74rem; letter-spacing:0.18em; text-transform:uppercase; text-decoration:none; color:var(--ink-soft); padding-bottom:2px; border-bottom:1px solid transparent; transition:border-color 250ms ease, color 250ms ease; }
-  nav.links a:hover{ border-bottom-color:var(--accent); color:var(--ink); }
+  @media (hover: hover){ nav.links a:hover{ border-bottom-color:var(--accent); color:var(--ink); } }
   @media (max-width:480px){ nav.links a{ font-size:0.66rem; letter-spacing:0.1em; } }
   .toggle{ width:2.2rem; height:2.2rem; border-radius:50%; border:1px solid var(--field-line); background:transparent; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; line-height:1; flex:none; transition:border-color 250ms ease, color 250ms ease, background-color 700ms ease; }
-  .toggle:hover{ border-color:var(--accent); color:var(--accent); }
+  @media (hover: hover){ .toggle:hover{ border-color:var(--accent); color:var(--accent); } }
   .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  html:not(.js) .toggle{ display:none; }   /* without JavaScript the toggle would render but do nothing */
 
   /* ---------- dusk sweep — the theme change crosses the page like the evening arriving.
      View Transitions API (Baseline 2025); progressive enhancement — without support or with
@@ -97,19 +102,18 @@
   @media (max-width:640px), (pointer: coarse){ .toggle{ width:2.75rem; height:2.75rem; } }
 
   .legal{ max-width:66rem; margin:0 auto; padding:clamp(5.5rem, 13vh, 8.5rem) var(--edge) clamp(3rem, 7vw, 5rem); }
-  .measure{ max-width:92ch; }   /* wider reading measure on legal — fewer line breaks, less scrolling */
+  .measure{ max-width:72ch; }   /* ≈ 80 characters per line — the readability memo's cap (92ch ran to ~110) */
   .eyebrow{ font-family:var(--ff-display); font-weight:700; font-size:0.78rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 var(--space-sm); }
-  h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 var(--space-xs); }
+  h1.title{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.9rem, 4.4vw, 3rem); line-height:1.15; letter-spacing:-0.01em; margin:0 0 var(--space-xs); text-wrap:balance; }
   .lede{ color:var(--ink-soft); margin:0 0 var(--space-xl); }
-  h2{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.35rem, 2.4vw, 1.8rem); line-height:1.25; letter-spacing:-0.01em; margin:var(--space-2xl) 0 var(--space-sm); }
-  h3{ font-family:var(--ff-display); font-weight:500; font-size:0.74rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); margin:var(--space-lg) 0 var(--space-2xs); }
-  p{ margin:0 0 var(--space-md); max-width:92ch; }
+  h2{ font-family:var(--ff-text); font-weight:300; font-size:clamp(1.35rem, 2.4vw, 1.8rem); line-height:1.25; letter-spacing:-0.01em; margin:var(--space-2xl) 0 var(--space-sm); scroll-margin-top:6rem; }
+  h3{ font-family:var(--ff-display); font-weight:500; font-size:0.74rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); margin:var(--space-lg) 0 var(--space-2xs); scroll-margin-top:6rem; }
+  p{ margin:0 0 var(--space-md); max-width:72ch; }
   a.link, .legal a:not(.mark):not(.foot-mark){ color:var(--accent); text-decoration:underline; text-underline-offset:0.16em; }
   dl.imprint{ margin:0 0 var(--space-sm); display:grid; gap:var(--space-3xs) var(--space-md); }
   @media (min-width:560px){ dl.imprint{ grid-template-columns:11rem 1fr; align-items:baseline; } }
   dl.imprint dt{ font-family:var(--ff-display); font-size:0.74rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-mute); }
   dl.imprint dd{ margin:0; }
-  .ph{ color:var(--ink-mute); font-style:italic; }
   .small{ font-size:0.86rem; color:var(--ink-mute); }
   hr.rule{ height:1px; border:0; background:var(--rule); margin:var(--space-xl) 0; }
 
@@ -144,11 +148,12 @@
 
   @media (prefers-reduced-motion: reduce){ *, *::before, *::after{ transition-duration:0.001ms !important; } }
 
-  /* ---------- work-in-progress notice (native <dialog>; opens on every load) ----------
+  /* ---------- work-in-progress notice (native <dialog>; opens once per visit) ----------
      A quiet, museal card on a blurred backdrop, in the site's palette + type, adapting to
      Daylight/Afterglow. Closed by ✕, "Look around", Esc or a click outside — then the page
-     browses normally. Shown every load by design (no localStorage gate). Kept byte-identical
-     across index / gallery / legal (hand-synced, like the token blocks). */
+     browses normally. Session-gated by design (sessionStorage: a new tab or a return visit
+     shows it again). Kept byte-identical across index / gallery / legal (hand-synced, like
+     the token blocks). */
   .wip{ position:fixed; inset:0; width:100%; height:100%; max-width:100vw; max-height:100vh; border:0; padding:0; margin:0; background:transparent; color:var(--ink); }
   .wip[open]{ display:flex; align-items:center; justify-content:center; }
   .wip::backdrop{ background:rgba(44,38,32,0.34); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
@@ -163,6 +168,24 @@
   .wip-close:hover{ color:var(--ink); }
   .wip-close:focus-visible, .wip-dismiss:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
   @media (prefers-reduced-motion: no-preference){ .wip[open]{ animation:wip-fade 260ms ease; } @keyframes wip-fade{ from{ opacity:0 } to{ opacity:1 } } }
+
+  /* ---------- print — the page as a document (hand-synced across index / gallery / legal) ----------
+     Reveal animations never run on paper, a fixed bar would stamp itself on every sheet, and the
+     controls mean nothing printed; the CSS-background wordmarks give way to their text; Afterglow
+     hands its tokens back to Daylight (pale ink on white paper otherwise). Selectors repeat the
+     base rules' specificity (.bar .mark, .wip[open], .js .menu-btn …) so source order decides. */
+  @media print{
+    *, *::before, *::after{ transition:none !important; animation:none !important; }   /* a media switch must not start from the on-screen value */
+    html, html:has(body.night){ color-scheme:light; }
+    body.night{ --bg:inherit; --bg-soft:inherit; --ink:inherit; --ink-soft:inherit; --ink-mute:inherit; --accent:inherit; --accent-on:inherit; --rule:inherit; --rule-strong:inherit; --field-line:inherit; --bar-bg:inherit; --hero-band:inherit; --hero-wash:inherit; --light-glow:inherit; --light-warm:inherit; --light-opacity:inherit; --frame-grad:inherit; --frame-label:inherit; --footer-bg:inherit; --footer-ink:inherit; --footer-mute:inherit; --plan-shadow:inherit; }   /* back to the :root (Daylight) values */
+    .js .reveal{ opacity:1; transform:none; }
+    body{ position:static !important; top:auto !important; left:auto !important; right:auto !important; width:auto !important; }   /* the open notice / menu / lightbox pin the body inline — one viewport-sized page otherwise */
+    header.bar{ position:static; }
+    .toggle, .menu-btn, .js .menu-btn, .menu, .hero-media, .scroll-cue, .skip-link, .toggle-hint, .tracker, .wip, .wip[open], .lightbox, .lightbox[open], .hold-hint::before{ display:none; }
+    .hero{ min-height:auto; }
+    .mark, .bar .mark, body.night .bar .mark, .wordmark, body.night .wordmark, .foot-mark, .wip-mark, body.night .wip-mark{ background:none; text-indent:0; width:auto; aspect-ratio:auto; font-family:var(--ff-display); font-weight:400; letter-spacing:0.2em; }
+    footer, .foot-meta, .foot-meta a{ background:none; color:var(--ink); }
+  }
 </style>
 </head>
 
@@ -206,7 +229,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     <h1 class="title">Who is behind this site, and what it does with data.</h1>
     <p class="lede measure">Kept short and plain by design. This site exists only to present the house and, if you wish, to note your interest. It collects as little as possible.</p>
 
-    <h2>Site provider</h2>
+    <h2 id="imprint">Site provider</h2>
     <p class="measure">This website is operated by the data controller below. (This is a contact address for the operator — not the location of the residence.)</p>
     <dl class="imprint">
       <dt>Controller</dt><dd>SIGNGUARD APP LTD (the operating company of AETHON House)</dd>
@@ -216,7 +239,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       <dt>Email</dt><dd><a class="link" href="mailto:mail@aethon.house">mail@aethon.house</a></dd>
     </dl>
 
-    <h2>Privacy notice</h2>
+    <h2 id="privacy">Privacy notice</h2>
 
     <h3>What we collect, and why</h3>
     <p class="measure">If you use the <em>Register interest</em> form, we collect the name, email address, and any message you give us. We use these only to add you to a small private interest list and to contact you, in time, should the house become available. The legal basis is your consent (GDPR Article 6(1)(a)), given when you submit the form — your registration is complete on submission, and you may withdraw at any time.</p>
@@ -228,7 +251,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     <p class="measure">The site is hosted on <strong>GitHub Pages</strong> (GitHub, Inc., a Microsoft company) and delivered through <strong>Cloudflare</strong> (Cloudflare, Inc.), whose network routes and protects the traffic. Like any web host, both process limited technical data such as your IP address in server logs, to deliver and protect the site (legitimate interest, GDPR Article 6(1)(f)). This may involve processing outside the EU under appropriate safeguards (such as the EU Standard Contractual Clauses and the EU–US Data Privacy Framework).</p>
 
     <h3>No tracking, no third-party fonts</h3>
-    <p class="measure">The site self-hosts its fonts and sets no advertising or social-media trackers. Its delivery network (Cloudflare) collects cookieless, aggregate visit statistics — no cookies, no cross-site tracking, no personal profiles. The site itself keeps a handful of equally anonymous, aggregate event counters with the same host — for instance, how often the evening view is opened — again without cookies, identifiers, or profiles, and it honours your browser's Do-Not-Track and Global Privacy Control signals. Opening a page therefore sends your data to no third party beyond the hosting providers above.</p>
+    <p class="measure">The site self-hosts its fonts and sets no advertising or social-media trackers. Its delivery network (Cloudflare) collects cookieless, aggregate visit statistics — no cookies, no cross-site tracking, no personal profiles. The site itself keeps a handful of equally anonymous, aggregate event counters with the same host — for instance, how often the evening view is opened — again without cookies, identifiers, or profiles, and it honours your browser’s Do-Not-Track and Global Privacy Control signals. Opening a page therefore sends your data to no third party beyond the hosting providers above.</p>
 
     <h3>How long we keep it</h3>
     <p class="measure">We keep your details on the interest list until you ask us to remove you; the list is reviewed periodically, and is deleted in whole once its purpose has ended.</p>
@@ -236,14 +259,14 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     <h3>Your rights</h3>
     <p class="measure">You may ask us to access, correct, delete, restrict, or port your data, or object to its use, and you may withdraw consent at any time — simply write to <a class="link" href="mailto:mail@aethon.house">mail@aethon.house</a>. You also have the right to lodge a complaint with the <a class="link" href="https://www.dataprotection.gov.cy/" target="_blank" rel="noopener">Office of the Commissioner for Personal Data Protection</a> (Cyprus). We make no automated decisions and do not profile you.</p>
 
-    <h2>Cookies &amp; local storage</h2>
-    <p class="measure">This site sets no cookies at all. It stores two small functional notes in your browser's local storage, and only when you use the day / night toggle — your choice of view, and that the toggle's one-time explanation has been shown; during a visit it also keeps a session-only note that the site notice has been shown, which your browser discards when the tab closes. None of this is ever sent to us, and you can clear it all through your browser at any time. Because there is no non-essential tracking, no cookie-consent banner is needed.</p>
+    <h2 id="storage">Cookies &amp; local storage</h2>
+    <p class="measure">This site sets no cookies at all. It stores two small functional notes in your browser’s local storage, and only when you use the Daylight / Afterglow (day / night) toggle — your choice of view, and that the toggle’s one-time explanation has been shown; during a visit it also keeps a session-only note that the site notice has been shown, which your browser discards when the tab closes. None of this is ever sent to us, and you can clear it all through your browser at any time. Because there is no non-essential tracking, no cookie-consent banner is needed.</p>
 
-    <h2>Content</h2>
+    <h2 id="content">Content</h2>
     <p class="measure">&copy; AETHON. The text and imagery on this site are the property of SIGNGUARD APP LTD and may not be reproduced without permission. The site is offered in good faith and without warranty.</p>
 
     <hr class="rule" />
-    <p class="small">Last updated 4 July 2026.</p>
+    <p class="small">Last updated 12 October 2026.</p>
   </div>
 </main>
 
@@ -311,7 +334,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     try { if (sessionStorage.getItem('aethon-wip') === '1') return; } catch (e) {}
     var body = document.body, sy = 0;
     function lock(){ sy = window.scrollY || 0; body.style.position = 'fixed'; body.style.top = (-sy) + 'px'; body.style.left = '0'; body.style.right = '0'; body.style.width = '100%'; }
-    function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); }
+    function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; var h = location.hash && document.getElementById(location.hash.slice(1)); if (h){ h.scrollIntoView({ behavior: 'instant' }); } else { window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); } }   // an arrival fragment (/#interest) outranks the pre-lock position
     function close(){ if (dlg.open) dlg.close(); }
     dlg.addEventListener('close', unlock);                     // fires for ✕, button, backdrop AND Esc
     var x = dlg.querySelector('.wip-close'); if (x) x.addEventListener('click', close);

@@ -59,7 +59,7 @@
 
 <style>
   /* Self-hosted fonts (LT Museum + Spectral, SIL OFL) — no third-party CDN; no visitor IP sent to Google.
-     LT Museum is one weight (Medium); declared across 100–900 so every display weight maps to it. */
+     LT Museum ships as Medium (100–550) + Bold (551–900): nav / labels map to Medium, the 700 eyebrows to Bold. */
   @font-face{ font-family:'LT Museum'; font-style:normal; font-weight:100 550; font-display:swap; src:url(/fonts/ltmuseum-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'LT Museum'; font-style:normal; font-weight:551 900; font-display:swap; src:url(/fonts/ltmuseum-bold-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:italic; font-weight:300; font-display:swap; src:url(/fonts/spectral-300i-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -68,8 +68,12 @@
   /* Greek micro-subset (5 glyphs, ~2.6KB) so Αἴθων renders in a matching serif italic instead of the
      system fallback — EB Garamond Italic (SIL OFL), declared into the Spectral slot via unicode-range. */
   @font-face{ font-family:'Spectral'; font-style:italic; font-weight:300; font-display:swap; src:url(/fonts/greek-aithon-lt.woff2) format('woff2'); unicode-range:U+0370-03FF, U+1F00-1FFF; }
-  /* Metric-matched fallbacks — local() fonts scaled to the web fonts so the swap doesn't shift layout (CLS). */
-  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:116.7%; ascent-override:81.3%; descent-override:18.2%; line-gap-override:0%; }
+  /* Metric-matched fallbacks — local() fonts scaled to the web fonts so the swap doesn't shift layout (CLS).
+     LT Museum's size-adjust is fitted to the site's own strings (all uppercase + tracked; tracking is in em
+     and unaffected by size-adjust) — the whole-glyph-set average (116.7%) over-set them by up to 29%.
+     The ascent/descent overrides are percentages of the size-ADJUSTED em, so they move with size-adjust:
+     re-fit the pair together (content area ≈ 116% of the em, like the real face). */
+  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:90%; ascent-override:105.4%; descent-override:23.6%; line-gap-override:0%; }
   @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
 
   :root{
@@ -129,6 +133,10 @@
     --ff-display: "LT Museum", "LT Museum fallback", system-ui, sans-serif;
     --ff-text: "Spectral", "Spectral fallback", Georgia, serif;
   }
+  /* tell the browser which scheme the page is in, so UA-drawn parts (scrollbars, form-control
+     internals, validation bubbles) follow Afterglow instead of staying light */
+  html{ color-scheme: light; }
+  html:has(body.night){ color-scheme: dark; }
 
   /* --- Roles: NIGHT (warm ~3000K) --- */
   body.night{
@@ -191,8 +199,6 @@
     margin: 0 0 var(--space-sm);   /* eyebrow → title: bind the label to its heading */
   }
 
-  .measure{ max-width: var(--measure); }
-
   h2.section-title{
     font-family: var(--ff-text);
     font-weight: 300;
@@ -200,16 +206,11 @@
     line-height: 1.25;
     letter-spacing: -0.01em;
     margin: 0 0 var(--space-md);
+    text-wrap: balance;   /* no lone last word ("…turns / west.") when a title wraps */
   }
 
   p{ margin: 0 0 var(--space-md); max-width: var(--measure); }
   p:last-child{ margin-bottom: 0; }
-
-  .hairline{
-    height: 1px; width: 100%;
-    background: linear-gradient(to right, transparent, var(--rule-strong), transparent);
-    border: 0;
-  }
 
   /* ---------- top bar ---------- */
   header.bar{
@@ -226,7 +227,7 @@
     border-bottom-color: var(--rule);
   }
   .bar .mark{
-    display: inline-block; min-height: 44px; width: 6rem;
+    display: inline-block; min-height: 44px; width: 6rem; flex: none;   /* never squeezed by a long nav */
     background: url(/brand/logo-dark.svg) left center / contain no-repeat;
     text-indent: -9999px; overflow: hidden; white-space: nowrap;
     text-decoration: none;
@@ -244,11 +245,29 @@
     color: var(--ink-soft);
     padding-bottom: 2px;
     border-bottom: 1px solid transparent;
+    white-space: nowrap;
     transition: border-color 250ms ease, color 250ms ease;
   }
-  nav.links a:hover,
   nav.links a.active{ border-bottom-color: var(--accent); color: var(--ink); }
-  @media (max-width: 640px), ((pointer: coarse) and (max-height: 500px)){ nav.links{ display:none; } }
+  @media (hover: hover){ nav.links a:hover{ border-bottom-color: var(--accent); color: var(--ink); } }
+  @media (max-width: 700px), ((pointer: coarse) and (max-height: 500px)){ nav.links{ display:none; } }
+  /* 701–940px band (small tablets, iPad portrait, narrowed windows): mark + six links + toggle
+     only fit if the bar tightens — the mark never shrinks (it was squeezed to a sliver), the
+     links step down a size and never wrap; below 701px the overlay menu takes over. 940 is where
+     the full-size bar clears the mark with a coarse pointer's 44px toggle (at 901 the gap was 4px).
+     The hint and the skip link follow the bar's tighter edge. Scoped to where the inline nav
+     actually shows — landscape phones (coarse + short) use the overlay and keep the full bar */
+  @media (min-width: 701px) and (max-width: 940px) and (min-height: 501px),
+         (min-width: 701px) and (max-width: 940px) and (pointer: fine),
+         (min-width: 701px) and (max-width: 940px) and (pointer: none){
+    header.bar{ padding-left: clamp(1.25rem, 4vw, 3rem); padding-right: clamp(1.25rem, 4vw, 3rem); }
+    .bar .mark{ width: 5rem; }
+    .bar-right{ gap: 0.9rem; }
+    nav.links{ gap: 0.7rem; }
+    nav.links a{ font-size: 0.62rem; letter-spacing: 0.1em; }
+    header.bar .toggle-hint{ right: clamp(1.25rem, 4vw, 3rem); }   /* outweigh the later base rules (media queries add no specificity) */
+    a.skip-link{ left: clamp(1.25rem, 4vw, 3rem); }
+  }
 
   /* day / night toggle */
   .toggle{
@@ -259,7 +278,7 @@
     font-size: 0.95rem; line-height: 1; flex: none;
     transition: border-color 250ms ease, color 250ms ease, background-color 700ms ease;
   }
-  .toggle:hover{ border-color: var(--accent); color: var(--accent); }
+  @media (hover: hover){ .toggle:hover{ border-color: var(--accent); color: var(--accent); } }
   .toggle:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
   /* comfortable touch target on phones (QR arrival) */
   @media (max-width: 640px), (pointer: coarse){ .toggle{ width: 2.75rem; height: 2.75rem; } }
@@ -304,7 +323,7 @@
   }
   .toggle-hint.show{ opacity: 1; }
 
-  /* mobile overlay menu — replaces the nav links that are hidden < 640px */
+  /* mobile overlay menu — replaces the nav links that are hidden < 701px */
   .menu-btn{
     display: none;
     font-family: var(--ff-display); font-weight: 400; font-size: 0.74rem;
@@ -312,7 +331,7 @@
     background: transparent; border: 0; cursor: pointer; padding: 1rem 0.3rem; line-height: 1;
     transition: color 250ms ease;
   }
-  .menu-btn:hover{ color: var(--ink); }
+  @media (hover: hover){ .menu-btn:hover{ color: var(--ink); } }
   .menu-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
   .menu{
     position: fixed; inset: 0; z-index: 40; background: var(--bg);
@@ -328,11 +347,11 @@
     color: var(--ink); text-decoration: none; display: inline-block; padding: 0.35rem 0.7rem;
     transition: color 250ms ease;
   }
-  .menu-list a:hover{ color: var(--accent); }
+  @media (hover: hover){ .menu-list a:hover{ color: var(--accent); } }
   .menu-list .menu-cta{ color: var(--accent); }
-  @media (min-width: 641px) and (pointer: fine){ .menu{ display: none; } }                            /* mouse desktop never shows the overlay */
-  @media (min-width: 641px) and (pointer: coarse) and (min-height: 501px){ .menu{ display: none; } }  /* tablets keep the desktop nav; landscape PHONES (coarse + short) keep the overlay */
-  @media (max-width: 640px), ((pointer: coarse) and (max-height: 500px)){
+  @media (min-width: 701px) and (pointer: fine){ .menu{ display: none; } }                            /* mouse desktop never shows the overlay */
+  @media (min-width: 701px) and (pointer: coarse) and (min-height: 501px){ .menu{ display: none; } }  /* tablets keep the desktop nav; landscape PHONES (coarse + short) keep the overlay */
+  @media (max-width: 700px), ((pointer: coarse) and (max-height: 500px)){
     .js .menu-btn{ display: inline-block; }   /* JS-gated: without JS the button would render but do nothing */
   }
   /* any TOUCH device, any width/orientation: touch-size the quiet links; keep the hero still (battery) */
@@ -458,7 +477,7 @@
     font-family: var(--ff-text); font-weight: 300; font-size: clamp(1.2rem, 2vw, 1.55rem);
     line-height: 1.25; letter-spacing: -0.01em; margin: 0 0 var(--space-2xs);
   }
-  .note-source{ font-family: var(--ff-text); font-style: italic; color: var(--ink-soft); margin: 0; max-width: 40ch; }
+  .note-source{ font-family: var(--ff-text); font-style: italic; color: var(--ink-soft); margin: 0; max-width: 40ch; text-wrap: pretty; }
   .note-mats{ display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: clamp(0.9rem, 2vw, 1.4rem); }
   .mat{ margin: 0; }
   .mat-chip{ display:block; width:100%; height: clamp(7rem, 13vw, 10rem); border: 1px solid var(--rule); object-fit: cover; }
@@ -483,7 +502,7 @@
   .frame .shot{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
   .pf figcaption{ font-family: var(--ff-display); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute); }
   /* Daylight ↔ Afterglow paired imagery — drop a day + warm-evening capture of the SAME viewpoint
-     into .shot-pair; the evening layer crossfades in under .night. See docs/imagery-brief.md. */
+     into .shot-pair; the evening layer crossfades in under .night. See images/README.md. */
   .shot-pair{ position:relative; }
   .shot-pair .shot-night{ position:absolute; inset:0; opacity:0; transition:opacity 800ms ease; }
   body.night .shot-pair .shot-night{ opacity:1; }
@@ -509,6 +528,9 @@
   @media (max-width: 640px), ((pointer: coarse) and (max-height: 500px)){
     #gallery .frame .shot-night, .plate .frame .shot-night{ display:none; }
     body.night #gallery .frame .shot-day, body.night .plate .frame .shot-day{ opacity:1; }
+    /* the pair shows its DAY layer here, so its label keeps the day register — the theme-following
+       colour landed pale-on-pale at ~1.4:1 (2026-10 review) */
+    body.night #gallery .frame.shot-pair .label, body.night .plate .frame.shot-pair .label{ color: rgba(34,29,24,0.96); }
   }
 
   /* ---------- hold to preview the other hour ----------
@@ -528,7 +550,7 @@
   body.night .shot-pair.held{
     --frame-grad: linear-gradient(135deg, var(--travertine), var(--sandstone) 60%, var(--greige));
     --frame-label: rgba(34,29,24,0.96);
-    --light-glow: #F2DDBE; --light-warm: #EACA9C;
+    --light-glow: #F2DDBE; --light-warm: #E9C79B;
   }
   /* real pairs, once photography lands: held shows the opposite layer */
   .shot-pair.held .shot-night{ opacity: 1; }
@@ -543,6 +565,9 @@
   /* quiet affordance in the pause label — reads the action for the current hour */
   .hold-hint::before{ content: " · hold for the evening"; }
   body.night .hold-hint::before{ content: " · hold for the daylight"; }
+  /* without JavaScript these controls would render but do nothing — gate them like the menu button */
+  html:not(.js) .toggle, html:not(.js) .hero-media, html:not(.js) .evening-line{ display: none; }
+  html:not(.js) .hold-hint::before{ content: none; }
   .frame{
     position: relative; aspect-ratio: 16 / 10; overflow: hidden;
     background: var(--frame-grad);
@@ -583,7 +608,7 @@
     background: transparent; border: 0; padding: 0.4rem 0; cursor: pointer;
     transition: color 250ms ease;
   }
-  .hero-media:hover{ color: var(--ink-soft); }
+  @media (hover: hover){ .hero-media:hover{ color: var(--ink-soft); } }
   .hero-media:focus-visible{ outline: 2px solid var(--accent); outline-offset: 4px; }
   .hero-media .play{ width: 1.9rem; height: 1.9rem; font-size: 0.8rem; padding-left: 0; }
   /* the word for the hour we are NOT in steps back */
@@ -613,6 +638,9 @@
     transition: border-color 250ms ease, color 0.7s ease;
   }
   input:focus, textarea:focus{ border-bottom-color: var(--accent); }   /* the global :focus-visible ring stays — keyboard users keep their place (WCAG 2.4.7) */
+  /* browser autofill paints fields in its own blue tint — keep them on the stone, in both hours */
+  input:-webkit-autofill, textarea:-webkit-autofill{ -webkit-box-shadow: 0 0 0 1000px var(--bg-soft) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); transition: background-color 9999s ease-out 0s; }
+  input:autofill, textarea:autofill{ box-shadow: 0 0 0 1000px var(--bg-soft) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); }
   textarea{ resize: vertical; min-height: 4.5rem; }
   .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 
@@ -624,7 +652,7 @@
     padding: 0.95rem 2.2rem; cursor: pointer; border-radius: 0;
     transition: background 250ms ease, color 250ms ease, border-color 0.7s ease;
   }
-  button.submit:hover{ background: transparent; color: var(--accent); }
+  @media (hover: hover){ button.submit:hover{ background: transparent; color: var(--accent); } }
   button.submit:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
   .form-note{ font-size: 0.86rem; color: var(--ink-mute); margin-top: var(--space-md); }
   .form-note a{ color: var(--accent); text-decoration: underline; text-underline-offset: 0.15em; }
@@ -644,7 +672,7 @@
   }
   .credits-list dd{ margin: 0; color: var(--ink-soft); }
   .credits-list dd a{ color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; transition: color 0.7s ease, opacity 0.2s ease; }
-  .credits-list dd a:hover{ opacity: 0.72; }
+  @media (hover: hover){ .credits-list dd a:hover{ opacity: 0.72; } }
   @media (min-width: 620px){
     .credits-list > div{ grid-template-columns: 13rem 1fr; gap: var(--space-md); align-items: baseline; }
   }
@@ -652,8 +680,13 @@
   /* gallery entry link (end of Views) + footer link */
   .more{ margin-top: clamp(1.8rem, 3.5vw, 2.8rem); }
   .more-link{ font-family: var(--ff-display); font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; color: var(--ink-soft); border-bottom: 1px solid var(--field-line); padding-bottom: 4px; transition: color 0.25s ease, border-color 0.25s ease; }
-  .more-link:hover{ color: var(--ink); border-bottom-color: var(--accent); }
+  @media (hover: hover){ .more-link:hover{ color: var(--ink); border-bottom-color: var(--accent); text-decoration-color: var(--accent); } }
   .more-link .arrow{ padding-left: 0.45em; }
+  /* touch: as an inline-block (padding above) the rule would span the whole box under a wrapped
+     link — underline the text instead. Sits AFTER the base rule: a media query adds no specificity */
+  @media (max-width: 640px), (pointer: coarse){
+    .more-link{ padding-bottom: 0.4rem; border-bottom: 0; text-decoration: underline; text-decoration-color: var(--field-line); text-decoration-thickness: 1px; text-underline-offset: 0.35em; }
+  }
   .foot-meta a{ color: var(--footer-ink); text-decoration: underline; text-underline-offset: 0.18em; }
 
   /* ---------- footer ---------- */
@@ -704,7 +737,7 @@
 
   /* ===== Exhibition quick-wins (museum-catalogue pass — review 2026-06) ===== */
   /* (10) Reveal only finished things: hide placeholder media until the photography
-     lands (docs/imagery-brief.md). Plan + Materials keep their real images.
+     lands (images/README.md). Plan + Materials keep their real images.
      PREVIEW TOGGLE: add class="preview" to <body> to reveal every slot with its
      placeholder — the full page as it will read once photos land. Remove the class
      (one word) to return to the finished live state. */
@@ -730,6 +763,7 @@
   /* over imagery the muted hero smalls step one role up (ink-soft) to hold 4.5:1 — no effect on the finished plain-ground state */
   body.preview .descriptor, body.preview .hero-orient,
   body.preview .scroll-cue, body.preview .hero-media{ color: var(--ink-soft); }
+  @media (hover: hover){ body.preview .hero-media:hover{ color: var(--ink); } }   /* the preview rule outranks the base hover — give the chip its hover back */
   body.preview .scroll-cue .stroke{ background: currentColor; }
 
   /* (2) Quiet chapter numerals on the content sections. */
@@ -765,7 +799,7 @@
     text-align: left; text-decoration: underline; text-decoration-style: dotted; text-decoration-thickness: 1px;
     text-underline-offset: 0.2em; transition: color 0.25s ease;
   }
-  .evening-line:hover{ color: var(--accent); }
+  @media (hover: hover){ .evening-line:hover{ color: var(--accent); } }
   body.night .evening-line{ text-decoration: none; cursor: default; }   /* at night it reads as a statement, not a control */
 
   /* quiet page-leaving cue on the Gallery links (the one nav item that exits the one-pager) */
@@ -788,11 +822,11 @@
     font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute);
   }
   .artifact figcaption a{ color: var(--accent); text-decoration: underline; text-underline-offset: 0.18em; transition: color 0.7s ease, opacity 0.2s ease; }
-  .artifact figcaption a:hover{ opacity: 0.72; }
+  @media (hover: hover){ .artifact figcaption a:hover{ opacity: 0.72; } }
 
   /* Silent full-bleed "pause" plates — image-only breathing moments between sections.
      Full viewport width; reuse .shot-pair so the toggle crossfades day/afterglow once a
-     matched pair lands. One per scene-break, never many. (docs/imagery-brief.md) */
+     matched pair lands. One per scene-break, never many. (images/README.md) */
   .pause{ padding: 0; }
   .pause-media{
     position: relative; width: 100%; min-height: clamp(46svh, 56vw, 78svh);
@@ -812,11 +846,12 @@
     text-transform: uppercase; color: var(--frame-label);
   }
 
-  /* ---------- work-in-progress notice (native <dialog>; opens on every load) ----------
+  /* ---------- work-in-progress notice (native <dialog>; opens once per visit) ----------
      A quiet, museal card on a blurred backdrop, in the site's palette + type, adapting to
      Daylight/Afterglow. Closed by ✕, "Look around", Esc or a click outside — then the page
-     browses normally. Shown every load by design (no localStorage gate). Kept byte-identical
-     across index / gallery / legal (hand-synced, like the token blocks). */
+     browses normally. Session-gated by design (sessionStorage: a new tab or a return visit
+     shows it again). Kept byte-identical across index / gallery / legal (hand-synced, like
+     the token blocks). */
   .wip{ position:fixed; inset:0; width:100%; height:100%; max-width:100vw; max-height:100vh; border:0; padding:0; margin:0; background:transparent; color:var(--ink); }
   .wip[open]{ display:flex; align-items:center; justify-content:center; }
   .wip::backdrop{ background:rgba(44,38,32,0.34); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); }
@@ -831,6 +866,24 @@
   .wip-close:hover{ color:var(--ink); }
   .wip-close:focus-visible, .wip-dismiss:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
   @media (prefers-reduced-motion: no-preference){ .wip[open]{ animation:wip-fade 260ms ease; } @keyframes wip-fade{ from{ opacity:0 } to{ opacity:1 } } }
+
+  /* ---------- print — the page as a document (hand-synced across index / gallery / legal) ----------
+     Reveal animations never run on paper, a fixed bar would stamp itself on every sheet, and the
+     controls mean nothing printed; the CSS-background wordmarks give way to their text; Afterglow
+     hands its tokens back to Daylight (pale ink on white paper otherwise). Selectors repeat the
+     base rules' specificity (.bar .mark, .wip[open], .js .menu-btn …) so source order decides. */
+  @media print{
+    *, *::before, *::after{ transition:none !important; animation:none !important; }   /* a media switch must not start from the on-screen value */
+    html, html:has(body.night){ color-scheme:light; }
+    body.night{ --bg:inherit; --bg-soft:inherit; --ink:inherit; --ink-soft:inherit; --ink-mute:inherit; --accent:inherit; --accent-on:inherit; --rule:inherit; --rule-strong:inherit; --field-line:inherit; --bar-bg:inherit; --hero-band:inherit; --hero-wash:inherit; --light-glow:inherit; --light-warm:inherit; --light-opacity:inherit; --frame-grad:inherit; --frame-label:inherit; --footer-bg:inherit; --footer-ink:inherit; --footer-mute:inherit; --plan-shadow:inherit; }   /* back to the :root (Daylight) values */
+    .js .reveal{ opacity:1; transform:none; }
+    body{ position:static !important; top:auto !important; left:auto !important; right:auto !important; width:auto !important; }   /* the open notice / menu / lightbox pin the body inline — one viewport-sized page otherwise */
+    header.bar{ position:static; }
+    .toggle, .menu-btn, .js .menu-btn, .menu, .hero-media, .scroll-cue, .skip-link, .toggle-hint, .tracker, .wip, .wip[open], .lightbox, .lightbox[open], .hold-hint::before{ display:none; }
+    .hero{ min-height:auto; }
+    .mark, .bar .mark, body.night .bar .mark, .wordmark, body.night .wordmark, .foot-mark, .wip-mark, body.night .wip-mark{ background:none; text-indent:0; width:auto; aspect-ratio:auto; font-family:var(--ff-display); font-weight:400; letter-spacing:0.2em; }
+    footer, .foot-meta, .foot-meta a{ background:none; color:var(--ink); }
+  }
 </style>
 </head>
 
@@ -891,16 +944,16 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
   <section class="hero" aria-label="Introduction">
     <!--
       HERO MEDIA — a matched day/evening light-study PAIR stands in until the photography
-      lands; this markup is FINAL. Photography day = replace FILES only: drop hero--day.* +
-      hero--eve.* masters into images/_masters/, run scripts/process-photos.py, commit
-      images/hero/ — no markup edit. Keep the day image the LCP element: first in DOM,
+      lands; this markup is FINAL. Photography day = replace the image FILES only (runbook:
+      images/README.md) — no markup edit. Keep the day image the LCP element: first in DOM,
       fetchpriority="high", never loading="lazy" (the evening layer stays eager too — the
-      house's hours can open the page in Afterglow). When the real pair lands, give the day
-      <img> its alt (draft, museal register): "AETHON House at dusk — the west elevation open
-      to the pool and garden, toward the sea". The headline keeps ≥ 4.5:1 contrast over any
+      house's hours can open the page in Afterglow). When the real pair lands, drop the
+      aria-hidden from this wrapper (it marks the stand-in decorative) and give the day <img>
+      its alt (draft, museal register): "AETHON House at dusk — the west elevation open to
+      the pool and garden, toward the sea". The headline keeps ≥ 4.5:1 contrast over any
       image (WCAG F83) via the body.preview scrim + hero-wash. Motion stays an option per the
       brief: a muted looping clip with the day frame as poster, gated behind
-      prefers-reduced-motion; the hero stays a still on mobile. (docs/imagery-brief.md)
+      prefers-reduced-motion; the hero stays a still on mobile.
     -->
     <div class="hero-photo shot-pair" aria-hidden="true">
       <picture class="shot-day">
@@ -957,9 +1010,9 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       </div>
       <div>
         <p>AETHON is a quiet elevation of an existing seafront residence — once one of the Faros Beach Houses — not a reinvention. The original geometry is kept and honoured; the material and spatial language is refined toward stillness. Completed in 2026, it is the same house, quietly raised.</p>
-        <p>The emptiness of Japandi and the warmth of Mediterranean light — held in proportion rather than ornament. Light here is treated as a material in its own right: warm, indirect, and dimmed low as the day turns, so the house changes character with the hour. Warmth, air and shade are tuned quietly and out of sight; comfort here is felt rather than managed.</p>
-        <p>The plan was shaped from the outset by Feng Shui, so its calm is structural rather than styled. The ground opens to gather — and opens completely: the glazed walls slide back until the living and entertaining rooms, the pool, the garden and the sea become a single space. The garden answers in kind, drawn into the heart of the plan as a planted courtyard — running through the house as much as around it. Above, the rooms grow still. Surfaces stay few and honest — chosen to age with the coast.</p>
-        <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
+        <p>The emptiness of Japandi and the warmth of Mediterranean light — held in proportion rather than ornament. Light here is treated as a material in its own right: warm, indirect, and dimmed low as the day turns, so the house changes character with the hour. Warmth, air, and shade are tuned quietly and out of sight; comfort here is felt rather than managed.</p>
+        <p>The plan was shaped from the outset by Feng Shui, so its calm is structural rather than styled. The ground opens to gather — and opens completely: the glazed walls slide back until the living and entertaining rooms, the pool, the garden, and the sea become a single space. The garden answers in kind, drawn into the heart of the plan as a planted courtyard — running through the house as much as around it. Above, the rooms grow still. Surfaces stay few and honest — chosen to age with the coast.</p>
+        <p>The intent is permanence — an architecture that feels as though it had always belonged to this stretch of coast. Much of the house was made for it: kitchen, cabinetry, and joinery shaped for these rooms rather than bought to fit — built, not furnished.</p>
       </div>
     </div>
     <ol class="timeline reveal" aria-label="The house, in time">
@@ -993,7 +1046,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         </div>
         <div>
           <p>Two conceptual views — kept soft, for atmosphere rather than measurement.</p>
-          <p>Below, the house gathers: living, dining, kitchen, and a room kept for the evening open in a single line to the terrace, the pool, and the garden — and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller as the house rises.</p>
+          <p>Below, the house gathers: living, dining, kitchen, and a room kept for the evening open in a single line to the terrace, the pool, and the garden — and the sea beyond. Above, it withdraws — the bedrooms and quiet rooms kept for rest, growing stiller floor by floor.</p>
         </div>
       </div>
       <!-- Muted, low-detail floor renders (no dimensions); processed via images/README.md into images/plan/. -->
@@ -1026,8 +1079,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
   <!-- PAUSE — a silent full-bleed breath (Daylight ↔ Afterglow when the matched pair lands) -->
   <section class="pause" aria-label="The house, toward the western sea">
     <div class="pause-media shot-pair" data-hold role="button" tabindex="0" aria-label="Hold to preview the evening view">
-      <!-- matched day/evening pair (light-study stand-ins) — photography day replaces the
-           FILES via scripts/process-photos.py (masters pause-west--day.* / --eve.*) -->
+      <!-- matched day/evening pair (light-study stand-ins) — photography day replaces the files (images/README.md) -->
       <picture class="shot-day">
         <source type="image/avif" srcset="images/pause/pause-west-day-800.avif 800w, images/pause/pause-west-day-1600.avif 1600w, images/pause/pause-west-day-2400.avif 2400w" sizes="100vw">
         <source type="image/webp" srcset="images/pause/pause-west-day-800.webp 800w, images/pause/pause-west-day-1600.webp 1600w, images/pause/pause-west-day-2400.webp 2400w" sizes="100vw">
@@ -1085,7 +1137,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       <picture>
         <source type="image/avif" srcset="images/sketch/ground-floor-sketch-800.avif 800w, images/sketch/ground-floor-sketch-1264.avif 1264w" sizes="(min-width:760px) 62rem, 92vw">
         <source type="image/webp" srcset="images/sketch/ground-floor-sketch-800.webp 800w, images/sketch/ground-floor-sketch-1264.webp 1264w" sizes="(min-width:760px) 62rem, 92vw">
-        <img src="images/sketch/ground-floor-sketch-1264.jpg" srcset="images/sketch/ground-floor-sketch-800.jpg 800w, images/sketch/ground-floor-sketch-1264.jpg 1264w" sizes="(min-width:760px) 62rem, 92vw" width="1264" height="917" loading="lazy" decoding="async" alt="Concept sketch — a one-point perspective of the ground floor that gathers: the living room opening to the dining table, the terrace and the garden beyond">
+        <img src="images/sketch/ground-floor-sketch-1264.jpg" srcset="images/sketch/ground-floor-sketch-800.jpg 800w, images/sketch/ground-floor-sketch-1264.jpg 1264w" sizes="(min-width:760px) 62rem, 92vw" width="1264" height="917" loading="lazy" decoding="async" alt="Concept sketch — a one-point perspective of the ground floor that gathers: the living room opening to the dining table, the terrace, and the garden beyond">
       </picture>
       <figcaption>Concept sketch &mdash; the rooms, from within &middot; <a href="https://www.dearmodern.com/" target="_blank" rel="noopener">Cliff Tan, Dear Modern</a></figcaption>
     </figure>
@@ -1104,8 +1156,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
   <!-- PAUSE — the afterglow breath before the materials -->
   <section class="pause" aria-label="The afterglow — lit from within">
     <div class="pause-media shot-pair" data-hold role="button" tabindex="0" aria-label="Hold to preview the evening view">
-      <!-- matched day/evening pair — the house lit warm from within at dusk
-           (masters pause-afterglow--day.* / --eve.*) -->
+      <!-- matched day/evening pair — the house lit warm from within at dusk (files only; images/README.md) -->
       <picture class="shot-day">
         <source type="image/avif" srcset="images/pause/pause-afterglow-day-800.avif 800w, images/pause/pause-afterglow-day-1600.avif 1600w, images/pause/pause-afterglow-day-2400.avif 2400w" sizes="100vw">
         <source type="image/webp" srcset="images/pause/pause-afterglow-day-800.webp 800w, images/pause/pause-afterglow-day-1600.webp 1600w, images/pause/pause-afterglow-day-2400.webp 2400w" sizes="100vw">
@@ -1143,17 +1194,17 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
           <div class="note-mats">
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/marble-400.avif 400w, images/materials/marble-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/marble-400.webp 400w, images/materials/marble-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/marble-800.jpg" srcset="images/materials/marble-400.jpg 400w, images/materials/marble-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Honed marble in close view — soft grey veining on a pale ground" style="background:#E9E7E0">
+                <source type="image/avif" srcset="images/materials/marble-400.avif 400w, images/materials/marble-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/marble-400.webp 400w, images/materials/marble-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/marble-800.jpg" srcset="images/materials/marble-400.jpg 400w, images/materials/marble-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Honed marble in close view — soft grey veining on a pale ground" style="background:#E9E7E0">
               </picture>
               <figcaption><span class="mat-name">Marble</span><span class="mat-note">The cool ground, underfoot.</span></figcaption>
             </figure>
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/patiti-400.avif 400w, images/materials/patiti-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/patiti-400.webp 400w, images/materials/patiti-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/patiti-800.jpg" srcset="images/materials/patiti-400.jpg 400w, images/materials/patiti-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Hand-pressed lime plaster in close view — the surface worked into waves" style="background:#C5B292">
+                <source type="image/avif" srcset="images/materials/patiti-400.avif 400w, images/materials/patiti-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/patiti-400.webp 400w, images/materials/patiti-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/patiti-800.jpg" srcset="images/materials/patiti-400.jpg 400w, images/materials/patiti-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Hand-pressed lime plaster in close view — the surface worked into waves" style="background:#C5B292">
               </picture>
               <figcaption><span class="mat-name">Patiti</span><span class="mat-note">A Mediterranean lime, pressed into waves.</span></figcaption>
             </figure>
@@ -1168,17 +1219,17 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
           <div class="note-mats">
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/travertine-400.avif 400w, images/materials/travertine-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/travertine-400.webp 400w, images/materials/travertine-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/travertine-800.jpg" srcset="images/materials/travertine-400.jpg 400w, images/materials/travertine-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Travertine in close view — warm, open-pored stone" style="background:#DCCDB3">
+                <source type="image/avif" srcset="images/materials/travertine-400.avif 400w, images/materials/travertine-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/travertine-400.webp 400w, images/materials/travertine-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/travertine-800.jpg" srcset="images/materials/travertine-400.jpg 400w, images/materials/travertine-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Travertine in close view — warm, open-pored stone" style="background:#DCCDB3">
               </picture>
               <figcaption><span class="mat-name">Travertine</span><span class="mat-note">Warm stone that holds the afternoon.</span></figcaption>
             </figure>
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/coastal-sandstone-400.avif 400w, images/materials/coastal-sandstone-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/coastal-sandstone-400.webp 400w, images/materials/coastal-sandstone-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/coastal-sandstone-800.jpg" srcset="images/materials/coastal-sandstone-400.jpg 400w, images/materials/coastal-sandstone-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Coastal sandstone in close view — layered, sand-toned grain" style="background:#C7B08C">
+                <source type="image/avif" srcset="images/materials/coastal-sandstone-400.avif 400w, images/materials/coastal-sandstone-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/coastal-sandstone-400.webp 400w, images/materials/coastal-sandstone-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/coastal-sandstone-800.jpg" srcset="images/materials/coastal-sandstone-400.jpg 400w, images/materials/coastal-sandstone-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Coastal sandstone in close view — layered, sand-toned grain" style="background:#C7B08C">
               </picture>
               <figcaption><span class="mat-name">Coastal sandstone</span><span class="mat-note">The colour of the shore.</span></figcaption>
             </figure>
@@ -1193,17 +1244,17 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
           <div class="note-mats">
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/olive-leather-400.avif 400w, images/materials/olive-leather-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/olive-leather-400.webp 400w, images/materials/olive-leather-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/olive-leather-800.jpg" srcset="images/materials/olive-leather-400.jpg 400w, images/materials/olive-leather-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Olive-green leather in close view — a deep, grained green" style="background:#565B3B">
+                <source type="image/avif" srcset="images/materials/olive-leather-400.avif 400w, images/materials/olive-leather-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/olive-leather-400.webp 400w, images/materials/olive-leather-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/olive-leather-800.jpg" srcset="images/materials/olive-leather-400.jpg 400w, images/materials/olive-leather-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Olive-green leather in close view — a deep, grained green" style="background:#565B3B">
               </picture>
               <figcaption><span class="mat-name">Olive-green leather</span><span class="mat-note">The deep green; the garden&rsquo;s olive, brought in.</span></figcaption>
             </figure>
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/rosemary-green-400.avif 400w, images/materials/rosemary-green-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/rosemary-green-400.webp 400w, images/materials/rosemary-green-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/rosemary-green-800.jpg" srcset="images/materials/rosemary-green-400.jpg 400w, images/materials/rosemary-green-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Rosemary-green fabric in close view — a soft, muted weave" style="background:#7C8569">
+                <source type="image/avif" srcset="images/materials/rosemary-green-400.avif 400w, images/materials/rosemary-green-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/rosemary-green-400.webp 400w, images/materials/rosemary-green-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/rosemary-green-800.jpg" srcset="images/materials/rosemary-green-400.jpg 400w, images/materials/rosemary-green-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Rosemary-green fabric in close view — a soft, muted weave" style="background:#7C8569">
               </picture>
               <figcaption><span class="mat-name">Rosemary green</span><span class="mat-note">A softer green, in fabric — curtains and chairs.</span></figcaption>
             </figure>
@@ -1218,17 +1269,17 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
           <div class="note-mats">
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/dark-oak-400.avif 400w, images/materials/dark-oak-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/dark-oak-400.webp 400w, images/materials/dark-oak-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/dark-oak-800.jpg" srcset="images/materials/dark-oak-400.jpg 400w, images/materials/dark-oak-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Dark oak in close view — deep, near-black grain" style="background:#2C2620">
+                <source type="image/avif" srcset="images/materials/dark-oak-400.avif 400w, images/materials/dark-oak-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/dark-oak-400.webp 400w, images/materials/dark-oak-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/dark-oak-800.jpg" srcset="images/materials/dark-oak-400.jpg 400w, images/materials/dark-oak-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Dark oak in close view — deep, near-black grain" style="background:#2C2620">
               </picture>
               <figcaption><span class="mat-name">Dark oak</span><span class="mat-note">The warm ink of the house.</span></figcaption>
             </figure>
             <figure class="mat">
               <picture>
-                <source type="image/avif" srcset="images/materials/iroko-400.avif 400w, images/materials/iroko-800.avif 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <source type="image/webp" srcset="images/materials/iroko-400.webp 400w, images/materials/iroko-800.webp 800w" sizes="(min-width:760px) 22vw, 45vw">
-                <img class="mat-chip" src="images/materials/iroko-800.jpg" srcset="images/materials/iroko-400.jpg 400w, images/materials/iroko-800.jpg 800w" sizes="(min-width:760px) 22vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Iroko in close view — warm amber hardwood grain" style="background:#9C6A3E">
+                <source type="image/avif" srcset="images/materials/iroko-400.avif 400w, images/materials/iroko-800.avif 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <source type="image/webp" srcset="images/materials/iroko-400.webp 400w, images/materials/iroko-800.webp 800w" sizes="(min-width:760px) 27vw, 45vw">
+                <img class="mat-chip" src="images/materials/iroko-800.jpg" srcset="images/materials/iroko-400.jpg 400w, images/materials/iroko-800.jpg 800w" sizes="(min-width:760px) 27vw, 45vw" width="800" height="533" loading="lazy" decoding="async" alt="Iroko in close view — warm amber hardwood grain" style="background:#9C6A3E">
               </picture>
               <figcaption><span class="mat-name">Iroko</span><span class="mat-note">Warm hardwood, close at hand.</span></figcaption>
             </figure>
@@ -1253,10 +1304,10 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         </div>
       </div>
       <!--
-        SHOT BRIEF — placeholders mirror final size / ratio / position; grey until real
-        photography lands; the set scales to the eventual 20–30:
+        SHOT BRIEF — each frame holds a light-study stand-in at final size / ratio / position;
+        photography day replaces the files only; the set scales to the eventual 20–30:
         DAYLIGHT ↔ AFTERGLOW: the hero + signature views are matched day/evening PAIRS (same
-        viewpoint), crossfaded by the toggle. Full brief & asset list: docs/imagery-brief.md.
+        viewpoint), crossfaded by the toggle. Runbook: images/README.md.
           1. West elevation · sunset        — wide 21:9, golden hour, the signature exterior.
              (Optional: a short, slow, muted establishing/drone FILM here instead of a still
               — situating the house on the western coast; never aimless hovering.)
@@ -1284,59 +1335,59 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         </div>
         <div class="frame shot-pair">
           <picture class="shot-day">
-            <source type="image/avif" srcset="images/views/views-living-day-800.avif 800w, images/views/views-living-day-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-living-day-800.webp 800w, images/views/views-living-day-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-living-day-1600.jpg" srcset="images/views/views-living-day-800.jpg 800w, images/views/views-living-day-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-living-day-800.avif 800w, images/views/views-living-day-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-living-day-800.webp 800w, images/views/views-living-day-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-living-day-1600.jpg" srcset="images/views/views-living-day-800.jpg 800w, images/views/views-living-day-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
           </picture>
           <picture class="shot-night">
-            <source type="image/avif" srcset="images/views/views-living-eve-800.avif 800w, images/views/views-living-eve-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-living-eve-800.webp 800w, images/views/views-living-eve-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-living-eve-1600.jpg" srcset="images/views/views-living-eve-800.jpg 800w, images/views/views-living-eve-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-living-eve-800.avif 800w, images/views/views-living-eve-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-living-eve-800.webp 800w, images/views/views-living-eve-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-living-eve-1600.jpg" srcset="images/views/views-living-eve-800.jpg 800w, images/views/views-living-eve-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
           </picture>
           <span class="label">Living, toward the sea</span>
         </div>
         <div class="frame shot-pair">
           <picture class="shot-day">
-            <source type="image/avif" srcset="images/views/views-pool-day-800.avif 800w, images/views/views-pool-day-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-pool-day-800.webp 800w, images/views/views-pool-day-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-pool-day-1600.jpg" srcset="images/views/views-pool-day-800.jpg 800w, images/views/views-pool-day-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-pool-day-800.avif 800w, images/views/views-pool-day-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-pool-day-800.webp 800w, images/views/views-pool-day-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-pool-day-1600.jpg" srcset="images/views/views-pool-day-800.jpg 800w, images/views/views-pool-day-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
           </picture>
           <picture class="shot-night">
-            <source type="image/avif" srcset="images/views/views-pool-eve-800.avif 800w, images/views/views-pool-eve-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-pool-eve-800.webp 800w, images/views/views-pool-eve-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-pool-eve-1600.jpg" srcset="images/views/views-pool-eve-800.jpg 800w, images/views/views-pool-eve-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-pool-eve-800.avif 800w, images/views/views-pool-eve-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-pool-eve-800.webp 800w, images/views/views-pool-eve-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-pool-eve-1600.jpg" srcset="images/views/views-pool-eve-800.jpg 800w, images/views/views-pool-eve-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
           </picture>
           <span class="label">The pool, at dusk</span>
         </div>
         <div class="frame tall hour-day">
           <picture>
-            <source type="image/avif" srcset="images/views/views-olives-800.avif 800w, images/views/views-olives-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-olives-800.webp 800w, images/views/views-olives-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-olives-1600.jpg" srcset="images/views/views-olives-800.jpg 800w, images/views/views-olives-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-olives-800.avif 800w, images/views/views-olives-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-olives-800.webp 800w, images/views/views-olives-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-olives-1600.jpg" srcset="images/views/views-olives-800.jpg 800w, images/views/views-olives-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt="">
           </picture>
           <span class="label">The garden, sculptural olives</span>
         </div>
         <div class="frame tall hour-eve">
           <picture>
-            <source type="image/avif" srcset="images/views/views-olive-night-800.avif 800w, images/views/views-olive-night-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-olive-night-800.webp 800w, images/views/views-olive-night-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-olive-night-1600.jpg" srcset="images/views/views-olive-night-800.jpg 800w, images/views/views-olive-night-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-olive-night-800.avif 800w, images/views/views-olive-night-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-olive-night-800.webp 800w, images/views/views-olive-night-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-olive-night-1600.jpg" srcset="images/views/views-olive-night-800.jpg 800w, images/views/views-olive-night-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="2000" loading="lazy" decoding="async" alt="">
           </picture>
           <span class="label">The lit olive, after dark</span>
         </div>
         <div class="frame hour-day">
           <picture>
-            <source type="image/avif" srcset="images/views/views-terrace-800.avif 800w, images/views/views-terrace-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-terrace-800.webp 800w, images/views/views-terrace-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-terrace-1600.jpg" srcset="images/views/views-terrace-800.jpg 800w, images/views/views-terrace-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-terrace-800.avif 800w, images/views/views-terrace-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-terrace-800.webp 800w, images/views/views-terrace-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-terrace-1600.jpg" srcset="images/views/views-terrace-800.jpg 800w, images/views/views-terrace-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
           </picture>
           <span class="label">The terrace, under shade sails</span>
         </div>
         <div class="frame hour-eve">
           <picture>
-            <source type="image/avif" srcset="images/views/views-interior-800.avif 800w, images/views/views-interior-1600.avif 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <source type="image/webp" srcset="images/views/views-interior-800.webp 800w, images/views/views-interior-1600.webp 1600w" sizes="(min-width: 620px) 46vw, 92vw">
-            <img src="images/views/views-interior-1600.jpg" srcset="images/views/views-interior-800.jpg 800w, images/views/views-interior-1600.jpg 1600w" sizes="(min-width: 620px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
+            <source type="image/avif" srcset="images/views/views-interior-800.avif 800w, images/views/views-interior-1600.avif 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <source type="image/webp" srcset="images/views/views-interior-800.webp 800w, images/views/views-interior-1600.webp 1600w" sizes="(min-width: 760px) 46vw, 92vw">
+            <img src="images/views/views-interior-1600.jpg" srcset="images/views/views-interior-800.jpg 800w, images/views/views-interior-1600.jpg 1600w" sizes="(min-width: 760px) 46vw, 92vw" width="1600" height="1000" loading="lazy" decoding="async" alt="">
           </picture>
           <span class="label">The interior, lit from within</span>
         </div>
@@ -1364,12 +1415,10 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
         <p class="intro">The residence is privately owned and not on the market today — this is not a listing, and the house is met only by invitation. Should that ever change, a short and private list is kept, for those who would like to be told first — no newsletters, no marketing, only a quiet word, in time. You are welcome to leave a note below.</p>
 
         <!--
-          FORM DELIVERY (Brevo): posts to this account's Brevo subscription-form endpoint.
-          Enhanced to submit via AJAX (script below) so visitors stay on the page and get an
-          inline thank-you; the plain POST is the no-JS fallback. Fields map to Brevo
-          attributes FIRSTNAME / EMAIL / MESSAGE; honeypot email_address_check; hidden
-          SOURCE=aethon.house (stored only if a SOURCE attribute exists in Brevo — otherwise
-          the dedicated "AETHON — Interest" list is what keeps these contacts separate).
+          FORM DELIVERY (Brevo): posts to the Brevo subscription-form endpoint. Enhanced to
+          submit via AJAX (script below) so visitors stay on the page and get an inline
+          thank-you; the plain POST is the no-JS fallback. Fields map to Brevo attributes
+          FIRSTNAME / EMAIL / MESSAGE; honeypot email_address_check; hidden SOURCE tag.
         -->
         <form id="register-form" class="register" action="https://06e3f483.sibforms.com/serve/MUIFALZtNwrfYRie9sz1bG8YnRNZPOTrFhddbiapvcGS7lsNjlRfOOaYD3ioukppoi1DGr3ljYQtJwdAlKHyYy-8U5AKSsy7vqzWFX20XrTkJuKC7AXd28q87w-AYZVgJDxx_ZPXcCaDXOKww5fU560hl4Z_eMe5-BBqnO2y2MTsAHBLHuGK9AKJOeDDYv-9L_CU2eqH0x3jh9ytmQ==" method="POST">
           <div class="grid-2">
@@ -1386,7 +1435,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
               <textarea id="message" name="MESSAGE" rows="3"></textarea>
             </div>
           </div>
-          <!-- tags every AETHON registrant so they stay distinct from the other site's contacts -->
+          <!-- source tag for the interest list -->
           <input type="hidden" name="SOURCE" value="aethon.house" />
           <!-- Brevo anti-bot honeypot: must remain empty -->
           <div class="hp" aria-hidden="true">
@@ -1396,7 +1445,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
           <input type="hidden" name="locale" value="en" />
           <button class="submit" type="submit">Register interest</button>
         </form>
-        <p class="form-note" id="register-note">Your details are used only to contact you about the house, and are shared only with the service that delivers this form. See our <a href="/legal/">privacy notice</a>.</p>
+        <p class="form-note" id="register-note">Your details are used only to contact you about the house, and are shared only with the service that delivers this form. See our <a href="/legal/#privacy">privacy notice</a>.</p>
         <p class="form-note" id="register-error" role="alert" hidden>That didn’t go through. Please try again in a moment.</p>
         <div class="register-done" id="register-thanks" role="status" tabindex="-1" hidden>
           <p class="register-done__line">Thank you. Your interest has been noted.</p>
@@ -1596,7 +1645,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       var form = document.getElementById('register-form');
       if (form){
         form.addEventListener('focusin', function(){ ev('form-start'); }, { once: true });
-        form.addEventListener('submit', function(){ ev('form-submit'); });
+        form.addEventListener('submit', function(){ var hp = form.querySelector('[name="email_address_check"]'); if (hp && hp.value) return; ev('form-submit'); });   // a honeypot-caught bot is not an ask
       }
       // 'film-play' / 'hero-loop' are pre-registered in the worker — call
       // window.__aeEv('film-play') from the media play handlers once real footage lands.
@@ -1688,7 +1737,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       }
     });
     window.addEventListener('resize', function(){
-      var phoneMenu = window.innerWidth <= 640 || window.matchMedia('(pointer: coarse) and (max-height: 500px)').matches;
+      var phoneMenu = window.innerWidth <= 700 || window.matchMedia('(pointer: coarse) and (max-height: 500px)').matches;
       if (!phoneMenu && body.classList.contains('menu-open')) setOpen(false);   // don't let a mobile URL-bar resize close the open menu
     }, { passive: true });
   })();
@@ -1750,7 +1799,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
     try { if (sessionStorage.getItem('aethon-wip') === '1') return; } catch (e) {}
     var body = document.body, sy = 0;
     function lock(){ sy = window.scrollY || 0; body.style.position = 'fixed'; body.style.top = (-sy) + 'px'; body.style.left = '0'; body.style.right = '0'; body.style.width = '100%'; }
-    function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); }
+    function unlock(){ body.style.position = ''; body.style.top = ''; body.style.left = ''; body.style.right = ''; body.style.width = ''; var h = location.hash && document.getElementById(location.hash.slice(1)); if (h){ h.scrollIntoView({ behavior: 'instant' }); } else { window.scrollTo({ top: sy, left: 0, behavior: 'instant' }); } }   // an arrival fragment (/#interest) outranks the pre-lock position
     function close(){ if (dlg.open) dlg.close(); }
     dlg.addEventListener('close', unlock);                     // fires for ✕, button, backdrop AND Esc
     var x = dlg.querySelector('.wip-close'); if (x) x.addEventListener('click', close);

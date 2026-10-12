@@ -19,9 +19,9 @@ history. So:
 - The pipeline **strips all metadata** and writes only the small web assets. **Only
   those get committed.**
 
-## Photography day — the one command
+## Photography day — the one command (plus one line per frame)
 Every photo slot on both pages is **already wired**; the markup is final. Integrating
-the real photography changes **files only**:
+the real photography changes **files** — and, per frame, **one line of alt text**:
 
 1. Name each delivered master by its slot (list below): matched pairs as
    `<slot>--day.*` + `<slot>--eve.*`, single-hour slots as `<slot>.*`, and drop them
@@ -31,8 +31,17 @@ the real photography changes **files only**:
    managed to sRGB (embedded ICC respected), centre-cropped to the slot's exact
    ratio, resized, saved AVIF q55 + WebP q75 + progressive JPEG q82, metadata
    stripped.
-3. Commit the regenerated `hero/ pause/ plates/ views/ gallery/` files. Done — the
-   pages pick them up by name.
+3. **Write each frame's `alt`.** The stand-ins ship `alt=""` (abstract studies are
+   decorative); a real photograph is content — give the day `<img>` of every slot a
+   museal one-liner (entity first, then the view: *"AETHON House at dusk — the west
+   elevation open to the pool and garden, toward the sea"*). The evening layer of a
+   pair keeps `alt=""` — the crossfade is decorative; the day image carries the
+   description. The hero wrapper (`.hero-photo`) carries `aria-hidden="true"` while
+   its stand-in is decorative — **remove it with the hero pair**, or the alt is never
+   read. The draft above sits in the hero's HTML comment; the gallery's shot brief
+   gives the register rule.
+4. Commit the regenerated `hero/ pause/ plates/ views/ gallery/` files with those
+   alt lines. Done — the pages pick the images up by name.
 
 | Slot | Where | Ratio | Hours |
 |---|---|---|---|
