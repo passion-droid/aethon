@@ -521,8 +521,10 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   `body.night`** — pale ink on white paper otherwise; the print selectors repeat the base rules'
   specificity, `.bar .mark` / `.wip[open]` / `.js .menu-btn`, so source order decides; and
   `body{ position:static !important; … }` releases the inline scroll-lock of an open notice /
-  menu / lightbox — printing with the WIP card up gave ONE viewport-sized page otherwise;
-  Save-as-PDF was 13 blank pages); no-JS gating of toggle / hero chip /
+  menu / lightbox — printing with the WIP card up gave ONE viewport-sized page otherwise; the
+  hero photo is hidden in print — Chromium paginates the absolutely positioned hero image to a
+  15px sliver under the bar, so the hero prints as text; Save-as-PDF was 13 blank pages); no-JS
+  gating of toggle / hero chip /
   evening-lines / hold-hint (like the menu button); **hover-only rules wrapped in
   `@media (hover:hover)`** on all pages — touch no longer sticks a tapped submit button in its
   inverted state (the WIP block's hovers are left as-is to keep its byte-sync); autofill override

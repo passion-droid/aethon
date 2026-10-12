@@ -183,6 +183,7 @@
     header.bar{ position:static; }
     .toggle, .menu-btn, .js .menu-btn, .menu, .hero-media, .scroll-cue, .skip-link, .toggle-hint, .tracker, .wip, .wip[open], .lightbox, .lightbox[open], .hold-hint::before{ display:none; }
     .hero{ min-height:auto; }
+    body.preview .hero-photo{ display:none; }   /* the absolutely positioned hero image paginates to a 15px sliver under the bar — the hero prints as text */
     .mark, .bar .mark, body.night .bar .mark, .wordmark, body.night .wordmark, .foot-mark, .wip-mark, body.night .wip-mark{ background:none; text-indent:0; width:auto; aspect-ratio:auto; font-family:var(--ff-display); font-weight:400; letter-spacing:0.2em; }
     footer, .foot-meta, .foot-meta a{ background:none; color:var(--ink); }
   }
