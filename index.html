@@ -73,8 +73,8 @@
      and unaffected by size-adjust) — the whole-glyph-set average (116.7%) over-set them by up to 29%.
      The ascent/descent overrides are percentages of the size-ADJUSTED em, so they move with size-adjust:
      re-fit the pair together (content area ≈ 116% of the em, like the real face). */
-  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:90%; ascent-override:105.4%; descent-override:23.6%; line-gap-override:0%; }
-  @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
+  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'), local('Arimo'), local('Arimo Regular'), local('Arimo-Regular'); size-adjust:90%; ascent-override:105.4%; descent-override:23.6%; line-gap-override:0%; }
+  @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'), local('Tinos'), local('Tinos Regular'), local('Tinos-Regular'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
 
   :root{
     /* --- Material constants (the house's real materials; do not theme these) --- */
@@ -1750,7 +1750,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       entries.forEach(function(e){
         if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
       });
-    }, { threshold: 0.16 });
+    }, { threshold: 0, rootMargin: '0px 0px -80px 0px' });   // reveal once ~80px of a block is in view — a ratio threshold left tall blocks (Views, Materials) invisible on phones until 16% of their height had scrolled in
     document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
   } else {
     document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });

@@ -955,7 +955,45 @@ def check_static():
     for u in re.findall(r'content="(https://aethon\.house/[^"]+\.(?:jpg|png|svg))"', open(os.path.join(ROOT, 'index.html')).read()):
         if not os.path.isfile(_resolve('index.html', urllib.parse.urlsplit(u).path)[0]): extra.append(f'og {u}')
     R.check('static: sitemap URLs, manifest icons and the og/twitter image exist on disk', not extra, '; '.join(extra) or 'all present')
+    # the hand-synced blocks must be byte-identical across index / gallery / legal — behaviour
+    # checks elsewhere only catch drift once it shows; this catches it at the bytes
+    synced = {rel: _synced_blocks(open(os.path.join(ROOT, rel), encoding='utf-8').read())
+              for rel in ('index.html', 'gallery/index.html', 'legal/index.html')}
+    drift = []
+    for name in SYNCED_BLOCKS:
+        blocks = {rel: b.get(name) for rel, b in synced.items()}
+        if any(v is None for v in blocks.values()):
+            drift.append(f'{name}: not found in ' + ', '.join(r for r, v in blocks.items() if v is None)); continue
+        if len(set(blocks.values())) > 1:
+            drift.append(f'{name}: differs on ' + ', '.join(r for r, v in blocks.items() if v != blocks['index.html']))
+    sizes = ' · '.join(f'{n} {len(synced["index.html"].get(n) or "")} B' for n in SYNCED_BLOCKS)
+    R.check('static: hand-synced blocks are byte-identical across index / gallery / legal', not drift, '; '.join(drift) or sizes)
     return externals
+
+
+# (name, start marker, end marker) — each block runs from the first line containing `start`
+# to the first later line containing `end` (inclusive); a single-line block has end = None.
+SYNCED_BLOCKS = {
+    'r4-init': ('new Intl.DateTimeFormat', None),
+    'theme-meta': ("if(t==='night'){document.body.classList.add('night')", None),
+    'font-fallbacks': ("font-family:'LT Museum fallback'", "font-family:'Spectral fallback'"),
+    'wip-css': ('.wip{ position:fixed', '@keyframes wip-fade'),
+    'print-block': ('/* ---------- print — the page as a document', '</style>'),
+    'wip-dialog': ('<dialog class="wip"', '</dialog>'),
+    'wip-iife': ('// Work-in-progress notice', '  })();'),
+}
+
+
+def _synced_blocks(text):
+    lines = text.split('\n'); found = {}
+    for name, (start, end) in SYNCED_BLOCKS.items():
+        i = next((k for k, l in enumerate(lines) if start in l), None)
+        if i is None: continue
+        if end is None:
+            found[name] = lines[i]; continue
+        j = next((k for k in range(i + 1, len(lines)) if end in lines[k]), None)
+        found[name] = '\n'.join(lines[i:j + 1]) if j is not None else None
+    return found
 
 
 def _head(url, ctx):

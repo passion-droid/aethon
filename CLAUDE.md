@@ -158,10 +158,16 @@ impression and the mobile layout matter.
   resets cwd to the repo. (b) A push-verify loop comparing `git rev-parse HEAD` to ls-remote
   **false-positives when both evaluate empty** (dead cwd → "" == "") — always require the remote
   SHA to be non-empty before declaring a push confirmed. Never re-add the docs to `main`. `scripts/`
-  stays on `main` (the GitHub Actions workflows need it) but is robots-disallowed.
-- **Stale remote branches to delete (user-side).** ~10 old `claude/*` branches linger; deleting them
-  can only be done via the GitHub *Branches* UI — the proxy 403s git ref-deletions and the GitHub MCP
-  tools have no delete-branch action. Not something this agent can clear.
+  stays on `main` (the GitHub Actions workflows need it) but is excluded from the Pages output
+  (`_config.yml`, 2026-11-03) and robots-disallowed.
+- **Stale remote branches to delete (user-side).** One left (checked 2026-11-03):
+  `claude/optimistic-cerf-ahilv4` — 11 commits from 2026-06-19, superseded by everything since (it is
+  the branch the fresh container keeps booting onto). Delete via the GitHub *Branches* UI — the proxy
+  403s git ref-deletions and the GitHub MCP tools have no delete-branch action. Done when it disappears
+  from `git ls-remote`.
+- **GitHub disables scheduled workflows after 60 days without a push (public repo).** A quiet
+  autumn/winter needs one push before each 60-day mark or the fortnightly report silently stops
+  (last push that reset the clock: 2026-11-03 → next mark 2027-01-02).
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
@@ -395,6 +401,31 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   negative gaps my comment blamed on launch history; the real cause is the TTL asymmetry.
   Any `_hits` "(all-time)" figure in the events TABLE is likewise a trailing ~60-day sum,
   and a `--days` > 60 window would truncate `_hits` the same way.
+  **2026-11-03 (boot review) — the report now says what its numbers mean:** Cloudflare prints
+  the sample interval and the retained-beacon count with an exact-Poisson 95 % band (every RUM
+  figure since July is a multiple of 10 → 60 visits = 6 beacons ≈ 22–131; deltas are labelled
+  "see the band"); the spike floor is **5 retained beacons** (was 20 visits = two beacons — the
+  10-01 "+30" forensics were noise, and its "our own PSI run" NB did not survive arithmetic:
+  p≈0.001); **report run days are marked ▸** in the visits-by-day line, never subtracted (the
+  PSI self-hit hypothesis was tested 2026-11-03 with two on-demand runs = six Lighthouse loads:
+  none registered as a visit, events ±0 — cross-check the 11-15 report for a late-ingested 11-03
+  entry); the PSI block states the **Cyprus time of the lab loads and whether they fell into R4
+  night** (then the two homepage loads count afterglow-auto +2 — the 11-01 run was 56 min short
+  of that line); GSC gets a **Homepage (brand proxy)** line — site totals mix in /legal/'s
+  imprint-string matches (7 impressions at pos 29 dragged the average to 20.5 while the homepage
+  sat at 5.5; "+2 impressions" hid a homepage drop 9→4) — and the brand split is annotated as
+  query-filtered (Google omits anonymized queries under a query filter, so 0/0 beside real
+  impressions means unattributable, not absent); the events column is **"new since <date>"**
+  (named events: lifetime delta, exact until the first 400-day expiry ≈ 2027-08; `_hits`: summed
+  from the day buckets after the previous report — the lifetime difference was inflow minus
+  60-day expiry) with the `_hits` row labelled "60 d"; KV reads are counted (`N keys · M
+  unreadable` — a 429 can no longer read as zero; the `_hits` "new since" starts from the previous
+  run's reading of its own day bucket, so a same-day re-run prints the true inflow). `seo-pull.py` keeps `daily` buckets in the JSON
+  (a few KB; `trend_base` stays metadata-only, now incl. `run_days`). Workflow: cron **05:37 UTC**
+  (07:00 runs landed 5–7 h late in the :00 congestion; a December delay ≥ 7.7 h would have put the
+  PSI loads into Cyprus night), actions on **v7** (Node 24 — checkout / setup-python /
+  upload-artifact; the artifact REST read path is unaffected), pip step `continue-on-error` so a
+  PyPI hiccup degrades Search Console instead of losing the report.
   Both owner setups landed the same night: **Brevo live** (key as `BREVO_API_KEY`
   secret, no IP allowlist — GitHub runners have none; list found, 0 subscribers = consistent
   with form-submit 0) and the **404 watch live** after a three-step token odyssey worth
@@ -456,8 +487,16 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   subdomains only, NEVER the apex domain, so the worker sat at 0 invocations while real traffic
   flowed; fixed to `aethon.house/e*` (owner, 2026-07-10) and the chain verified end-to-end the
   same minute (first counters: 7 chapters ×2, reach-register 2, afterglow 1, form-start 1).
-  The worker also keeps a `_hits:<day>` heartbeat (counts EVERY /e request, no name, 60-day
-  TTL) — it appears in the report table; read it as route-level diagnostics, not as an event. **Verification path:** curl/
+  The worker also keeps a `_hits:<day>` heartbeat (counts EVERY request the route delivers, no
+  name, 60-day TTL) — it appears in the report table; read it as route-level diagnostics, not as an
+  event. **2026-11-03: `_hits` was 78 % scanner probes** — the route is `/e*`, so `/env`, `/ecp/…`
+  landed in the worker, were counted and answered 204 (hidden from the 404 watch). **The worker
+  source on `main` now handles only the exact `/e` path** (everything else `return fetch(request)`
+  → GitHub Pages' branded 404, counted by the 404 watch) and try/catches the named put so the 204
+  is unconditional. **DEPLOY PENDING — owner-dispatched `deploy-events-worker.yml` (ToDo B3 in the
+  boot-2026-11-03 section); until then the LIVE worker still counts every `/e*` probe.** DNT is
+  NOT a source of unattributed hits — an opted-out browser sends nothing (the page returns before
+  `sendBeacon`). **Verification path:** curl/
   headless probes CANNOT reach aethon.house — the zone's bot protection 403s non-browser clients
   before the worker, and this session's egress proxy blocks the domain entirely
   (ERR_TUNNEL_CONNECTION_FAILED) — so the factual end-to-end check is: real visitor (or owner's
@@ -535,13 +574,19 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   404 honours a saved Afterglow (night tokens + white logo + saved-pref init; no R4 clock there);
   `--light-warm` held-value re-synced; dead `.measure`/`.hairline`/`.ph` CSS removed; stale
   comments fixed; **public view-source scrubbed** of the Brevo "other site"/list-name notes and
-  of `docs/` paths (those live on `internal`); README refreshed (it is served on the brand
-  domain); the outlook address scrubbed from this file. Copy (all owner-approved): four Oxford
+  of `docs/` paths (those live on `internal`); README refreshed (it was served on the brand
+  domain until the 2026-11-03 `_config.yml` exclude); the outlook address scrubbed from this file. Copy (all owner-approved): four Oxford
   commas, "growing stiller floor by floor" (The plan), gallery chapter VI "Materials, close at
   hand" (matches the Iroko captions + both briefs), legal toggle wording, legal date.
 - **Deliberately NOT done:** `.nojekyll` (would newly expose `.github/` and dotfiles on the
-  domain); label type-size consolidation + worst-case label contrast (photography-day items);
-  `prefers-reduced-data` guardrail. **Owner-side:** DARK Architectural Lighting's TLS certificate
+  domain) — **since 2026-11-03 the complementary lever is in: `_config.yml` with Jekyll `exclude:`
+  keeps CLAUDE.md, README.md, images/README.md and `scripts/` out of the Pages output** (the repo is
+  public, so this is domain hygiene, not confidentiality; robots.txt keeps its Disallow lines as
+  belt-and-braces; `fonts/LICENSE.md` stays served for the OFL). The skeptic's Jekyll 3.10 build
+  showed the Pages default plugins had ALSO been rendering **`/CLAUDE.html`** (optional-front-matter
+  converts any `.md`) and **`/images/index.html`** (readme-index) — both gone with the exclude;
+  Jekyll's default excludes are restated in the file because a user list replaces them; label type-size consolidation +
+  worst-case label contrast (photography-day items); `prefers-reduced-data` guardrail. **Owner-side:** DARK Architectural Lighting's TLS certificate
   expired 21 Aug 2026 (their site; the credit link stays — a courtesy nudge); Cloudflare security
   headers (HSTS etc. via Transform Rules — Pages sets none); real-iOS + screen-reader passes.
 - **Fallback-font lesson:** the July `size-adjust: 116.7%` for the LT Museum fallback was fitted
@@ -553,6 +598,69 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   matched the real 116px line at 100px; 90% with the same overrides gave 89px) — they were
   re-scaled together to **105.4% / 23.6%** (0.9 × 1.29 ≈ 1.161). Fit fallbacks against the
   strings actually set, not the font's average advance, and re-fit the vertical pair with it.
+
+## Boot 2026-11-03 — data truths + optimisation review (memo: internal:docs/boot-2026-11-03.md)
+- **Method:** six lenses over the 10-15 / 11-01 reports + the repo (measurement truth, performance,
+  content, SEO, ops, first visit on a phone) → one skeptic per lens, refuting against CLAUDE.md and
+  re-measuring → synthesis into A (safe today) / B (owner) / C (later). 13 agents; 25 proposals →
+  7 shipped, 3 owner questions, the rest deferred or refuted. The sandbox has 4 CPUs → 2 concurrent
+  agents; size workflows accordingly (one skeptic per lens, not per finding).
+- **Data truths (keep reading the reports this way):** real traffic ≈ one arrival a day; since
+  10-15 most arrivals no longer scroll (afterglow-auto +8 vs ch-place +2) — humans leaving at the
+  notice or JS-running fetchers, indistinguishable with the current counters. Cloudflare is sampled
+  1-in-10: 60 visits = 6 beacons (95 % ≈ 22–131) — **never read a delta or a "spike" below ~5
+  beacons**. 78 % of `_hits` were `/e*` scanner probes (worker fix pending deploy). **afterglow-auto
+  rises with the calendar, not with interest:** R4 keys to Cyprus wall-clock, sunset 14:54Z in
+  November, two-thirds of the audience is North American → a US-Eastern working day is 89 %
+  Afterglow (50 % in July); the evening is given 25× more often than chosen (75 vs 3, hold 0).
+  /legal/ out-impresses the homepage via imprint strings (company name, HE number) — harmless.
+  PSI 100×4 needs nothing: the 10-15 96 / SI 4.2 s and the 11-01 100 were the same commit (lab
+  variance); **the mobile CLS 0.015 is one hero re-centre that only exists where neither Arial nor
+  Liberation resolves** (the PSI host, every Android) — the orientation line wraps 22→45 px;
+  0.0000 in 8/8 timing scenarios with a matched fallback, so the 10-12 re-fit is right. Mobile
+  first view: 12 requests, 31 KB gz HTML + 101 KB (90 KB fonts); a third font preload and an
+  eager first gallery plate were measured and rejected (noise).
+- **Shipped (one push, 2026-11-03):** (A1) **scroll-reveal threshold** `0.16/0.12` → `threshold:0,
+  rootMargin:'0px 0px -80px 0px'` on index + gallery — a ratio threshold left tall blocks (Views
+  2,454 px) invisible on phones until 16 % of their height had scrolled in, i.e. 52–62 % of the
+  screen blank under Materials; now every block reveals at 80–100 px visible (measured), desktop
+  unchanged; (A2) `_config.yml` exclude (above); (A3) **`verify-site.py --only static` checks the
+  seven hand-synced blocks byte-for-byte** (R4 init · theme-meta · font fallbacks · WIP CSS ·
+  print block · WIP dialog · WIP IIFE; `SYNCED_BLOCKS` markers) — extend the dict when a new block is
+  hand-synced; (A4) workflow housekeeping (above); (A5) the report-truth bundle (above); (A6) the
+  worker source (deploy pending, above); (A7) `local('Arimo')` / `local('Tinos')` added to the two
+  fallback src lists ×3 — metric clones of Liberation (same fit), spelled as family + full name +
+  PostScript name (`'Arimo' / 'Arimo Regular' / 'Arimo-Regular'`) because CSS `local()` matches the
+  latter two and the skeptic measured the bare family name matching nothing with a real Arimo
+  installed; **do not add FreeSans/FreeSerif or DejaVu** (measured −4 % / +27 %).
+- **ToDo B — owner decisions pending (don't act unprompted):** **B1** WIP notice clause — "the
+  photography is on its way" (approved 2026-07-03) predates the ~January deferral; candidates
+  (a) "the photography will follow" · (b) "the photographs are yet to come"; recommend (a);
+  byte-identical ×3. **B2** hide the Views evening sentence on phones — tapping "Every view here
+  keeps two hours — see the evening." sweeps the page to Afterglow but 0 of 8 Views change (the
+  cellular guardrail keeps their day layer by design); CSS only, in the guardrail block:
+  `#gallery p:has(> .evening-line){ display:none; }` (option B — loading the evening layers on
+  phones — is refuted: that is a photography-day decision). **B3** dispatch
+  `deploy-events-worker.yml` once (idempotent, ~1 min) so the worker on main goes live; the
+  11-15 / 12-01 reports then show `_hits` collapsing to the named rows.
+- **ToDo C — later / owner-side:** studios backlink (Vardastudio, House Talks, Dear Modern) after
+  the shoot (SEO-3); Cloudflare Cache Rule for /fonts/ (optional, ~1 visit/day: cold edge anyway;
+  never a long browser TTL on same-path `images/`); a `daylight-auto` twin for afterglow-auto so
+  arrivals are counted around the clock (MT-7, 18th counter → counsel wording); Lighthouse-UA
+  filter in the worker (MT-5 — moot while the cron is daytime); KV metadata read path or bulk-get
+  (OPS-4b, ~950 keys ≈ late 2027); gallery lightbox on portrait phones — swipe, edge-to-edge
+  image, arrows below the caption (FV-3, fold into the next gallery edit; `← The house` already has
+  the quiet-link padding); Android fallback pair (`local('Roboto')` / `local('Noto Serif')` with their
+  OWN measured size-adjust + overrides — needs a device that has them; Arial/Liberation never
+  resolve on Android, so the swap re-centres the hero there); delete the last `claude/*` branch
+  (OPS-7); DARK certificate · Cloudflare security headers · token scope (recorded, unchanged).
+- **Refuted — don't re-raise:** interim rewrites of the Views/gallery stand-in disclosures (they are
+  photography-day items, C-22; a direct /gallery/ entry sees the WIP notice first); the Register
+  paragraph's conditional (left-as-is, PR #36); `/legal/` noindex; "first mobile 100" as a site
+  change; afterglow-auto as "evening interest"; the PSI self-hit subtraction.
+- **Lesson:** a measurement layer at this volume needs its resolution printed beside every
+  number — the deltas, forensics and "all-time" pairs read as bookkeeping until the sample
+  interval, the TTLs and the run days stood next to them.
 
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
 - **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the
@@ -681,7 +789,11 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   silently eat content — pass values via environment (`WT="$WT" python3 - <<'EOF'`) and keep
   the delimiter quoted. And the container's system `cryptography` package is broken (cffi
   backend panic), which kills `pypdf` on import — verify PDF link annotations by scanning the
-  raw bytes for `/URI (…)` (or via pypdfium2), not with pypdf. Two more (2026-07-11): pip's
+  raw bytes for `/URI (…)` (or via pypdfium2), not with pypdf. **The system Pillow is broken the
+  same way** (`from PIL import Image` → no `_imaging`; the sweep burst checks then SKIP as "needs
+  Pillow") — `python3 -m pip install --ignore-installed pillow` puts a working one first on the
+  path (2026-11-03); a fresh container also lacks `playwright`/`pypdfium2` — `pip install` both,
+  never `playwright install`. Two more (2026-07-11): pip's
   `playwright` wants browsers newer than the preinstalled set — launch with
   `p.chromium.launch(executable_path='/opt/pw-browsers/chromium')`, never `playwright install`;
   and Playwright's URL globs need a `/` before the host segment — `**/sibforms.com/**` silently
@@ -829,6 +941,7 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   so it reads in the past tense, with no “under construction / owners away” implication.
 
 ## Still open (decide together — don't act unprompted)
+- **Open ToDos from the 2026-11-03 boot review — see that section (B = owner decisions, C = later).**
 - Current section order (established): Hero → The place → The architecture → The plan →
   The garden → The interior → Materials → Views → Register interest → Credits.
 - Floor plans and credits placement — **decided:** the *Plan* sits after *The

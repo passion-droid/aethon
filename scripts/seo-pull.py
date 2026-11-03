@@ -232,18 +232,20 @@ def pull_cloudflare(days):
         return {"available": False, "reason": f"parse error: {ex}"}
 
 
-def _spike_days(daily, cap=3):
+def _spike_days(daily, interval=10, cap=3):
     """Outlier days in the visits-by-day curve — the days worth a drilldown.
 
-    A day is a spike at >= max(2.5x the median active day, 20 visits); needs at
-    least 4 active days of context so a young site doesn't flag its whole first
-    week. Cloudflare rounds these counts to tens at this scale, so 2x is noise
-    and 2.5x+ is signal. Biggest first, capped to bound the follow-up queries."""
+    A day is a spike at >= max(2.5x the median active day, 5 retained beacons);
+    needs at least 4 active days of context so a young site doesn't flag its
+    whole first week. Cloudflare's figures are adaptive samples multiplied back
+    (every number a multiple of the sample interval), so a floor below ~5
+    retained beacons flags pure sampling noise — 20 visits was two beacons.
+    Biggest first, capped to bound the follow-up queries."""
     active = [d for d in daily if d.get("visits", 0) > 0]
     if len(active) < 4:
         return []
     vals = sorted(d["visits"] for d in active)
-    threshold = max(2.5 * vals[len(vals) // 2], 20)
+    threshold = max(2.5 * vals[len(vals) // 2], 5 * (interval or 10))
     spikes = sorted((d for d in active if d["visits"] >= threshold),
                     key=lambda d: d["visits"], reverse=True)
     return spikes[:cap]
@@ -291,9 +293,24 @@ def pull_cloudflare_extras(days):
     except Exception as ex:  # noqa: BLE001
         out["errors"].append(f"rum: {str(ex)[:150]}")
 
+    # sampling resolution: every RUM figure is an adaptive sample multiplied back, so
+    # the retained-beacon count (visits / interval) is the honest size of each number
+    try:
+        q = """query { viewer { accounts(filter: {accountTag: "%s"}) {
+          s: rumPageloadEventsAdaptiveGroups(filter: {%s}, limit: 1) { count avg { sampleInterval } }
+        } } }""" % (account, flt)
+        data = gql(q)
+        if data.get("errors"):
+            out["errors"].append("sampling: " + "; ".join(e.get("message", "") for e in data["errors"])[:150])
+        else:
+            srow = (data["data"]["viewer"]["accounts"][0].get("s") or [{}])[0]
+            out["sample_interval"] = (srow.get("avg") or {}).get("sampleInterval")
+    except Exception as ex:  # noqa: BLE001
+        out["errors"].append(f"sampling: {str(ex)[:150]}")
+
     # spike forensics: for each outlier day, ask the same RUM dataset WHO it was —
     # referrer / country / path, one query per day (<= cap extra calls)
-    for d in _spike_days(out["daily"]):
+    for d in _spike_days(out["daily"], out.get("sample_interval") or 10):
         day = d["date"]
         try:
             dflt = f'date_geq: "{day}", date_leq: "{day}"'
@@ -414,7 +431,7 @@ def pull_events(days):
             if not cursor:
                 break
         start = (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
-        window, totals = {}, {}
+        window, totals, daily, unreadable = {}, {}, {}, 0
         for name in keys:
             event, _, day = name.rpartition(":")
             if not event:
@@ -424,12 +441,14 @@ def pull_events(days):
                     f"{api}/accounts/{account}/storage/kv/namespaces/{ns_id}/values/{name}",
                     headers=hdrs), timeout=60).read() or b"0")
             except Exception:  # noqa: BLE001
+                unreadable += 1   # a 429 / 5xx must never read as a zero count — it is reported
                 continue
             totals[event] = totals.get(event, 0) + val
+            daily.setdefault(event, {})[day] = val   # the day buckets are the TTL-proof truth
             if day >= start:
                 window[event] = window.get(event, 0) + val
         return {"available": True, "days": days, "window": window, "totals": totals,
-                "tracked_keys": len(keys)}
+                "daily": daily, "unreadable": unreadable, "tracked_keys": len(keys)}
     except urllib.error.HTTPError as ex:
         return {"available": False, "reason": f"HTTP {ex.code} — token may lack Workers KV read"}
     except Exception as ex:  # noqa: BLE001
@@ -478,16 +497,19 @@ def fetch_previous_report():
         cand = sorted((a for a in arts if a.get("name", "").startswith("seo-insights-")
                        and not a.get("expired")),
                       key=lambda a: a.get("created_at", ""), reverse=True)
+        # every artifact is a report run — the days the site's own PageSpeed loads happened
+        run_days = sorted({(a.get("created_at") or "")[:10] for a in cand if a.get("created_at")})
         if not cand:
-            return {"available": False, "reason": "no previous seo-insights artifact (first run?)"}
+            return {"available": False, "reason": "no previous seo-insights artifact (first run?)",
+                    "run_days": run_days}
         blob = _download_artifact(cand[0]["archive_download_url"], hdrs)
         with zipfile.ZipFile(io.BytesIO(blob)) as zf:
             name = next((n for n in zf.namelist() if n.endswith(".json")), None)
             if not name:
-                return {"available": False, "reason": "previous artifact holds no JSON"}
+                return {"available": False, "reason": "previous artifact holds no JSON", "run_days": run_days}
             data = json.loads(zf.read(name))
         return {"available": True, "data": data,
-                "date": data.get("date") or os.path.basename(name)[:-5]}
+                "date": data.get("date") or os.path.basename(name)[:-5], "run_days": run_days}
     except urllib.error.HTTPError as ex:
         return {"available": False, "reason": f"HTTP {ex.code} — workflow may lack actions:read"}
     except Exception as ex:  # noqa: BLE001
@@ -509,11 +531,55 @@ def _fmt_delta(cur, prev):
     return f"+{d}" if d > 0 else (f"-{-d}" if d < 0 else "±0")
 
 
+def _poisson_ci(n, conf=0.95):
+    """Exact (Garwood) Poisson limits for an observed count n — pure python, for the
+    handful of retained beacons behind every Cloudflare figure at this scale."""
+    import math
+    a = (1 - conf) / 2
+
+    def cdf(k, lam):   # P(X <= k) — terms in log space (exp(-lam) underflows past ~745)
+        if lam <= 0:
+            return 1.0
+        return min(1.0, sum(math.exp(-lam + i * math.log(lam) - math.lgamma(i + 1)) for i in range(k + 1)))
+
+    def solve(pred, lo, hi):   # largest lam in [lo, hi] for which pred holds (pred monotone)
+        for _ in range(60):
+            mid = (lo + hi) / 2
+            if pred(mid):
+                lo = mid
+            else:
+                hi = mid
+        return (lo + hi) / 2
+
+    lower = 0.0 if n <= 0 else solve(lambda lam: 1 - cdf(n - 1, lam) < a, 0.0, n + 1.0)
+    upper = solve(lambda lam: cdf(n, lam) > a, 0.0, 3.0 * n + 20)
+    return lower, upper
+
+
+# the page's R4 clock, mirrored (index.html no-flash init): mid-month Paphos sunset /
+# sunrise in Cyprus wall-clock hours — tells whether a load at an instant opens in Afterglow
+_SUNSET = [17.2, 17.7, 18.1, 19.5, 19.9, 20.2, 20.3, 19.8, 19.1, 18.3, 16.9, 16.7]
+_SUNRISE = [6.9, 6.7, 6.1, 6.3, 5.8, 5.6, 5.7, 6.1, 6.5, 6.9, 6.4, 6.8]
+
+
+def _house_hour(when_utc):
+    try:
+        from zoneinfo import ZoneInfo
+        local = when_utc.astimezone(ZoneInfo("Asia/Nicosia"))
+    except Exception:  # noqa: BLE001
+        return None
+    h = local.hour + local.minute / 60
+    night = h >= _SUNSET[local.month - 1] or h < _SUNRISE[local.month - 1]
+    return {"utc": when_utc.strftime("%Y-%m-%d %H:%M"), "cyprus": local.strftime("%H:%M"), "night": night}
+
+
 # ---------- report ----------
-def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, prev, when):
+def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, prev, when,
+           psi_run=None):
     out = [f"# AETHON — insights · {when}", ""]
     pd = prev.get("data") if prev.get("available") else None
     pdate = prev.get("date") if pd else None
+    run_days = set(prev.get("run_days") or []) | {when}   # today's artifact does not exist yet — this run IS a run day
 
     out.append("## PageSpeed Insights (lab)")
     for label, psi in [("Mobile /", psi_mobile), ("Desktop /", psi_desktop),
@@ -532,6 +598,12 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
                 out.append(f"    - suggest: {o}")
         else:
             out.append(f"- **{label}** — unavailable ({psi.get('reason', '')[:180]})")
+    if psi_run:
+        # the lab loads run the page's JS: in Cyprus night they open in Afterglow and the two
+        # homepage loads count afterglow-auto (+2) — say which it was, so the counter can be read
+        out.append(f"- _lab loads ran at {psi_run['cyprus']} Cyprus time — "
+                   + ("**Afterglow: the two homepage loads may have counted afterglow-auto (+2)**_"
+                      if psi_run["night"] else "Daylight; afterglow-auto unaffected_"))
     out.append("")
 
     out.append("## Search Console")
@@ -549,6 +621,19 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
                 line += (f"  _(vs {pdate}: impressions {_fmt_delta(t.get('impressions', 0), pt.get('impressions', 0))}, "
                          f"clicks {_fmt_delta(t.get('clicks', 0), pt.get('clicks', 0))})_")
             out.append(line)
+            # the homepage alone is the brand proxy — site totals mix in /legal/'s imprint-string
+            # matches (company name, registration number), which drag the average position
+            home_url = f"https://{SITE}/"
+            home = next((r for r in gsc.get("pages", []) if r["keys"][0] == home_url), None)
+            if home:
+                hl = (f"- **Homepage (brand proxy)** — clicks {int(home.get('clicks', 0))} · "
+                      f"impressions {int(home.get('impressions', 0))} · avg position {home.get('position', 0):.1f}")
+                ph = next((r for r in (_dig(pd, "gsc", "pages") or []) if r.get("keys", [None])[0] == home_url), None)
+                if ph is not None:
+                    hl += f"  _(vs {pdate}: impressions {_fmt_delta(home.get('impressions', 0), ph.get('impressions', 0))})_"
+                elif pd is not None:
+                    hl += f"  _(not listed on {pdate})_"
+                out.append(hl)
         else:
             out.append("- No impressions in range yet.")
 
@@ -566,7 +651,10 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
         out.append(f"- **Brand vs discovery** — 'aethon' queries: {int(b.get('impressions', 0))} impressions / "
                    f"{int(b.get('clicks', 0))} clicks · other queries: {int(nb.get('impressions', 0))} / "
                    f"{int(nb.get('clicks', 0))} · **image search**: {int(im.get('impressions', 0))} impressions"
-                   f"{' (baseline for the photography)' if not im.get('impressions') else ''}")
+                   f"{' (baseline for the photography)' if not im.get('impressions') else ''}"
+                   + ("  _(query-filtered — Google omits anonymized queries under a query filter, so 0/0 beside "
+                      "real impressions means unattributable, not absent)_"
+                      if int(b.get('impressions', 0)) + int(nb.get('impressions', 0)) < int(t.get('impressions', 0)) else ""))
         if gsc.get("devices"):
             out.append("- **Devices** — " + " · ".join(
                 f"{r['keys'][0].lower()} {int(r.get('impressions', 0))}" for r in gsc["devices"]))
@@ -618,8 +706,15 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
                 f"**{cf['visits']} visits · {cf['pageviews']} page views**")
         if _dig(pd, "cloudflare", "available"):
             line += (f"  _(vs {pdate}: visits {_fmt_delta(cf['visits'], _dig(pd, 'cloudflare', 'visits'))}, "
-                     f"views {_fmt_delta(cf['pageviews'], _dig(pd, 'cloudflare', 'pageviews'))} — sampled)_")
+                     f"views {_fmt_delta(cf['pageviews'], _dig(pd, 'cloudflare', 'pageviews'))} — sampled, see the band)_")
         out.append(line)
+        si = cfx.get("sample_interval") if cfx.get("available") else None
+        if si and cf.get("visits") is not None:
+            n = int(round(cf["visits"] / si))
+            lo, hi = _poisson_ci(n)
+            out.append(f"- _sampling: 1 in {si:g} — {cf['visits']} visits = ≈{n} retained beacons, a 95 % band of "
+                       f"roughly {int(round(lo * si))}–{int(round(hi * si))} visits; differences inside that band are "
+                       f"noise, and the groupings below are separate samples that need not sum to the total_")
         if cf.get("pages"):
             out += ["", "### Top pages", "", "| path | views | visits |", "|---|--:|--:|"]
             for p in cf["pages"]:
@@ -635,16 +730,21 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
                 out.append(f"| {r['host']} | {r['views']} |")
         if cfx.get("daily"):
             out.append("")
+            marked = [d for d in cfx["daily"] if d["visits"] and d["date"] in run_days]
             out.append("**Visits by day** — " + " · ".join(
-                f"{d['date'][5:]}:{d['visits']}" for d in cfx["daily"] if d["visits"]))
+                f"{d['date'][5:]}:{d['visits']}" + ("▸" if d["date"] in run_days else "")
+                for d in cfx["daily"] if d["visits"]))
+            if marked:
+                out.append("_▸ a report ran that day — its PageSpeed step loads / twice and /gallery/ once "
+                           "(≤ 3 beacons; marked, never subtracted — unsubtractable at this sampling)_")
         if cfx.get("spikes"):
             out += ["", "**Spike forensics** — outlier days, and who that traffic was (views):", ""]
             for s in cfx["spikes"]:
                 refs = ", ".join(f"{r['host']} {r['views']}" for r in s["referrers"][:4]) or "—"
                 geo = ", ".join(f"{c['country']} {c['views']}" for c in s["countries"][:4]) or "—"
                 paths = ", ".join(f"{p['path']} {p['views']}" for p in s["paths"][:4]) or "—"
-                out.append(f"- **{s['date'][5:]}** ({s['visits']} visits) — referrers: {refs} · "
-                           f"countries: {geo} · paths: {paths}")
+                out.append(f"- **{s['date'][5:]}**{' ▸report run' if s['date'] in run_days else ''} "
+                           f"({s['visits']} visits) — referrers: {refs} · countries: {geo} · paths: {paths}")
         out.append("")
         nf_err = next((e for e in cfx.get("errors", []) if e.startswith("404:")), None)
         if cfx.get("notfound"):
@@ -687,22 +787,36 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
             out.append(f"No events in the last {events.get('days')} days yet.")
         else:
             prev_tot = _dig(pd, "events", "totals")
+            daily = events.get("daily") or {}
+            intro = f"Last {events.get('days')} days (lifetime in parens — `_hits`: trailing 60 d by TTL):"
             if prev_tot is not None:
-                out += [f"Last {events.get('days')} days (all-time in parens):", "",
-                        f"| event | count | Δ vs {pdate} |", "|---|--:|--:|"]
+                out += [intro, "", f"| event | count | new since {pdate} |", "|---|--:|--:|"]
             else:
-                out += [f"Last {events.get('days')} days (all-time in parens):", "",
-                        "| event | count |", "|---|--:|"]
+                out += [intro, "", "| event | count |", "|---|--:|"]
             for name in sorted(win, key=win.get, reverse=True):
                 tot = events["totals"].get(name, 0)
-                row = f"| {name} | {win[name]} ({tot}) |"
+                row = f"| {name} | {win[name]} ({tot}{' · 60 d' if name == '_hits' else ''}) |"
                 if prev_tot is not None:
-                    row += f" {_fmt_delta(tot, prev_tot.get(name, 0))} |"
+                    if name == "_hits" and daily:
+                        # 60-day TTL: a lifetime difference would be inflow minus expiry — count the
+                        # day buckets instead: from the previous run's reading of its own day onward
+                        # (exact), or the days after it when that reading is not stored (older JSON)
+                        hd = daily.get("_hits", {})
+                        base = _dig(pd, "events", "daily", "_hits", pdate) if pdate else None
+                        if base is not None:
+                            new = sum(v for d, v in hd.items() if d >= pdate) - int(base)
+                        else:
+                            new = sum(v for d, v in hd.items() if pdate and d > pdate)
+                        row += f" +{new} |" if new > 0 else " ±0 |"
+                    else:
+                        # named events keep 400 days, so the lifetime difference IS the new
+                        # count — exact until the first expiry (2027-08 for the July launch)
+                        row += f" {_fmt_delta(tot, prev_tot.get(name, 0))} |"
                 out.append(row)
-            # _hits counts EVERY /e request, so requests without an allowlisted
-            # name (scanners probing the endpoint, DNT-suppressed sends) inflate
-            # it past the named rows. Surface the gap in-report once it is real —
-            # the heartbeat then reads as route pressure, not as visitors.
+            # _hits counts EVERY request the worker sees. Requests without an allowlisted
+            # name are scanner probes (every /e* path while the pre-2026-11 worker is live;
+            # bare /e or unknown names after the exact-path worker is deployed) — not
+            # visitors and not DNT: an opted-out browser sends nothing at all.
             # Window-only on purpose: _hits keys expire after 60 days while named
             # events keep 400, so lifetime sums cross retention horizons and
             # don't compare (and a --days > 60 window would truncate _hits too).
@@ -710,8 +824,12 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
             unattr_win = hits_win - sum(v for k, v in win.items() if k != "_hits")
             if unattr_win > 0:
                 out += ["", f"_`_hits` check: {unattr_win} of {hits_win} window requests "
-                            "carry no allowlisted event name — route noise (scanners/DNT), "
+                            "carry no allowlisted event name — scanner probes of the endpoint, "
                             "not visitors; the named rows are the human signal._"]
+            kv = f"_KV read: {events.get('tracked_keys', 0)} keys"
+            if events.get("unreadable"):
+                kv += f" · **{events['unreadable']} unreadable — counts above may be low**"
+            out += ["", kv + "_"]
     out.append("")
     if not prev.get("available") and os.environ.get("GITHUB_ACTIONS"):
         out += [f"_Trend deltas unavailable: {prev.get('reason', '')[:150]}_", ""]
@@ -727,6 +845,7 @@ def main():
     when = datetime.date.today().isoformat()
     gsc = pull_gsc(args.days)
     index = pull_index()
+    psi_run = _house_hour(datetime.datetime.now(datetime.timezone.utc))
     psi_mobile = pull_psi("mobile")
     psi_desktop = pull_psi("desktop")
     psi_gallery = pull_psi("mobile", "/gallery/")
@@ -737,7 +856,8 @@ def main():
     prev = fetch_previous_report()
 
     os.makedirs(args.out, exist_ok=True)
-    report = render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, prev, when)
+    report = render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, events, prev, when,
+                    psi_run=psi_run)
     base = os.path.join(args.out, when)
     with open(base + ".md", "w", encoding="utf-8") as fh:
         fh.write(report)
@@ -747,8 +867,8 @@ def main():
         json.dump({"date": when, "gsc": gsc, "index": index, "cloudflare": cf,
                    "cloudflare_extras": cfx, "brevo": brevo, "events": events,
                    "psi": {"mobile": psi_mobile, "desktop": psi_desktop,
-                           "gallery_mobile": psi_gallery},
-                   "trend_base": {k: prev.get(k) for k in ("available", "date", "reason")
+                           "gallery_mobile": psi_gallery, "run": psi_run},
+                   "trend_base": {k: prev.get(k) for k in ("available", "date", "reason", "run_days")
                                   if k in prev}}, fh, indent=2)
 
     print(report)

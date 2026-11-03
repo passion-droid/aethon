@@ -1,0 +1,17 @@
+# GitHub Pages builds main with Jekyll. Keep the working files off the public domain —
+# they stay in the repository (public on github.com) but are not served on aethon.house.
+# (.nojekyll is deliberately NOT used: it would newly expose .github/ and dotfiles.)
+# Files without front matter are copied verbatim, so the four pages are untouched.
+exclude:
+  - CLAUDE.md
+  - README.md
+  - images/README.md
+  - scripts/
+  # Jekyll's own defaults, restated — a user list replaces them rather than merging
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

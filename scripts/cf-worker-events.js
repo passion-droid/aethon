@@ -6,7 +6,9 @@
 // Lost-update races under concurrency can drop the odd count (±1) — irrelevant at this
 // site's scale and a fair trade for having no state beyond a plain counter.
 //
-// Route:   aethon.house/e*        (same-origin — the page calls navigator.sendBeacon('/e?n=…'))
+// Route:   aethon.house/e*        (owner-managed, same-origin — the page calls navigator.sendBeacon('/e?n=…');
+//                                 only the exact /e path is handled, every other /e… path passes through
+//                                 to the site's own 404 — scanner probes must not hide inside _hits)
 // Binding: EVENTS                 (Workers KV namespace "aethon_events")
 // Deploy:  .github/workflows/deploy-events-worker.yml (scripts/deploy-events-worker.sh)
 // Read:    scripts/seo-pull.py — "On-page events" section of the fortnightly report.
@@ -30,7 +32,7 @@ const ALLOW = new Set([
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (!url.pathname.startsWith('/e')) return new Response(null, { status: 404 });
+    if (url.pathname !== '/e') return fetch(request);   // same-zone subrequest → origin (GitHub Pages' branded 404, counted by the 404 watch)
     const name = url.searchParams.get('n') || '';
     const optedOut = request.headers.get('DNT') === '1' || request.headers.get('Sec-GPC') === '1';
     const day = new Date().toISOString().slice(0, 10);
@@ -42,10 +44,12 @@ export default {
       await env.EVENTS.put(`_hits:${day}`, String(h + 1), { expirationTtl: 60 * 60 * 24 * 60 });
     } catch (e) {}
     if (ALLOW.has(name) && !optedOut) {
-      const key = `${name}:${day}`; // UTC day buckets
-      const current = parseInt((await env.EVENTS.get(key)) || '0', 10);
-      // keep ~13 months, then buckets age out on their own
-      await env.EVENTS.put(key, String(current + 1), { expirationTtl: 60 * 60 * 24 * 400 });
+      try {
+        const key = `${name}:${day}`; // UTC day buckets
+        const current = parseInt((await env.EVENTS.get(key)) || '0', 10);
+        // keep ~13 months, then buckets age out on their own
+        await env.EVENTS.put(key, String(current + 1), { expirationTtl: 60 * 60 * 24 * 400 });
+      } catch (e) {}   // a KV hiccup (write-rate limit, transient error) must not turn the promised 204 into a 1101
     }
     // Always 204, even for unknown names or opted-out visitors — the beacon is fire-and-forget
     // and the response must never invite retries or leak which names count.

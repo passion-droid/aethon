@@ -30,8 +30,8 @@
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:300; font-display:swap; src:url(/fonts/spectral-300-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face{ font-family:'Spectral'; font-style:normal; font-weight:400; font-display:swap; src:url(/fonts/spectral-400-lt.woff2) format('woff2'); unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   /* Metric-matched fallbacks — local() fonts scaled to the web fonts so the swap doesn't shift layout (CLS); LT Museum's value is fitted to the site's uppercase, tracked strings (see index.html). */
-  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'); size-adjust:90%; ascent-override:105.4%; descent-override:23.6%; line-gap-override:0%; }
-  @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
+  @font-face{ font-family:'LT Museum fallback'; font-style:normal; font-weight:100 900; src:local('Arial'), local('Liberation Sans'), local('Arimo'), local('Arimo Regular'), local('Arimo-Regular'); size-adjust:90%; ascent-override:105.4%; descent-override:23.6%; line-gap-override:0%; }
+  @font-face{ font-family:'Spectral fallback'; font-style:normal; font-weight:300 400; src:local('Times New Roman'), local('Liberation Serif'), local('Tinos'), local('Tinos Regular'), local('Tinos-Regular'); size-adjust:108.3%; ascent-override:97.7%; descent-override:42.7%; line-gap-override:0%; }
 
   :root{
     --bg:#E9E7E0; --bg-soft:#F0EEE8; --ink:#2C2620; --ink-soft:#4A423A; --ink-mute:#665F53;
