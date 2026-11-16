@@ -160,14 +160,17 @@ impression and the mobile layout matter.
   SHA to be non-empty before declaring a push confirmed. Never re-add the docs to `main`. `scripts/`
   stays on `main` (the GitHub Actions workflows need it) but is excluded from the Pages output
   (`_config.yml`, 2026-11-03) and robots-disallowed.
-- **Stale remote branches to delete (user-side).** One left (checked 2026-11-03):
-  `claude/optimistic-cerf-ahilv4` — 11 commits from 2026-06-19, superseded by everything since (it is
-  the branch the fresh container keeps booting onto). Delete via the GitHub *Branches* UI — the proxy
-  403s git ref-deletions and the GitHub MCP tools have no delete-branch action. Done when it disappears
-  from `git ls-remote`.
+- **Stale remote branches to delete (user-side).** **Ten** `claude/*` branches (checked 2026-11-16 via
+  the GitHub MCP `list_branches` and `git ls-remote` — the 2026-11-03 note "one left" was wrong):
+  `brand-assets`, `brevo-interest-form`, `exhibition-quickwins`, `materials-coast-palette`,
+  `nav-active-highlight`, `nav-sync`, `optimistic-cerf-ahilv4`, `remove-root-originals`,
+  `second-green-accent`, `woven-visual-placeholders` — all superseded by everything since
+  (`optimistic-cerf-ahilv4` is the branch the fresh container keeps booting onto). Delete via the
+  GitHub *Branches* UI — the proxy 403s git ref-deletions and the GitHub MCP tools have no
+  delete-branch action. Done when they disappear from `git ls-remote`.
 - **GitHub disables scheduled workflows after 60 days without a push (public repo).** A quiet
   autumn/winter needs one push before each 60-day mark or the fortnightly report silently stops
-  (last push that reset the clock: 2026-11-03 → next mark 2027-01-02).
+  (last push that reset the clock: 2026-11-16 → next mark 2027-01-15).
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
@@ -227,6 +230,30 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   brand **"A"** at centre; **verified scannable** by decoding it back with OpenCV). Reproducible via
   `scripts/gen-signage-blueprint.py` (needs `segno`, `opencv-python-headless`, `Pillow`). Dimensions
   in **mm**; a *design study* (verify on site, not for structural use); **no address** anywhere.
+- **Physical brand — door mats: order specified (2026-11).** Eight custom logo mats from a Cypriot
+  supplier (En Oiko Dimiourgies; qualities *Prado* = printed nylon 7 mm, *Azure* = vinyl loop).
+  **Owner's final choice after checking the samples in real light (2026-11-16): Prado base Beige 2
+  + logo Brown 12 · Azure base Beige + logo Brown · logo one colour incl. the dot, centred, 50 % of
+  the mat width · edge in the base colour if available, otherwise all mats borderless.** List:
+  ENTRANCE-OUT 100×80 Azure · KITCHEN-OUT 70×60 Azure · VERANDA 200×100 Prado · ENTRANCE-IN 100×110
+  Prado · BALCONY 1–3 100×60 Prado ×3 · BALCONY-IN 70×60 Prado. The one-page order sheet (EN), the
+  research report and the colour measurements live in `docs/mats/` on `internal`. **Open with the
+  supplier:** edge colour, Azure thickness (catalogue 9 mm, the sample fan is labelled 12 mm),
+  whether the wordmark reproduces on vinyl loop, proof + quotation. Brand logic used: gold stays the
+  dot only and drowns on light grounds (≈1.2–1.7:1) → a one-colour mark; the wordmark comes from the
+  logo file, never typeset. **Learnings:** (1) catalogue swatches mislead (the printed Prado green
+  was far darker than the real yarn) — measure real samples from a photo **with a white sheet of
+  paper in frame**: convert the phone's Display-P3 to sRGB, balance on the paper, compare mat and
+  floor *within one photo*. (2) Pile looks darker in raking sun than in shade (self-shadowing): the
+  same Light Grey 4 sat 1.1:1 on the travertine in shade and 1.6:1 in low sun. (3) The real
+  travertine is a golden sand — as light as the palette token `#DCCDB3`, clearly more saturated
+  (≈ `#DEC89D` measured); the token stays a design value. (4) The wordmark's strokes are 1.4–1.9 %
+  of its width (stems 6.8 of 366.78 units): 7–9 mm at a 50 cm logo; published vinyl-loop inlay
+  minima are 9.5–10 mm. (5) The supplier's "max one side 150 cm" caps the SHORT side (the price list
+  runs to 150×300). (6) From the research: Cliff Tan's own published advice is not to put a mark you
+  value on a doormat; a 7–9 mm borderless edge is above every trip threshold (ADA 6.4 mm, BG BAU
+  4 mm), though nothing binds a private house; PVC-backed mats on porous stone want lifting to dry
+  (weekly indoors, after rain outdoors).
 - **`/icon.svg` favicon — DONE (2026-07).** All four pages' `<head>` links
   `<link rel="icon" type="image/svg+xml" href="/icon.svg">`; the file had been missing (404 on every
   page — cosmetic, browsers fell back to `favicon.ico`/PNG). Fixed by adding **`/icon.svg`**: the brand
@@ -633,16 +660,16 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   PostScript name (`'Arimo' / 'Arimo Regular' / 'Arimo-Regular'`) because CSS `local()` matches the
   latter two and the skeptic measured the bare family name matching nothing with a real Arimo
   installed; **do not add FreeSans/FreeSerif or DejaVu** (measured −4 % / +27 %).
-- **ToDo B — owner decisions pending (don't act unprompted):** **B1** WIP notice clause — "the
-  photography is on its way" (approved 2026-07-03) predates the ~January deferral; candidates
-  (a) "the photography will follow" · (b) "the photographs are yet to come"; recommend (a);
-  byte-identical ×3. **B2** hide the Views evening sentence on phones — tapping "Every view here
-  keeps two hours — see the evening." sweeps the page to Afterglow but 0 of 8 Views change (the
-  cellular guardrail keeps their day layer by design); CSS only, in the guardrail block:
-  `#gallery p:has(> .evening-line){ display:none; }` (option B — loading the evening layers on
-  phones — is refuted: that is a photography-day decision). **B3** dispatch
-  `deploy-events-worker.yml` once (idempotent, ~1 min) so the worker on main goes live; the
-  11-15 / 12-01 reports then show `_hits` collapsing to the named rows.
+- **ToDo B — owner decisions:** **B1 + B2 SHIPPED 2026-11-16** (owner: "mache 2 und 3"). B1: the WIP
+  notice clause is now "the photography will follow" (was "is on its way", which predated the
+  ~January deferral; byte-identical ×3). B2: the Views evening sentence ("Every view here keeps two
+  hours — see the evening.") is hidden on phones via `#gallery p:has(> .evening-line){ display:none; }`
+  inside the guardrail media query (index only) — its tap swept the page to Afterglow while 0 of 8
+  Views changed; the interior's evening line stays (the hero and pause plates do answer it); the
+  matrix carries a phone check + a desktop control. (Loading the evening layers on phones stays
+  refuted: a photography-day decision.) **B3 STILL PENDING — don't act unprompted (offered again
+  2026-11-16, not taken up):** dispatch `deploy-events-worker.yml` once (idempotent, ~1 min) so the
+  worker on main goes live; until then `_hits` stays ~88 % scanner probes.
 - **ToDo C — later / owner-side:** studios backlink (Vardastudio, House Talks, Dear Modern) after
   the shoot (SEO-3); Cloudflare Cache Rule for /fonts/ (optional, ~1 visit/day: cold edge anyway;
   never a long browser TTL on same-path `images/`); a `daylight-auto` twin for afterglow-auto so
@@ -661,6 +688,28 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Lesson:** a measurement layer at this volume needs its resolution printed beside every
   number — the deltas, forensics and "all-time" pairs read as bookkeeping until the sample
   interval, the TTLs and the run days stood next to them.
+
+## Boot 2026-11-16 — report 11-15, quick content + visual check
+- **Report 11-15** (scheduled; **landed 7.3 h late** — 12:56 UTC for the 05:37 cron = 14:56 Cyprus,
+  still Daylight): the :37 minute did not cure the delay — it is repo-level queueing. A December run
+  delayed ≥ ~9 h would put the PSI loads into R4 night (the report then says so itself). *Optional,
+  offered 2026-11-16, undecided:* move the cron ~3 h earlier. PSI m98 / d100 / gallery 100, CLS 0.
+  GSC 12 impressions / 0 clicks, homepage pos 4.2; the misspelling **"ethon house" now ranks at 3**
+  (≈81 in September). Cloudflare 40 visits = ≈4 beacons (band 11–102), one www.google.com referral.
+  Events since 11-03: **every chapter +3 and reach-register +3** — three readers started and all
+  three read to the end (lifetime before: ~40 % of starters reached Register); consistent with the
+  11-03 reveal fix, far too few to prove it. Brevo 0. `_hits` 335, of which 295 unattributed.
+- **PSI self-hit cross-check closed:** the 11-15 visits-by-day line has no late 11-03 entry — the
+  six Lighthouse loads of 11-03 never registered as visits.
+- **Checks:** `verify-site.py` 225 PASS · 0 FAIL (DARK's expired certificate SKIPs; facebook.com can
+  SKIP transiently — bot wall). Content read-through: no errors, only B1/B2 were stale (shipped the
+  same day). Visual pass (phone + desktop × Daylight/Afterglow, gallery on the phone): clean.
+- **DARK Architectural Lighting's certificate is still expired (since 21 Aug)** — a visitor who
+  clicks the credit gets a browser warning. Offered 2026-11-16: unlink until fixed (the name stays
+  as text). Undecided — don't act unprompted.
+- **Screenshot gotcha:** Chromium truncates a `full_page` capture at 16,384 px. The desktop homepage
+  is 18,448 px tall, so everything from *Register interest* down comes out blank — capture the lower
+  part by scrolling (viewport tiles). Not a site defect.
 
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
 - **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the
@@ -989,8 +1038,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Work-in-progress notice — shipped (2026-07).** A quiet, museal pop-up (`.wip`, a native
   `<dialog>` opened **once per visit** — sessionStorage `aethon-wip`) tells a visitor the site is still
   being finished. Copy (owner-approved 2026-07-03, reworded from the original after the audit —
-  "AETHON is finished; the *site* isn't"): *"This site is still being finished — the photography is
-  on its way. What you see is the shape of it; please, look around."* Blurred backdrop
+  "AETHON is finished; the *site* isn't"; **the clause changed 2026-11-16 from "is on its way" to
+  "will follow"** once the shoot moved to ~January): *"This site is still being finished — the
+  photography will follow. What you see is the shape of it; please, look around."* Blurred backdrop
   (`.wip::backdrop` blur; day/night tint via `body.night .wip::backdrop`), card in the role tokens +
   LT Museum/Spectral with the AETHON logotype; closes via **✕ / "Look around" / Esc / click-outside**,
   then the page browses normally. Native `<dialog>` gives the focus trap + inert background for free

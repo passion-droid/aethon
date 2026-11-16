@@ -790,6 +790,9 @@ def check_cellular(site):
         plate: getComputedStyle(document.querySelector('#architecture .frame.shot-pair .shot-night')).display,
         pause: getComputedStyle(document.querySelector('.pause-media .shot-night')).display })""")
     R.check('cellular: Views + woven plate evening layers are display:none on the phone, pause plates keep theirs', guard['night'] == 'none' and guard['plate'] == 'none' and guard['pause'] != 'none', json.dumps(guard))
+    door = s.ev("""() => ({ views: getComputedStyle(document.querySelector('#gallery .evening-line').parentElement).display,
+        interior: getComputedStyle(document.querySelector('#interior .evening-line')).display })""")
+    R.check('cellular: the Views evening sentence is hidden on the phone (its frames keep the day layer); the interior one stays', door['views'] == 'none' and door['interior'] != 'none', json.dumps(door))
     s.page.click('#theme-toggle'); s.page.wait_for_timeout(250)
     op = s.ev("""() => ({ day: getComputedStyle(document.querySelector('#gallery .frame.shot-pair .shot-day')).opacity,
                           plate: getComputedStyle(document.querySelector('#architecture .frame.shot-pair .shot-day')).opacity })""")
@@ -808,6 +811,8 @@ def check_cellular(site):
     s.scroll_through(step=500, pause=100); s.page.wait_for_timeout(1000)
     eve = sorted({u.split('/')[-1] for u in urls if '-eve-' in u})
     R.check('cellular: desktop control — Views/plate evening layers are fetched (lazy-load reaches them)', any(u.startswith('views-') for u in eve) and any(u.startswith('plate-living-eve') for u in eve), f'eve={eve}')
+    door = s.ev("() => getComputedStyle(document.querySelector('#gallery .evening-line').parentElement).display")
+    R.check('cellular: desktop control — the Views evening sentence is shown', door != 'none', door)
     s.finish('cellular desktop control')
 
 
