@@ -1,0 +1,22 @@
+{
+ "trav": {
+  "_stone": "#d9be8d",
+  "LIGHT GREY 4": "#9e988c",
+  "BEIGE 2": "#c9a789",
+  "WHITE 1": "#c4c5af",
+  "DARK GREY 13": "#645b57",
+  "DARK GREEN 14": "#445e3a",
+  "BLACK 16": "#1c1b1b",
+  "GOLD 3": "#d59346"
+ },
+ "marble": {
+  "_stone": "#e5dfca",
+  "LIGHT GREY 4": "#bab5b1",
+  "BEIGE 2": "#e1c4af",
+  "WHITE 1": "#d3d4c6",
+  "DARK GREY 13": "#857c7c",
+  "DARK GREEN 14": "#557d53",
+  "BLACK 16": "#232428",
+  "GOLD 3": "#eab66a"
+ }
+}
