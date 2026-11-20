@@ -18,16 +18,30 @@ outdoor-rated). No address appears in any of these files.
 
 - Logo: the AETHON wordmark from the logo file (never typeset), one colour including the dot,
   centred, 50 % of the mat width.
-- Edge: in the base colour if the supplier can do it; if only black is available, all eight mats
-  borderless.
+- Edge: the 2.5 cm edging is kept (see the exchange of 2026-11-19 below): Azure in beige, Prado in
+  beige if available, otherwise brown.
 - Floors: 1, 3, 5–7 lie on travertine (3 and 5–7 covered); 2 on a dark anthracite stone; 4 and 8
   on marble.
 - Assumption in the sheet: mat 4 is 100 wide and 110 deep (same width as mat 1 at the same door).
   If 110 runs along the door, the logo becomes 55 cm.
 
-**Open with the supplier:** edge colour; Azure thickness (catalogue 9 mm, the sample fan is
-labelled 12 mm and shows stock sizes); whether the wordmark reproduces cleanly on vinyl loop;
-proof before production; updated quotation and delivery time.
+**Open with the supplier (after her reply of 2026-11-19):** the Prado edging colour; proofs;
+quotation and delivery time.
+
+### The supplier's reply and the owner's answer (2026-11-19)
+
+1. **Reverse the Prado colours** (Brown 12 base, Beige 2 logo — dirt shows less on a dark base).
+   Declined. Rendered on the real stone a brown base is a wine-red slab at 3.4–4.6:1 against the
+   floor (`supplier-proposal-compared.jpg`). The light base and its cleaning are accepted.
+2. **Keep the 2.5 cm edging** on loose-laid mats (fraying, tearing). Accepted — this retires the
+   earlier "borderless if only black" rule. Azure: edging in beige. Prado: beige if her supplier
+   has it, otherwise brown to match the logo.
+3. **Prado on the veranda and balconies.** She asked whether they are fully protected from sun and
+   rain. The owner confirmed they are deeply covered and get no direct sunlight; Prado stays as
+   ordered.
+4. **Logo dimensions** may vary slightly for balance and production; proofs come for approval.
+
+The sample fan labelled 12 mm was outdated, so the thickness question was dropped.
 
 ## How the decision moved
 
@@ -94,6 +108,8 @@ Lettering: Dark Green 14 on Light Grey 4 2.3–2.5:1, Black 16 on Light Grey 4 6
 - `research-report-de.md` — the research report (German), with `research-notes/` behind it.
 - `samples-measured.jpg` — measured samples as flat colours, candidate combinations per floor.
 - `samples-on-real-stone.jpg` — mats composed from the real photo textures on the real stone.
+- `supplier-proposal-compared.jpg` — the supplier's reversed colours and the edging variants beside
+  the order, on the real stone.
 - `measured.json`, `measured-trav.json`, `composite-info.json` — the measurements.
 - `tools/` — the measuring scripts, kept for the method. They point at the session's upload
   paths, which no longer exist; the source photos are not stored here.
