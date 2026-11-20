@@ -170,7 +170,7 @@ impression and the mobile layout matter.
   delete-branch action. Done when they disappear from `git ls-remote`.
 - **GitHub disables scheduled workflows after 60 days without a push (public repo).** A quiet
   autumn/winter needs one push before each 60-day mark or the fortnightly report silently stops
-  (last push that reset the clock: 2026-11-16 → next mark 2027-01-15).
+  (last push that reset the clock: 2026-11-20 → next mark 2027-01-19).
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
@@ -445,8 +445,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   PSI self-hit hypothesis was tested 2026-11-03 with two on-demand runs = six Lighthouse loads:
   none registered as a visit, events ±0 — cross-check the 11-15 report for a late-ingested 11-03
   entry); the PSI block states the **Cyprus time of the lab loads and whether they fell into R4
-  night** (then the two homepage loads count afterglow-auto +2 — the 11-01 run was 56 min short
-  of that line); GSC gets a **Homepage (brand proxy)** line — site totals mix in /legal/'s
+  night** (written on the assumption that the two homepage loads would then count
+  afterglow-auto +2 — observed otherwise on 2026-11-20: Lighthouse loads send no beacons, so the
+  line is information only); GSC gets a **Homepage (brand proxy)** line — site totals mix in /legal/'s
   imprint-string matches (7 impressions at pos 29 dragged the average to 20.5 while the homepage
   sat at 5.5; "+2 impressions" hid a homepage drop 9→4) — and the brand split is annotated as
   query-filtered (Google omits anonymized queries under a query filter, so 0/0 beside real
@@ -686,15 +687,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   (boot-2026-11-20 section).
 - **ToDo C — later / owner-side:** studios backlink (Vardastudio, House Talks, Dear Modern) after
   the shoot (SEO-3); Cloudflare Cache Rule for /fonts/ (optional, ~1 visit/day: cold edge anyway;
-  never a long browser TTL on same-path `images/`); a `daylight-auto` twin for afterglow-auto so
-  arrivals are counted around the clock (MT-7, 18th counter → counsel wording); Lighthouse-UA
-  filter in the worker (MT-5 — moot while the cron is daytime); KV metadata read path or bulk-get
+  never a long browser TTL on same-path `images/`); ~~a `daylight-auto` twin (MT-7)~~ and ~~a
+  Lighthouse-UA filter in the worker (MT-5)~~ — both closed 2026-11-20: `arrive` counts arrivals
+  around the clock, and Lighthouse loads send no beacons; KV metadata read path or bulk-get
   (OPS-4b, ~950 keys ≈ late 2027); gallery lightbox on portrait phones — swipe, edge-to-edge
   image, arrows below the caption (FV-3, fold into the next gallery edit; `← The house` already has
   the quiet-link padding); Android fallback pair (`local('Roboto')` / `local('Noto Serif')` with their
   OWN measured size-adjust + overrides — needs a device that has them; Arial/Liberation never
-  resolve on Android, so the swap re-centres the hero there); delete the last `claude/*` branch
-  (OPS-7); DARK certificate · Cloudflare security headers · token scope (recorded, unchanged).
+  resolve on Android, so the swap re-centres the hero there); delete the ten stale `claude/*`
+  branches (OPS-7, owner-side — see *Deploying a change*); DARK certificate · Cloudflare security headers · token scope (recorded, unchanged).
 - **Refuted — don't re-raise:** interim rewrites of the Views/gallery stand-in disclosures (they are
   photography-day items, C-22; a direct /gallery/ entry sees the WIP notice first); the Register
   paragraph's conditional (left-as-is, PR #36); `/legal/` noindex; "first mobile 100" as a site
@@ -707,7 +708,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Report 11-15** (scheduled; **landed 7.3 h late** — 12:56 UTC for the 05:37 cron = 14:56 Cyprus,
   still Daylight): the :37 minute did not cure the delay — it is repo-level queueing. A December run
   delayed ≥ ~9 h would put the PSI loads into R4 night (the report then says so itself). *Optional,
-  offered 2026-11-16, undecided:* move the cron ~3 h earlier. PSI m98 / d100 / gallery 100, CLS 0.
+  offered 2026-11-16:* move the cron ~3 h earlier — dropped 2026-11-20 (Lighthouse loads send no
+  beacons, so a night run distorts nothing). PSI m98 / d100 / gallery 100, CLS 0.
   GSC 12 impressions / 0 clicks, homepage pos 4.2; the misspelling **"ethon house" now ranks at 3**
   (≈81 in September). Cloudflare 40 visits = ≈4 beacons (band 11–102), one www.google.com referral.
   Events since 11-03: **every chapter +3 and reach-register +3** — three readers started and all
@@ -778,8 +780,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   host returned a valid certificate issued the same minute — the egress proxy's own interception
   certificate. The matrix's `--only external` check is the reliable one; by it **DARK's certificate
   is still expired** (unlink offer still undecided).
-- **Still open / offered, undecided:** DARK link; Cloudflare security headers (owner-side). Replaces the ToDo-C idea of a `daylight-auto` twin — `arrive` counts
-  arrivals around the clock.
+- **Still open / offered, undecided:** DARK link; Cloudflare security headers (owner-side).
+- **Next session — read the 12-01 report for:** the first `arrive` / `notice-close` numbers (how
+  many arrivals go past the notice — the question behind this whole change); `_hits` falling toward
+  the sum of the named rows; `/e…` scanner probes now appearing in the 404 watch (expected); no
+  `arrive` jump on the run day; and whether the owner's bookmark habit holds (a complete
+  read-through on a day the owner looked is the tell). Door mats: the Prado edging colour, proofs
+  and quotation are with the supplier.
 
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
 - **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the
