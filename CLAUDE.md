@@ -234,12 +234,20 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   supplier (En Oiko Dimiourgies; qualities *Prado* = printed nylon 7 mm, *Azure* = vinyl loop).
   **Owner's final choice after checking the samples in real light (2026-11-16): Prado base Beige 2
   + logo Brown 12 · Azure base Beige + logo Brown · logo one colour incl. the dot, centred, 50 % of
-  the mat width · edge in the base colour if available, otherwise all mats borderless.** List:
+  the mat width.** List:
   ENTRANCE-OUT 100×80 Azure · KITCHEN-OUT 70×60 Azure · VERANDA 200×100 Prado · ENTRANCE-IN 100×110
   Prado · BALCONY 1–3 100×60 Prado ×3 · BALCONY-IN 70×60 Prado. The one-page order sheet (EN), the
-  research report and the colour measurements live in `docs/mats/` on `internal`. **Open with the
-  supplier:** edge colour, Azure thickness (catalogue 9 mm, the sample fan is labelled 12 mm),
-  whether the wordmark reproduces on vinyl loop, proof + quotation. Brand logic used: gold stays the
+  research report and the colour measurements live in `docs/mats/` on `internal`. **Supplier's reply
+  (2026-11-19) and the owner's answer:** (1) she advised reversing the Prado colours (Brown 12 base,
+  dirt shows less) — *declined*: rendered on the real stone a brown base is a wine-red slab at
+  3.4–4.6:1 against the floor, the object the owner had moved away from; the light base and its
+  cleaning are accepted. (2) She strongly advised keeping the 2.5 cm edging on loose-laid mats
+  (fraying, tearing) — *accepted*, which retires the "borderless if only black" rule: Azure edging
+  in beige; Prado in beige if her supplier has it, otherwise brown to match the logo. (3) Prado on
+  the veranda and balconies — the owner confirmed they are deeply covered and get no direct sun;
+  Prado stays as ordered. (4) Final logo dimensions may vary slightly; proofs come for approval.
+  The 12 mm sample fan was outdated — no thickness question. **Open:** the Prado edging colour,
+  proofs, quotation. Brand logic used: gold stays the
   dot only and drowns on light grounds (≈1.2–1.7:1) → a one-colour mark; the wordmark comes from the
   logo file, never typeset. **Learnings:** (1) catalogue swatches mislead (the printed Prado green
   was far darker than the real yarn) — measure real samples from a photo **with a white sheet of
@@ -491,7 +499,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   per-day counters via a **Cloudflare Worker** (`aethon-events`, route **`aethon.house/e*`**, KV
   namespace `aethon_events`) — no third party, no cookies, no IDs/IPs/UAs stored; **DNT + Global
   Privacy Control honoured on the page AND at the edge**; KV lost-update races (±1) accepted at
-  this scale. **Allowlist (17) in `scripts/cf-worker-events.js`:** `via-gate`/`via-sea`
+  this scale. **Allowlist (19 since 2026-11-20 — `arrive` + `notice-close`, see the boot-2026-11-20
+  section) in `scripts/cf-worker-events.js`:** `via-gate`/`via-sea`
   (**dormant** — owner chose PURE stone QR URLs; params remain available for future digital
   shares), `afterglow`/`afterglow-auto` (chosen vs given — auto = R4 night-at-load without saved
   pref; chosen = MutationObserver on a later switch into night, once per visit),
@@ -520,8 +529,11 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   landed in the worker, were counted and answered 204 (hidden from the 404 watch). **The worker
   source on `main` now handles only the exact `/e` path** (everything else `return fetch(request)`
   → GitHub Pages' branded 404, counted by the 404 watch) and try/catches the named put so the 204
-  is unconditional. **DEPLOY PENDING — owner-dispatched `deploy-events-worker.yml` (ToDo B3 in the
-  boot-2026-11-03 section); until then the LIVE worker still counts every `/e*` probe.** DNT is
+  is unconditional. **Deploy dispatched 2026-11-20 (owner: "ja, 1-4"), right after the push that
+  added the two funnel counters** — confirmation is `arrive` rows in the next report and `_hits`
+  falling toward the sum of the named rows; if they are missing, re-dispatch
+  `deploy-events-worker.yml` and read its log (the verified outcome of the first dispatch is in
+  internal:docs/boot-2026-11-20.md). From then on the 404 watch shows the `/e…` scanner probes. DNT is
   NOT a source of unattributed hits — an opted-out browser sends nothing (the page returns before
   `sendBeacon`). **Verification path:** curl/
   headless probes CANNOT reach aethon.house — the zone's bot protection 403s non-browser clients
@@ -667,9 +679,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   inside the guardrail media query (index only) — its tap swept the page to Afterglow while 0 of 8
   Views changed; the interior's evening line stays (the hero and pause plates do answer it); the
   matrix carries a phone check + a desktop control. (Loading the evening layers on phones stays
-  refuted: a photography-day decision.) **B3 STILL PENDING — don't act unprompted (offered again
-  2026-11-16, not taken up):** dispatch `deploy-events-worker.yml` once (idempotent, ~1 min) so the
-  worker on main goes live; until then `_hits` stays ~88 % scanner probes.
+  refuted: a photography-day decision.) **B3 dispatched 2026-11-20** with the funnel counters
+  (boot-2026-11-20 section).
 - **ToDo C — later / owner-side:** studios backlink (Vardastudio, House Talks, Dear Modern) after
   the shoot (SEO-3); Cloudflare Cache Rule for /fonts/ (optional, ~1 visit/day: cold edge anyway;
   never a long browser TTL on same-path `images/`); a `daylight-auto` twin for afterglow-auto so
@@ -710,6 +721,56 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
 - **Screenshot gotcha:** Chromium truncates a `full_page` capture at 16,384 px. The desktop homepage
   is 18,448 px tall, so everything from *Register interest* down comes out blank — capture the lower
   part by scrolling (viewport tiles). Not a site defect.
+
+## Boot 2026-11-20 — KPIs read as a funnel; the top of the funnel gets counted
+- **Report 11-20 (on demand):** PSI m98 / d100 / gallery 100. GSC 14 impressions, **1 click (the
+  first since July)**, homepage 9 impressions at 3.9; **Cyprus 7 impressions, 5 of them since 11-14,
+  mostly mobile** — someone local is looking the house up. Cloudflare 40 visits = ≈4 beacons. Since
+  11-15 one more complete read-through. Brevo 0. `_hits` 366, 319 unattributed.
+- **The lifetime funnel (July → 11-20):** ch-place 36 → ch-architecture 24 → ch-plan 16 → … →
+  reach-register 15. A third leaves in *The place*, another third in *The architecture*; whoever
+  reaches the plans reads to the end. Since the 11-03 reveal fix 4 of 4 starters finished (11 of 32
+  before) — suggestive, not proof, and some of those four are probably the owner. At least 82
+  arrivals came in the house's evening alone, 36 ever began to read: the biggest loss sits between
+  arriving and the first scroll, which the old counters could not see.
+- **Phone walk (390 × 844):** the page is 18.2 screens; the first REAL image (the ground-floor plan)
+  sits at screen 5.0 — before it the hero, ~430 words and two "forthcoming" stand-ins. Sections in
+  screens: place 1.2 → architecture 2.4 → plan 4.4 → garden 6.3 → interior 7.8 → materials 9.7 →
+  Views 12.0 → Register 14.9. **Shortening the opening stretch was NOT proposed for now** — the
+  data is too thin and January's photography changes exactly this stretch; decide with clean numbers.
+- **Shipped (one push; owner: "ja, 1-4"):**
+  (1) the **▶ glyph on the establishing-film stand-in is gone** — a play control that played nothing
+  sat in the first chapter; the plate and its label stay, the control returns with the footage
+  (the `.play` CSS is kept for it).
+  (2) **`?quiet=1` keeps the operator's own tab out of the counts.** It sets `window.name =
+  'ae-quiet'` for the TAB — deliberately NOT localStorage: /legal/ lists every stored item ("two
+  small functional notes … a session-only note"), and Safari evicts script storage after seven
+  idle days, so a "set once" switch would silently lapse. The parameter is stripped, the status
+  line under the bar says "This visit is not counted" (after the notice closes, if it is up), later
+  loads in the same tab stay quiet, `?quiet=0` lifts it ("This visit is counted again"). **Owner
+  habit: bookmark `aethon.house/?quiet=1` and open the site through it.** Cloudflare's own sampled
+  visit count cannot be excluded this way.
+  (3) **Two funnel counters:** `arrive` (every homepage load that runs the page script — people and
+  script-running fetchers alike) and `notice-close` (the site notice closed by the visitor; a
+  `close` listener in the beacon module, the hand-synced WIP IIFE is untouched). The report gained a
+  **Reading funnel** block — every step incl. zero rows, each as "n of the step before", all rows
+  on ONE time base (the window, or the days since `arrive` exists while it is younger than the
+  window; before any `arrive` count it starts at ch-place). A return to the homepage within one
+  visit arrives without a notice, so a row can exceed the one before. `robots.txt` now disallows
+  `/e?` so compliant crawlers' renderers stay off the endpoint (Google recrawled the homepage on
+  11-19 at 20:55 Cyprus time — a rendered crawl at night would count as `afterglow-auto`).
+  The legal sentence on counters is generic ("a handful of … event counters … for instance"), so no
+  notice change was needed; mention the two counters and the `?quiet` switch to counsel.
+  (4) **Worker deploy dispatched** (the pending B3 — exact `/e` path + 19-name allowlist).
+- **Matrix:** 9 new checks (arrive once, notice-close only when shown and closed, quiet tab incl.
+  no storage written, lift, confirmation after the notice).
+- **Gotcha — checking a third-party certificate from this sandbox:** a direct `ssl` socket to the
+  host returned a valid certificate issued the same minute — the egress proxy's own interception
+  certificate. The matrix's `--only external` check is the reliable one; by it **DARK's certificate
+  is still expired** (unlink offer still undecided).
+- **Still open / offered, undecided:** DARK link; report cron ~3 h earlier; Cloudflare security
+  headers (owner-side). Replaces the ToDo-C idea of a `daylight-auto` twin — `arrive` counts
+  arrivals around the clock.
 
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
 - **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the

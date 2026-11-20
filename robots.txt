@@ -5,5 +5,7 @@ Disallow: /CLAUDE.md
 Disallow: /README.md
 Disallow: /scripts/
 Disallow: /*.md$
+# the anonymous counter endpoint is for visitors' browsers, not for crawlers' renderers
+Disallow: /e?
 
 Sitemap: https://aethon.house/sitemap.xml

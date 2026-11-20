@@ -726,6 +726,7 @@ def check_beacons(site):
     search = s.ev('location.search')
     R.check('beacons: ?via=gate is counted once and stripped from the address bar', hits.count('via-gate') == 1 and search == '', f'hits={hits} search={search!r}')
     R.check('beacons: a Daylight arrival sends no afterglow-auto', 'afterglow-auto' not in hits, f'hits={hits}')
+    R.check('beacons: the homepage load itself is counted once (arrive)', hits.count('arrive') == 1, f'hits={hits}')
     s.scroll_through(step=400, pause=120)
     got = [c for c in chapters if c in hits]
     R.check('beacons: all seven chapter-reach events + reach-register fire on a full scroll', got == chapters, f'got={got}')
@@ -742,7 +743,36 @@ def check_beacons(site):
     s.scroll_to(0); s.scroll_through(step=600, pause=60)
     dup = [h for h in set(hits) if hits.count(h) > 1]
     R.check('beacons: every event counts at most once per pageview (re-scroll, re-toggle)', not dup, f'duplicates={dup} total={len(hits)}')
+    R.check('beacons: no notice-close when the site notice was not shown', 'notice-close' not in hits, f'hits={hits}')
     s.finish('beacons flow')
+
+    # the site notice, closed by the visitor → notice-close (only once it is closed)
+    s = site.session(theme='day', wip=False, reduced_motion='reduce'); hits = capture_beacons(s.page); s.goto('/'); s.page.wait_for_timeout(300)
+    before = list(hits)
+    s.page.click('.wip-dismiss'); s.page.wait_for_timeout(250)
+    R.check('beacons: closing the site notice fires notice-close once, and not before', 'notice-close' not in before and hits.count('notice-close') == 1 and hits.count('arrive') == 1, f'before={before} after={hits}')
+    s.finish('beacons notice-close')
+
+    # the operator's own tab — ?quiet=1: nothing is sent on this and later loads in the tab, the parameter
+    # is stripped, the status line confirms, and NOTHING is written to storage (/legal/ lists every stored item)
+    QUIET = """() => { const h = document.querySelector('.toggle-hint'); return { search: location.search, name: window.name,
+        note: h.textContent, shown: h.classList.contains('show'), ls: Object.keys(localStorage).sort().join(','),
+        ss: Object.keys(sessionStorage).sort().join(',') }; }"""
+    s = site.session(theme='day', reduced_motion='reduce'); hits = capture_beacons(s.page)
+    s.goto('/?quiet=1'); s.page.wait_for_timeout(350); st = s.ev(QUIET)
+    s.scroll_through(step=600, pause=60); s.goto('/gallery/'); s.goto('/'); s.scroll_through(step=600, pause=60)
+    R.check('quiet: ?quiet=1 sends ZERO beacons on this and later loads in the tab, strips the parameter and confirms in the status line',
+            len(hits) == 0 and st['search'] == '' and st['name'] == 'ae-quiet' and st['shown'] and 'not counted' in st['note'], f'hits={hits} state={json.dumps(st)}')
+    R.check('quiet: nothing is written to storage for it', st['ls'] == 'aethon-hint,aethon-theme' and st['ss'] == '__vs,aethon-wip', f'localStorage={st["ls"]} sessionStorage={st["ss"]}')
+    s.goto('/?quiet=0'); s.page.wait_for_timeout(350); st = s.ev(QUIET)
+    R.check('quiet: ?quiet=0 lifts it — the load is counted again', hits.count('arrive') == 1 and st['name'] == '' and st['search'] == '' and 'counted again' in st['note'], f'hits={hits} state={json.dumps(st)}')
+    s.finish('beacons quiet')
+
+    # with the site notice up, the confirmation waits for it to close — and closing it is not counted either
+    s = site.session(theme='day', wip=False, reduced_motion='reduce'); hits = capture_beacons(s.page); s.goto('/?quiet=1'); s.page.wait_for_timeout(350)
+    a = s.ev(QUIET); s.page.click('.wip-dismiss'); s.page.wait_for_timeout(250); b = s.ev(QUIET)
+    R.check('quiet: under the site notice the confirmation appears once the notice is closed; the close is not counted', not a['shown'] and b['shown'] and len(hits) == 0, f'before={a["shown"]} after={b["shown"]} hits={hits}')
+    s.finish('beacons quiet + notice')
 
     s = site.session(theme=None, fake_time='2026-07-15T18:30:00Z'); hits = capture_beacons(s.page); s.goto('/'); s.page.wait_for_timeout(300)
     R.check('beacons: an evening arrival with no saved theme fires afterglow-auto, not afterglow', hits.count('afterglow-auto') == 1 and 'afterglow' not in hits, f'hits={hits}')

@@ -1001,7 +1001,7 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
       </div>
     </div>
     <figure class="plate reveal">
-      <div class="frame wide film"><span class="play" aria-hidden="true">&#9654;</span><span class="label">Establishing film · the western coast at sunset · forthcoming</span></div>
+      <div class="frame wide film"><!-- the play control returns with the footage: a glyph that plays nothing is a dead affordance --><span class="label">Establishing film · the western coast at sunset · forthcoming</span></div>
     </figure>
   </section>
 
@@ -1605,15 +1605,44 @@ if(t==='night'){document.body.classList.add('night');var m=document.querySelecto
   // Each event counts at most once per pageview; every call is fail-silent.
   (function(){
     try{
+      var search = location.search;
+      // the operator's own look at the site stays out of the counts: arriving with ?quiet=1 marks
+      // this TAB quiet (window.name — nothing is written to storage, so the storage note in
+      // /legal/ stays complete), ?quiet=0 lifts it. The parameter is stripped from the address
+      // bar and the status line under the bar confirms the state.
+      var quiet = search.match(/[?&]quiet=([01])(&|$)/);
+      if (quiet){
+        try {
+          if (quiet[1] === '1') window.name = 'ae-quiet'; else if (window.name === 'ae-quiet') window.name = '';
+          history.replaceState(null, '', location.pathname + location.hash);
+        } catch (e) {}
+        setTimeout(function(){   // after the site notice, if it opens — the line sits behind its backdrop
+          var el = document.querySelector('.toggle-hint'), dlg = document.getElementById('wip');
+          if (!el) return;
+          var show = function(){
+            el.textContent = quiet[1] === '1' ? 'This visit is not counted' : 'This visit is counted again';
+            el.classList.add('show');
+            setTimeout(function(){ el.classList.remove('show'); }, 4200);
+          };
+          if (dlg && dlg.open) dlg.addEventListener('close', show, { once: true }); else show();
+        }, 0);
+      }
       if (navigator.doNotTrack === '1' || window.globalPrivacyControl) return;
+      if (window.name === 'ae-quiet') return;
       var sent = {};
       var ev = window.__aeEv = function(n){
         if (sent[n]) return; sent[n] = 1;
         try { navigator.sendBeacon('/e?n=' + n); } catch (e) {}
       };
+      // the top of the funnel — every homepage load that runs this script (people and
+      // script-running fetchers alike), and the site notice closed by the visitor (✕, the
+      // button, Esc or outside; it fires only when the notice was shown)
+      ev('arrive');
+      var notice = document.getElementById('wip');
+      if (notice) notice.addEventListener('close', function(){ ev('notice-close'); });
       // channel attribution — dormant while the stone QRs carry the pure URL; the parameter
       // is stripped from the address bar immediately after counting
-      var via = location.search.match(/[?&]via=(gate|sea)(&|$)/);
+      var via = search.match(/[?&]via=(gate|sea)(&|$)/);
       if (via){
         ev('via-' + via[1]);
         try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}

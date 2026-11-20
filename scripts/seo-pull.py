@@ -826,6 +826,48 @@ def render(gsc, index, psi_mobile, psi_desktop, psi_gallery, cf, cfx, brevo, eve
                 out += ["", f"_`_hits` check: {unattr_win} of {hits_win} window requests "
                             "carry no allowlisted event name — scanner probes of the endpoint, "
                             "not visitors; the named rows are the human signal._"]
+            # Reading funnel — every step, zero rows included (the table above lists only events seen
+            # in the window). All steps share ONE time base, or the fractions would lie: the window,
+            # or — while the arrival counters are younger than the window — the days since they exist.
+            funnel = ["arrive", "notice-close", "ch-place", "ch-architecture", "ch-plan", "ch-garden",
+                      "ch-interior", "ch-materials", "ch-views", "reach-register", "form-start", "form-submit"]
+            totals = events.get("totals") or {}
+            try:
+                start = (datetime.date.fromisoformat(str(when))
+                         - datetime.timedelta(days=int(events.get("days") or 28))).isoformat()
+            except Exception:  # noqa: BLE001
+                start = ""
+            first_arrive = min(daily.get("arrive") or {}, default=None)
+            base = max(start, first_arrive) if first_arrive else start
+
+            def _since(name):
+                d = daily.get(name)
+                if d is None:   # older JSON without day buckets — the window sum is all there is
+                    return win.get(name, 0)
+                return sum(v for day, v in d.items() if day >= base)
+
+            out += ["", "### Reading funnel", ""]
+            if not first_arrive:
+                steps = funnel[2:]
+                out.append("_No arrival counts yet (`arrive` / `notice-close`) — the funnel starts at the first chapter._")
+            else:
+                steps = funnel
+                if first_arrive > start:
+                    out.append(f"_Counted from {base}, the first day of the arrival counter — every row covers the same days._")
+            out += ["", "| step | count | of the step before | lifetime |", "|---|--:|--:|--:|"]
+            before = None
+            for name in steps:
+                n = _since(name)
+                if before is None:
+                    rel = "—"
+                else:
+                    rel = f"{n} of {before}" + (f" ({round(100 * n / before)} %)" if before else "")
+                out.append(f"| {name} | {n} | {rel} | {totals.get(name, 0)} |")
+                before = n
+            out += ["", "_`arrive` is every homepage load that ran the page script — people and script-running "
+                        "fetchers alike; `notice-close` needs a person. A return to the homepage within one visit "
+                        "arrives without a notice, so a row can exceed the one before. At this volume read the "
+                        "fractions, not the percentages._"]
             kv = f"_KV read: {events.get('tracked_keys', 0)} keys"
             if events.get("unreadable"):
                 kv += f" · **{events['unreadable']} unreadable — counts above may be low**"

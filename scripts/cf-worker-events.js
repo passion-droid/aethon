@@ -27,6 +27,9 @@ const ALLOW = new Set([
   'ch-place', 'ch-architecture', 'ch-plan', 'ch-garden', 'ch-interior', 'ch-materials', 'ch-views',
   // the ask — reached, begun, completed
   'reach-register', 'form-start', 'form-submit',
+  // the top of the funnel (2026-11-20) — a homepage load that ran the page script, and the site
+  // notice closed by the visitor; the operator's own tabs stay out via ?quiet=1 (page-side)
+  'arrive', 'notice-close',
 ]);
 
 export default {
