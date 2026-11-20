@@ -529,11 +529,14 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   landed in the worker, were counted and answered 204 (hidden from the 404 watch). **The worker
   source on `main` now handles only the exact `/e` path** (everything else `return fetch(request)`
   → GitHub Pages' branded 404, counted by the 404 watch) and try/catches the named put so the 204
-  is unconditional. **Deploy dispatched 2026-11-20 (owner: "ja, 1-4"), right after the push that
-  added the two funnel counters** — confirmation is `arrive` rows in the next report and `_hits`
-  falling toward the sum of the named rows; if they are missing, re-dispatch
-  `deploy-events-worker.yml` and read its log (the verified outcome of the first dispatch is in
-  internal:docs/boot-2026-11-20.md). From then on the 404 watch shows the `/e…` scanner probes. DNT is
+  is unconditional. **DEPLOYED 2026-11-20 (owner: "ja, 1-4"; run #6 green — worker uploaded, the
+  live route answered 204, the KV write was read back), together with the two funnel counters.**
+  From now on `_hits` should fall toward the sum of the named rows and the 404 watch shows the
+  `/e…` scanner probes. **That deploy's verification added one `afterglow`** — the script used to
+  probe with a real event name, so `afterglow:2026-11-20 = 1` is the deploy, not a visitor (chosen
+  evenings: 3, not 4). Fixed the same day: the probe now carries an unlisted name and only the
+  `_hits` heartbeat moves. A GitHub-runner curl with a browser User-Agent does reach the worker
+  (204), contrary to the older note below about curl probes. DNT is
   NOT a source of unattributed hits — an opted-out browser sends nothing (the page returns before
   `sendBeacon`). **Verification path:** curl/
   headless probes CANNOT reach aethon.house — the zone's bot protection 403s non-browser clients
@@ -679,7 +682,7 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   inside the guardrail media query (index only) — its tap swept the page to Afterglow while 0 of 8
   Views changed; the interior's evening line stays (the hero and pause plates do answer it); the
   matrix carries a phone check + a desktop control. (Loading the evening layers on phones stays
-  refuted: a photography-day decision.) **B3 dispatched 2026-11-20** with the funnel counters
+  refuted: a photography-day decision.) **B3 DONE 2026-11-20** — deployed with the funnel counters
   (boot-2026-11-20 section).
 - **ToDo C — later / owner-side:** studios backlink (Vardastudio, House Talks, Dear Modern) after
   the shoot (SEO-3); Cloudflare Cache Rule for /fonts/ (optional, ~1 visit/day: cold edge anyway;
@@ -761,15 +764,21 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   11-19 at 20:55 Cyprus time — a rendered crawl at night would count as `afterglow-auto`).
   The legal sentence on counters is generic ("a handful of … event counters … for instance"), so no
   notice change was needed; mention the two counters and the `?quiet` switch to counsel.
-  (4) **Worker deploy dispatched** (the pending B3 — exact `/e` path + 19-name allowlist).
+  (4) **Worker deployed** (the pending B3 — exact `/e` path + 19-name allowlist; run #6 green).
+  The report on the new code (run #38) rendered the funnel block: no `arrive` yet, window
+  ch-place 6 → ch-architecture 4 → … → reach-register 4, form-start 0.
+- **Lighthouse loads send no beacons — observed again:** run #38's two homepage lab loads came
+  minutes after the page with the unconditional `arrive` went live and left no `arrive` count
+  (as on 11-03: six loads, events ±0). So a report run at Cyprus night would not count
+  `afterglow-auto` either, and the idea of moving the cron earlier loses its reason; the report's
+  Cyprus-time line stays as information. Re-check on 12-01: `arrive` must not jump on run days.
 - **Matrix:** 9 new checks (arrive once, notice-close only when shown and closed, quiet tab incl.
   no storage written, lift, confirmation after the notice).
 - **Gotcha — checking a third-party certificate from this sandbox:** a direct `ssl` socket to the
   host returned a valid certificate issued the same minute — the egress proxy's own interception
   certificate. The matrix's `--only external` check is the reliable one; by it **DARK's certificate
   is still expired** (unlink offer still undecided).
-- **Still open / offered, undecided:** DARK link; report cron ~3 h earlier; Cloudflare security
-  headers (owner-side). Replaces the ToDo-C idea of a `daylight-auto` twin — `arrive` counts
+- **Still open / offered, undecided:** DARK link; Cloudflare security headers (owner-side). Replaces the ToDo-C idea of a `daylight-auto` twin — `arrive` counts
   arrivals around the clock.
 
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)

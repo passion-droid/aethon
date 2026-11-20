@@ -83,10 +83,15 @@ else
 fi
 
 # ---- 5 · verify ------------------------------------------------------------------------
-say "verify: beacon through the live route"
-CODE=$(curl -sS -o /dev/null -w '%{http_code}' "https://${ZONE_NAME}/e?n=afterglow" -H 'User-Agent: Mozilla/5.0 (deploy-verify)') || CODE="curl-error"
-echo "   live /e?n=afterglow -> HTTP ${CODE} (204 = counted; 403 would be bot protection challenging curl — real browsers pass)"
+# The probe carries a name that is NOT on the allowlist, so no event is counted — only the
+# anonymous _hits heartbeat moves, which is what it is for. (Until 2026-11-20 this step sent
+# n=afterglow and so added one "chosen evening" to the real counters on every deploy.)
+say "verify: probe through the live route (unlisted name — only the _hits heartbeat moves)"
 TODAY=$(date -u +%F)
-VAL=$(curl -sS "${AUTH[@]}" "${API}/accounts/${ACCT}/storage/kv/namespaces/${NS_ID}/values/afterglow:${TODAY}" || true)
-echo "   KV afterglow:${TODAY} = ${VAL:-<empty>}"
+BEFORE=$(curl -sS "${AUTH[@]}" "${API}/accounts/${ACCT}/storage/kv/namespaces/${NS_ID}/values/_hits:${TODAY}" || true)
+case "${BEFORE}" in ''|*[!0-9]*) BEFORE=0 ;; esac
+CODE=$(curl -sS -o /dev/null -w '%{http_code}' "https://${ZONE_NAME}/e?n=deploy-probe" -H 'User-Agent: Mozilla/5.0 (deploy-verify)') || CODE="curl-error"
+echo "   live /e?n=deploy-probe -> HTTP ${CODE} (204 = the worker answered; 403 would be bot protection challenging curl — real browsers pass)"
+AFTER=$(curl -sS "${AUTH[@]}" "${API}/accounts/${ACCT}/storage/kv/namespaces/${NS_ID}/values/_hits:${TODAY}" || true)
+echo "   KV _hits:${TODAY} ${BEFORE} -> ${AFTER:-<empty>} (it should have risen)"
 say "done — namespace ${NS_ID}, script ${SCRIPT_NAME}, route ${ZONE_NAME}/e*"
