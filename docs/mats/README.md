@@ -1,11 +1,11 @@
-# Door mats — decision record (2026-11-12 → 2026-11-16)
+# Door mats — decision record (2026-11-12 → 2026-11-25)
 
 Physical brand, not part of the website. Eight custom logo mats for the house, ordered from a
 Cypriot supplier (En Oiko Dimiourgies). Two catalogue qualities are in play: **Prado** (printed
 nylon, 7 mm, PVC backing, catalogued for indoor use) and **Azure** (vinyl loop, PVC backing,
 outdoor-rated). No address appears in any of these files.
 
-## The order as specified (owner's decision, 2026-11-16)
+## The order as specified (owner's decision, 2026-11-16; edge and mat 4 settled 2026-11-25)
 
 | No. | Label | Qty | Width × depth (cm) | Quality | Base | Logo | Logo width |
 |---|---|---|---|---|---|---|---|
@@ -18,15 +18,17 @@ outdoor-rated). No address appears in any of these files.
 
 - Logo: the AETHON wordmark from the logo file (never typeset), one colour including the dot,
   centred, 50 % of the mat width.
-- Edge: the 2.5 cm edging is kept (see the exchange of 2026-11-19 below): Azure in beige, Prado in
-  beige if available, otherwise brown.
+- Edge (settled 2026-11-25): the six Prado mats without edging, because Prado edging exists only in
+  black; the two Azure mats with the 2.5 cm edging in beige. Finished sizes as ordered.
 - Floors: 1, 3, 5–7 lie on travertine (3 and 5–7 covered); 2 on a dark anthracite stone; 4 and 8
   on marble.
-- Assumption in the sheet: mat 4 is 100 wide and 110 deep (same width as mat 1 at the same door).
-  If 110 runs along the door, the logo becomes 55 cm.
+- Mat 4 is 100 wide and 110 deep (owner, 2026-11-25): the 100 cm side lies along the door, the
+  counterpart to mat 1 outside, and the logo runs along it.
 
-**Open with the supplier (after her reply of 2026-11-19):** the Prado edging colour; proofs;
-quotation and delivery time.
+**Open with the supplier (as of 2026-11-25):** the revised artwork for approval, then the order
+form and the deposit. Production takes about three weeks from artwork approval and order
+confirmation. The quotation is accepted; its figures stay in the owner's mail and are not stored
+here.
 
 ### The supplier's reply and the owner's answer (2026-11-19)
 
@@ -42,6 +44,32 @@ quotation and delivery time.
 4. **Logo dimensions** may vary slightly for balance and production; proofs come for approval.
 
 The sample fan labelled 12 mm was outdated, so the thickness question was dropped.
+
+### Her artwork and quotation, and the owner's answer (2026-11-25)
+
+Prado edging exists only in black; Azure edging in beige or brown. Measured from her drawing, the
+logos sat at 72–84 % of the mat width instead of the ordered 50 % (146 cm on the veranda mat;
+59 cm on the Prado 70 × 60, about 3 cm from the edging), the veranda logo about 5 cm above centre,
+and mat 4 was rotated (110 wide × 100 deep). `supplier-artwork-2026-11-25-compared.jpg` shows her
+drawing beside the order on the real stone. The owner's answer, sent the same day:
+
+1. **Prado without edging**, all six, knowingly against her durability advice. A 2.5 cm black frame
+   is about three times as wide as the letter strokes and far darker than the brown: it becomes
+   the loudest element of the mat. The rule is back to "edging only where it can be tone-in-tone".
+2. **Azure edging beige**, on both mats.
+3. **Logo smaller**: about half the mat width, as small as the print raster allows ("more subtle
+   and elegant"); slightly larger only if production needs it, with the size reported back.
+4. **Logo centred** on every mat.
+5. **Mat 4**: 100 cm along the door, 110 deep.
+6. No price questions; the quotation stands.
+
+### Checking the next artwork
+
+Measure it, do not judge it by eye: `python3 tools/measure_artwork.py <drawing.png> --ref-cm 200`
+prints size, edging and logo width per mat. Expected: logo about 50 % of the mat width (100 cm on
+the 200 × 100, 50 cm on the 100 cm mats, 35 cm on the 70 × 60, or the smallest size production
+reports as clean), centred; no edging on the six Prado mats; beige edging on the two Azure mats;
+mat 4 drawn 100 wide × 110 deep; one colour including the dot; the wordmark from the logo file.
 
 ## How the decision moved
 
@@ -99,6 +127,16 @@ Lettering: Dark Green 14 on Light Grey 4 2.3–2.5:1, Black 16 on Light Grey 4 6
   mark you value on a doormat; a 7–9 mm borderless edge is above every trip threshold found
   (ADA 6.4 mm, BG BAU 4 mm), though none binds a private house; PVC-backed mats on porous stone
   want lifting to dry (weekly indoors, after rain outdoors); printed nylon is not sun-rated.
+- A tolerance given in words is read generously. "Feel free to slightly increase in case it's too
+  thin" came back as logos half again as large. Give a number.
+- "Width × depth" in an order sheet needs the door side spelled out. Mat 4 came back rotated.
+- The catalogue already answered the edging question: Prado lists a "black plastic perimeter
+  finish of 2.5 cm (optional)", Azure a plastic finish without naming a colour.
+- Reading the price list: Prado with logo runs at about €155–165 per m², Azure 9 mm at about
+  €250–290. The "€230 per m² for customized dimensions" line belongs to Elysium. Custom sizes are
+  priced above the pro-rata rate, towards the next list size, so the list sizes (60 × 90, 80 × 90,
+  90 × 120 …) are the economical ones.
+- Without edging the catalogue caps one side at 145 cm (150 cm with it).
 
 ## Files
 
@@ -110,6 +148,10 @@ Lettering: Dark Green 14 on Light Grey 4 2.3–2.5:1, Black 16 on Light Grey 4 6
 - `samples-on-real-stone.jpg` — mats composed from the real photo textures on the real stone.
 - `supplier-proposal-compared.jpg` — the supplier's reversed colours and the edging variants beside
   the order, on the real stone.
+- `supplier-artwork-2026-11-25-compared.jpg` — her drawing of 2026-11-25 beside the order: black
+  edging against none, drawn logo size against 50 %. The Azure edging tones and the anthracite
+  stone in it are assumptions.
 - `measured.json`, `measured-trav.json`, `composite-info.json` — the measurements.
-- `tools/` — the measuring scripts, kept for the method. They point at the session's upload
+- `tools/measure_artwork.py` — measures a supplier drawing: mat size, edging, logo width, centring.
+- `tools/` — the other measuring scripts, kept for the method. They point at the session's upload
   paths, which no longer exist; the source photos are not stored here.
