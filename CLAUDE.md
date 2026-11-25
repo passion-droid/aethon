@@ -170,7 +170,7 @@ impression and the mobile layout matter.
   delete-branch action. Done when they disappear from `git ls-remote`.
 - **GitHub disables scheduled workflows after 60 days without a push (public repo).** A quiet
   autumn/winter needs one push before each 60-day mark or the fortnightly report silently stops
-  (last push that reset the clock: 2026-11-20 → next mark 2027-01-19).
+  (last push that reset the clock: 2026-11-25 → next mark 2027-01-24).
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
@@ -246,8 +246,23 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   in beige; Prado in beige if her supplier has it, otherwise brown to match the logo. (3) Prado on
   the veranda and balconies — the owner confirmed they are deeply covered and get no direct sun;
   Prado stays as ordered. (4) Final logo dimensions may vary slightly; proofs come for approval.
-  The 12 mm sample fan was outdated — no thickness question. **Open:** the Prado edging colour,
-  proofs, quotation. Brand logic used: gold stays the
+  The 12 mm sample fan was outdated — no thickness question. **Artwork + quotation (2026-11-25) and the owner's answer, sent the same day:** Prado edging
+  exists only in black (the catalogue had said so all along: "black plastic perimeter finish …
+  optional"), Azure edging in beige or brown. Measured from her drawing (colour blobs; scale from
+  the 200 cm mat, 1.89 px/cm): the logos were drawn at **72–84 % of the mat width, not the ordered
+  50 %** (146 cm on the veranda mat; 59 cm on the Prado 70×60, 3 cm from the edging), the veranda
+  logo sat ≈5 cm above centre, and **ENTRANCE-IN was drawn rotated** (110 wide × 100 deep).
+  Decisions: **all six Prado mats without edging** (knowingly against her durability advice — the
+  rule is back to "edging only where it can be tone-in-tone"), **Azure edging beige on both**,
+  **logo smaller: about half the mat width, as small as the print raster allows** ("more subtle and
+  elegant"; slightly larger only if production needs it, with the size reported back), logo
+  centred, **ENTRANCE-IN = 100 along the door × 110 deep** (the counterpart to the mat outside),
+  finished sizes as ordered, **quotation accepted without price questions** (the figures stay in
+  the owner's mail, not in the repo). Production ≈ three weeks from artwork approval and order
+  confirmation. **Open:** revised artwork for approval, order form, deposit. **When the revised
+  artwork arrives, measure it against this list** — `internal:docs/mats/tools/measure_artwork.py`
+  prints size, edging and logo width per mat; a drawing that looks right was 25 points off.
+  Brand logic used: gold stays the
   dot only and drowns on light grounds (≈1.2–1.7:1) → a one-colour mark; the wordmark comes from the
   logo file, never typeset. **Learnings:** (1) catalogue swatches mislead (the printed Prado green
   was far darker than the real yarn) — measure real samples from a photo **with a white sheet of
@@ -261,7 +276,13 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   runs to 150×300). (6) From the research: Cliff Tan's own published advice is not to put a mark you
   value on a doormat; a 7–9 mm borderless edge is above every trip threshold (ADA 6.4 mm, BG BAU
   4 mm), though nothing binds a private house; PVC-backed mats on porous stone want lifting to dry
-  (weekly indoors, after rain outdoors).
+  (weekly indoors, after rain outdoors). (7) A tolerance given in words is read generously: "feel
+  free to slightly increase in case it's too thin" (the owner's mail of 11-16) came back as +50 %
+  — give a number. (8) An order sheet's "width × depth" needs the door side spelled out; mat 4
+  came back rotated. (9) Reading the price list: Prado with logo runs ≈ €155–165 per m², Azure
+  9 mm ≈ €250–290; the "€230 per m² for custom dimensions" line belongs to Elysium; custom sizes
+  are priced above the pro-rata rate (towards the next list size), so the list sizes (60×90,
+  80×90, 90×120 …) are the economical ones.
 - **`/icon.svg` favicon — DONE (2026-07).** All four pages' `<head>` links
   `<link rel="icon" type="image/svg+xml" href="/icon.svg">`; the file had been missing (404 on every
   page — cosmetic, browsers fell back to `favicon.ico`/PNG). Fixed by adding **`/icon.svg`**: the brand
@@ -785,8 +806,9 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   many arrivals go past the notice — the question behind this whole change); `_hits` falling toward
   the sum of the named rows; `/e…` scanner probes now appearing in the 404 watch (expected); no
   `arrive` jump on the run day; and whether the owner's bookmark habit holds (a complete
-  read-through on a day the owner looked is the tell). Door mats: the Prado edging colour, proofs
-  and quotation are with the supplier.
+  read-through on a day the owner looked is the tell). Door mats (2026-11-25): the corrected artwork
+  is with the supplier — check it by measurement when it comes back (logo ≈ 50 %, centred; Prado
+  without edging; Azure edging beige; mat 4 with 100 along the door), then the order form.
 
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
 - **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the
