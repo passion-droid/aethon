@@ -170,7 +170,7 @@ impression and the mobile layout matter.
   delete-branch action. Done when they disappear from `git ls-remote`.
 - **GitHub disables scheduled workflows after 60 days without a push (public repo).** A quiet
   autumn/winter needs one push before each 60-day mark or the fortnightly report silently stops
-  (last push that reset the clock: 2026-11-25 → next mark 2027-01-24).
+  (last push that reset the clock: 2026-11-26 → next mark 2027-01-25).
 
 ## Brand guardrails — always keep
 - **Name system:** the brand is `AETHON` (used alone for premium/physical use); the
@@ -259,9 +259,15 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   centred, **ENTRANCE-IN = 100 along the door × 110 deep** (the counterpart to the mat outside),
   finished sizes as ordered, **quotation accepted without price questions** (the figures stay in
   the owner's mail, not in the repo). Production ≈ three weeks from artwork approval and order
-  confirmation. **Open:** revised artwork for approval, order form, deposit. **When the revised
-  artwork arrives, measure it against this list** — `internal:docs/mats/tools/measure_artwork.py`
-  prints size, edging and logo width per mat; a drawing that looks right was 25 points off.
+  confirmation. **Revised artwork APPROVED (2026-11-26)** — measured with
+  `internal:docs/mats/tools/measure_artwork.py`: all sizes and ratios right, mat 4 100 wide × 110
+  deep, every logo centred, Prado without edging, Azure edging beige ≈2.5 cm, swatches Beige 2 /
+  Brown 12 and Azure beige / brown. Logo widths as drawn: 98.2 (veranda) · 49.7 (entrance-in) ·
+  50.2 (balconies) · 36.8 (balcony-in) · **47.86 on both Azure mats** — the supplier's technical
+  minimum for Azure (strokes ≈9 mm, matching the research's vinyl-inlay minimum), so the kitchen
+  70×60 carries 68 % of its width; accepted. Billing details went with the approval (the owner's
+  mail; not recorded here). **Open:** the order form, the 60 % deposit, then ≈ three weeks'
+  production and delivery.
   Brand logic used: gold stays the
   dot only and drowns on light grounds (≈1.2–1.7:1) → a one-colour mark; the wordmark comes from the
   logo file, never typeset. **Learnings:** (1) catalogue swatches mislead (the printed Prado green
@@ -806,9 +812,8 @@ is allowed (the V&A / Six Senses corrective) — restraint, not coldness.
   many arrivals go past the notice — the question behind this whole change); `_hits` falling toward
   the sum of the named rows; `/e…` scanner probes now appearing in the 404 watch (expected); no
   `arrive` jump on the run day; and whether the owner's bookmark habit holds (a complete
-  read-through on a day the owner looked is the tell). Door mats (2026-11-25): the corrected artwork
-  is with the supplier — check it by measurement when it comes back (logo ≈ 50 %, centred; Prado
-  without edging; Azure edging beige; mat 4 with 100 along the door), then the order form.
+  read-through on a day the owner looked is the tell). Door mats (2026-11-26): artwork approved;
+  the order form and the 60 % deposit are next, then about three weeks to delivery.
 
 ## Audit decisions (2026-07-03 — seven-persona review; working memo: internal:docs/site-audit-2026-07.md)
 - **No confirmation email — single opt-in (owner-confirmed).** Brevo DOI is OFF and stays off; the
