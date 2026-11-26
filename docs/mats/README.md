@@ -1,4 +1,4 @@
-# Door mats — decision record (2026-11-12 → 2026-11-25)
+# Door mats — decision record (2026-11-12 → 2026-11-26)
 
 Physical brand, not part of the website. Eight custom logo mats for the house, ordered from a
 Cypriot supplier (En Oiko Dimiourgies). Two catalogue qualities are in play: **Prado** (printed
@@ -25,8 +25,8 @@ outdoor-rated). No address appears in any of these files.
 - Mat 4 is 100 wide and 110 deep (owner, 2026-11-25): the 100 cm side lies along the door, the
   counterpart to mat 1 outside, and the logo runs along it.
 
-**Open with the supplier (as of 2026-11-25):** the revised artwork for approval, then the order
-form and the deposit. Production takes about three weeks from artwork approval and order
+**Open with the supplier (as of 2026-11-26):** the artwork is approved; the order form and the
+60 % deposit come next. Production takes about three weeks from artwork approval and order
 confirmation. The quotation is accepted; its figures stay in the owner's mail and are not stored
 here.
 
@@ -63,7 +63,28 @@ drawing beside the order on the real stone. The owner's answer, sent the same da
 5. **Mat 4**: 100 cm along the door, 110 deep.
 6. No price questions; the quotation stands.
 
-### Checking the next artwork
+### Revised artwork, approved (2026-11-26)
+
+Measured with `tools/measure_artwork.py`: every size and ratio as ordered, mat 4 drawn 100 wide ×
+110 deep, all logos centred, the six Prado mats without edging, the two Azure mats with beige
+edging of about 2.5 cm, swatches marked Beige 2 / Brown 12 (Prado) and beige / brown (Azure).
+Logo widths as stated on the artwork, confirmed by measurement within a pixel:
+
+| Mat | Ordered | Approved |
+|---|---|---|
+| VERANDA 200 × 100 | 100 cm | 98.2 cm |
+| ENTRANCE-IN 100 × 110 | 50 cm | 49.7 cm |
+| BALCONY 1–3 100 × 60 | 50 cm | 50.2 cm |
+| BALCONY-IN 70 × 60 | 35 cm | 36.8 cm |
+| ENTRANCE-OUT 100 × 80, Azure | 50 cm | 47.86 cm |
+| KITCHEN-OUT 70 × 60, Azure | 35 cm | 47.86 cm (68 % of the width) |
+
+47.86 cm is the supplier's technical minimum for an Azure logo. At that size the strokes are
+about 9 mm, which matches the vinyl-inlay minimum found in the research, so the figure is
+plausible; accepted. Billing details went with the approval in the owner's mail and are not
+recorded here. Next: the order form, the 60 % deposit, then about three weeks to delivery.
+
+### Checking an artwork
 
 Measure it, do not judge it by eye: `python3 tools/measure_artwork.py <drawing.png> --ref-cm 200`
 prints size, edging and logo width per mat. Expected: logo about 50 % of the mat width (100 cm on
